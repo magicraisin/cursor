@@ -20,6 +20,11 @@ export default function Home() {
       description: 'A modern, interactive ebook reader featuring Pride and Prejudice',
       path: '/prototypes/ebook-reader'
     },
+    {
+      title: 'RetroSynth',
+      description: 'A pixel-art synthesizer with interactive keyboard and waveform visualization',
+      path: '/prototypes/retro-synth'
+    },
     // Add your new prototypes here like this:
     // {
     //   title: 'Your new prototype',
