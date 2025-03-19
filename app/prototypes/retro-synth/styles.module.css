@@ -1,0 +1,243 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #2a1f2d;
+  padding: 2rem;
+  image-rendering: pixelated;
+  position: relative;
+  overflow: hidden;
+}
+
+.synthWindow {
+  background-color: #4a3d4d;
+  border: 4px solid #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 
+    0 0 0 4px #2a1f2d,
+    0 0 0 8px #ffffff;
+  width: 100%;
+  max-width: 800px;
+  image-rendering: pixelated;
+  position: relative;
+  z-index: 1;
+}
+
+.titleBar {
+  background-color: #ffffff;
+  padding: 0.5rem;
+  margin: -1rem -1rem 1rem -1rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 4px solid #2a1f2d;
+}
+
+.titleButtons {
+  display: flex;
+  gap: 8px;
+  margin-right: 16px;
+}
+
+.closeButton,
+.minimizeButton,
+.zoomButton {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #2a1f2d;
+  border-radius: 50%;
+}
+
+.closeButton {
+  background-color: #ffeb3b;
+}
+
+.minimizeButton {
+  background-color: #ff5252;
+}
+
+.zoomButton {
+  background-color: #4caf50;
+}
+
+.titleText {
+  color: #2a1f2d;
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 1.2rem;
+}
+
+.controls {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #3a2f3d;
+  border: 2px solid #ffffff;
+  border-radius: 4px;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.controlGroup label {
+  color: #ffffff;
+  font-family: monospace;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.select {
+  background-color: #2a1f2d;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  padding: 0.5rem;
+  font-family: monospace;
+  cursor: pointer;
+  outline: none;
+}
+
+.select:focus {
+  box-shadow: 0 0 0 2px #ffffff;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 150px;
+  height: 20px;
+  background: #2a1f2d;
+  border: 2px solid #ffffff;
+  border-radius: 4px;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #ffffff;
+  border: 2px solid #2a1f2d;
+  cursor: pointer;
+}
+
+.keyboard {
+  display: grid;
+  grid-template-columns: repeat(17, 1fr);
+  gap: 4px;
+  padding: 1rem;
+  background-color: #3a2f3d;
+  border: 2px solid #ffffff;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.waveformContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.waveform {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.wavePoint {
+  width: 8px;
+  height: 8px;
+  background-color: #ffffff;
+  transform-origin: center;
+  opacity: 0;
+  box-shadow: 0 0 4px #ffffff;
+  transition: transform 0.1s ease-out, opacity 0.2s ease-out;
+}
+
+.wavePoint.active {
+  opacity: 0.4;
+}
+
+.key {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.1s;
+  z-index: 1;
+}
+
+.whiteKey {
+  background-color: #fff;
+  height: 120px;
+  border: 2px solid #2a1f2d;
+}
+
+.blackKey {
+  background-color: #2a1f2d;
+  height: 120px;
+  color: #fff;
+  border: 2px solid #2a1f2d;
+}
+
+.key.active {
+  background-color: #ffffff;
+  color: #2a1f2d;
+}
+
+.keyLabel {
+  font-size: 0.8rem;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.noteLabel {
+  font-size: 0.7rem;
+  font-family: monospace;
+  opacity: 0.7;
+}
+
+.instructions {
+  margin-top: 2rem;
+  text-align: center;
+  color: #ffffff;
+  font-family: monospace;
+  font-size: 0.9rem;
+  padding: 1rem;
+  background-color: #3a2f3d;
+  border: 2px solid #ffffff;
+  border-radius: 4px;
+}
+
+/* Pixel art border effect */
+.synthWindow::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: transparent;
+  border: 4px solid #ffffff;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.pixelArt {
+  display: none;
+}

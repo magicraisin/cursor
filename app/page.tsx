@@ -30,6 +30,7 @@ export default function Home() {
 
   return (
     <div className={`${styles.container} ${instrumentSans.className}`}>
+      <div className={styles.shootingStar}></div>
       <header className={styles.header}>
         <h1>Madeleine's prototypes</h1>
       </header>

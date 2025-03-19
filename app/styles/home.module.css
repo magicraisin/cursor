@@ -1,16 +1,99 @@
+/* Night sky theme with twinkling stars */
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes shootingStar {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%) translateY(200%) rotate(45deg);
+    opacity: 0;
+  }
+}
+
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0a1128 0%, #1c2541 50%, #3a506b 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Create stars using pseudo-elements */
+.container::before,
+.container::after,
+.container > div:first-child {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Small stars */
+.container::before {
+  background-image: radial-gradient(1px 1px at 20px 30px, #fff 100%, transparent),
+                    radial-gradient(1px 1px at 40px 70px, #fff 100%, transparent),
+                    radial-gradient(1px 1px at 50px 160px, #fff 100%, transparent),
+                    radial-gradient(1px 1px at 90px 40px, #fff 100%, transparent),
+                    radial-gradient(1px 1px at 130px 80px, #fff 100%, transparent),
+                    radial-gradient(1px 1px at 160px 120px, #fff 100%, transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: twinkle 4s infinite;
+}
+
+/* Large stars */
+.container::after {
+  background-image: radial-gradient(2px 2px at 100px 100px, #fff 100%, transparent),
+                    radial-gradient(2px 2px at 200px 150px, #fff 100%, transparent),
+                    radial-gradient(2px 2px at 300px 250px, #fff 100%, transparent),
+                    radial-gradient(2px 2px at 400px 300px, #fff 100%, transparent),
+                    radial-gradient(2px 2px at 500px 100px, #fff 100%, transparent),
+                    radial-gradient(2px 2px at 50px 300px, #fff 100%, transparent);
+  background-repeat: repeat;
+  background-size: 600px 600px;
+  animation: twinkle 6s infinite;
+  animation-delay: 1s;
+}
+
+/* Shooting star */
+.shootingStar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+  box-shadow: 0 0 4px #fff;
+  animation: shootingStar 10s infinite linear;
+  opacity: 0;
+  z-index: 0;
 }
 
 .header {
   margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .header h1 {
   font-size: 2.5rem;
   font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  text-align: center;
 }
 
 .grid {
@@ -18,33 +101,43 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .card {
   padding: 1.5rem;
   border-radius: var(--border-radius);
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   cursor: pointer;
   display: block;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 
+              0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .card:hover {
-  background: rgba(0, 0, 0, 0.04);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2),
+              0 0 30px rgba(255, 255, 255, 0.2);
 }
 
 .card h3 {
   margin-bottom: 0.5rem;
   font-size: 1.25rem;
   font-weight: 600;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .card p {
   font-size: 0.9rem;
   opacity: 0.8;
   line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
 } 
