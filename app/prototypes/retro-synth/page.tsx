@@ -43,7 +43,7 @@ export default function RetroSynth() {
   const [activeKeys, setActiveKeys] = useState<Set<NoteKey>>(new Set());
   const [volume, setVolume] = useState(0.5);
   const [wavePoints, setWavePoints] = useState<number[]>(Array(WAVE_POINTS).fill(0));
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | null>(null);
 
   // Initialize Audio Context
   useEffect(() => {
