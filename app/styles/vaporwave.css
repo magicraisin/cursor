@@ -1,0 +1,127 @@
+:root {
+  --vapor-primary: #ff71ce;
+  --vapor-secondary: #01cdfe;
+  --vapor-accent: #05ffa1;
+  --vapor-background: #1a1a2e;
+  --vapor-text: #fffbf5;
+  --vapor-grid: rgba(1, 205, 254, 0.2);
+}
+
+.vaporwave {
+  background: var(--vapor-background);
+  color: var(--vapor-text);
+  font-family: "VT323", monospace;
+  background-image: 
+    linear-gradient(0deg, transparent 95%, var(--vapor-grid) 95%),
+    linear-gradient(90deg, transparent 95%, var(--vapor-grid) 95%);
+  background-size: 30px 30px;
+  position: relative;
+}
+
+.vaporwave::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(
+      180deg,
+      rgba(255, 113, 206, 0.1) 0%,
+      rgba(1, 205, 254, 0.1) 100%
+    );
+  pointer-events: none;
+}
+
+.vaporwave h1 {
+  font-size: 4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--vapor-primary);
+  text-shadow: 
+    2px 2px var(--vapor-secondary),
+    -2px -2px var(--vapor-accent);
+  margin-bottom: 2rem;
+}
+
+.vaporwave h2, .vaporwave h3 {
+  color: var(--vapor-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.vaporwave button {
+  background: transparent;
+  border: 2px solid var(--vapor-primary);
+  color: var(--vapor-primary);
+  padding: 0.5rem 2rem;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.vaporwave button:hover {
+  background: var(--vapor-primary);
+  color: var(--vapor-background);
+  transform: scale(1.05);
+}
+
+.vaporwave button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.vaporwave button:hover::before {
+  left: 100%;
+}
+
+.vaporwave input, .vaporwave textarea {
+  background: rgba(26, 26, 46, 0.8);
+  border: 1px solid var(--vapor-secondary);
+  color: var(--vapor-text);
+  padding: 0.5rem;
+}
+
+.vaporwave input:focus, .vaporwave textarea:focus {
+  outline: none;
+  border-color: var(--vapor-primary);
+  box-shadow: 0 0 10px var(--vapor-primary);
+}
+
+/* Glitch effect for text */
+@keyframes glitch {
+  0% {
+    text-shadow: 2px 0 var(--vapor-secondary), -2px 0 var(--vapor-accent);
+  }
+  25% {
+    text-shadow: -2px 0 var(--vapor-secondary), 2px 0 var(--vapor-accent);
+  }
+  50% {
+    text-shadow: 2px 0 var(--vapor-secondary), -2px 0 var(--vapor-accent);
+  }
+  75% {
+    text-shadow: -2px 0 var(--vapor-secondary), 2px 0 var(--vapor-accent);
+  }
+  100% {
+    text-shadow: 2px 0 var(--vapor-secondary), -2px 0 var(--vapor-accent);
+  }
+}
+
+.vaporwave .glitch {
+  animation: glitch 3s infinite;
+} 
