@@ -25,6 +25,16 @@ export default function Home() {
       description: 'A pixel-art synthesizer with interactive keyboard and waveform visualization',
       path: '/prototypes/retro-synth'
     },
+    {
+      title: 'Logo Animation',
+      description: 'An animated logo sequence with geometric transformations',
+      path: '/prototypes/logo-animation'
+    },
+    {
+      title: 'What Notion Agent are you?',
+      description: 'A fun personality test to discover your Notion agent type',
+      path: '/prototypes/personality-test'
+    },
     // Add your new prototypes here like this:
     // {
     //   title: 'Your new prototype',
