@@ -1140,10 +1140,22 @@
   cursor: pointer;
   transition: color 0.2s ease;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .breadcrumbResults:hover {
   color: #666;
+}
+
+.breadcrumbResults:hover .backChevron {
+  color: #666;
+}
+
+.backChevron {
+  color: #999;
+  transition: color 0.2s ease;
 }
 
 .breadcrumbSeparator {
