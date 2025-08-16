@@ -825,7 +825,7 @@
 .agentArrow {
   opacity: 0;
   transition: opacity 0.2s ease;
-  margin-left: 4px;
+  margin-left: 6px;
   transform: translateY(-16px);
 }
 
