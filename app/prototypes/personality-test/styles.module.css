@@ -1098,9 +1098,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 0 24px 0;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 0 0 24px 0;
   margin-bottom: 24px;
+  margin-left: -16px;
 }
 
 .backButton {
@@ -1126,13 +1126,14 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .breadcrumbResults {
   color: #999;
   cursor: pointer;
   transition: color 0.2s ease;
+  font-weight: 600;
 }
 
 .breadcrumbResults:hover {
