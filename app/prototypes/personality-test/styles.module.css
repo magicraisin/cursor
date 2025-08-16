@@ -821,9 +821,14 @@
   margin-right: 8px;
 }
 
-.rankInfo:hover {
-  background: #f0f0f0;
-  transform: translateX(2px);
+.agentArrow {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  margin-left: 4px;
+}
+
+.rankInfo:hover .agentArrow {
+  opacity: 1;
 }
 
 .agentIcon {

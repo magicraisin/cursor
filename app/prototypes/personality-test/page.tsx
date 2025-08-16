@@ -2419,6 +2419,22 @@ export default function NotionAgentTest() {
                               className={styles.agentIcon}
                             />
                             <span className={styles.agentName}>{entry.agent}</span>
+                            <svg 
+                              width="16" 
+                              height="16" 
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              xmlns="http://www.w3.org/2000/svg"
+                              className={styles.agentArrow}
+                            >
+                              <path 
+                                d="M9 18l6-6-6-6" 
+                                stroke="#999" 
+                                strokeWidth="2" 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round"
+                              />
+                            </svg>
                           </div>
                           <div className={styles.statsInfo}>
                             <span className={styles.count}>
