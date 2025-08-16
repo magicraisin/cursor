@@ -2142,28 +2142,43 @@ export default function NotionAgentTest() {
     const agent = agents[sequence];
     if (agent) {
       try {
-        // Create a temporary image element to capture just the agent image
-        const agentImageElement = document.querySelector(`.${styles.agentImage}`) as HTMLImageElement;
-        if (agentImageElement) {
+        // Since we're showing new agent cards, we need to load the original agent image
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        // Get the original agent image path (not the card image)
+        const originalAgentImagePath = getAgentImage(agent.name);
+        
+        img.onload = () => {
           // Create a canvas to draw just the agent image
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
           
-          canvas.width = 140; // Same as agent image size
-          canvas.height = 140;
+          canvas.width = 200; // Higher resolution for better quality
+          canvas.height = 200;
           
           if (ctx) {
+            // White background
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(agentImageElement, 0, 0, 140, 140);
+            
+            // Draw the agent image centered
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
             // Create download link
             const link = document.createElement('a');
-            link.download = `${agent.name.toLowerCase().replace(/\s+/g, '-')}-agent.png`;
+            link.download = `${agent.name.toLowerCase().replace(/\s+/g, '-')}-agent-portrait.png`;
             link.href = canvas.toDataURL();
             link.click();
           }
-        }
+        };
+        
+        img.onerror = () => {
+          console.error('Error loading agent image:', originalAgentImagePath);
+        };
+        
+        img.src = originalAgentImagePath;
+        
       } catch (error) {
         console.error('Error generating agent image:', error);
       }
