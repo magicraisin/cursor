@@ -826,7 +826,7 @@
   opacity: 0;
   transition: opacity 0.2s ease;
   margin-left: 4px;
-  transform: translateY(-8px);
+  transform: translateY(-16px);
 }
 
 .rankInfo:hover .agentArrow {
