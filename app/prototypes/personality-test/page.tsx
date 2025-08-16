@@ -2045,7 +2045,9 @@ export default function NotionAgentTest() {
   const saveResult = async (finalSequence: string) => {
     try {
       const agent = agents[finalSequence];
-      await fetch('/api/personality-results', {
+      console.log('Saving result:', { agent: agent.name, sequence: finalSequence });
+      
+      const response = await fetch('/api/personality-results', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -2055,6 +2057,13 @@ export default function NotionAgentTest() {
           sequence: finalSequence,
         }),
       });
+      
+      const data = await response.json();
+      console.log('Save result response:', data);
+      
+      if (data.isNewResult === false) {
+        console.log('Result not saved - duplicate IP detected. Existing agent:', data.existingAgent);
+      }
     } catch (error) {
       console.error('Failed to save result:', error);
     }
@@ -2190,11 +2199,15 @@ export default function NotionAgentTest() {
   const fetchLeaderboard = async () => {
     setIsLoadingLeaderboard(true);
     try {
+      console.log('Fetching leaderboard...');
       const response = await fetch('/api/personality-results');
       const data = await response.json();
+      console.log('Leaderboard response:', data);
+      
       if (data.success) {
         setLeaderboardData(data.leaderboard);
         setTotalResults(data.totalResults);
+        console.log('Leaderboard updated:', data.leaderboard, 'Total:', data.totalResults);
       }
     } catch (error) {
       console.error('Failed to fetch leaderboard:', error);

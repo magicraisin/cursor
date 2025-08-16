@@ -41,16 +41,33 @@ function writeResults(results: PersonalityResult[]) {
 
 // Get client IP
 function getClientIP(request: NextRequest): string {
+  // Get various IP headers (Vercel uses these)
   const forwarded = request.headers.get('x-forwarded-for');
   const realIP = request.headers.get('x-real-ip');
+  const vercelIP = request.headers.get('x-vercel-forwarded-for');
+  const userAgent = request.headers.get('user-agent') || '';
   
+  console.log('IP Detection Debug:', {
+    forwarded,
+    realIP, 
+    vercelIP,
+    userAgent: userAgent.substring(0, 100)
+  });
+  
+  // Try different IP headers in order of preference
+  if (vercelIP) {
+    return vercelIP.split(',')[0].trim();
+  }
   if (forwarded) {
     return forwarded.split(',')[0].trim();
   }
   if (realIP) {
     return realIP;
   }
-  return 'unknown';
+  
+  // Create a unique identifier combining IP and User-Agent for better uniqueness
+  const fallbackId = `unknown-${userAgent.replace(/[^a-zA-Z0-9]/g, '').substring(0, 20)}-${Date.now().toString().slice(-6)}`;
+  return fallbackId;
 }
 
 export async function POST(request: NextRequest) {
@@ -58,16 +75,21 @@ export async function POST(request: NextRequest) {
     const { agent, sequence } = await request.json();
     const ip = getClientIP(request);
     
+    console.log('POST Debug:', { agent, sequence, ip });
+    
     const results = readResults();
+    console.log('Existing results:', results.length, 'entries');
     
     // Check if this IP has already submitted a result
     const existingResult = results.find(result => result.ip === ip);
     if (existingResult) {
+      console.log('Duplicate IP detected:', ip, 'existing agent:', existingResult.agent);
       // IP already exists, don't add duplicate
       return NextResponse.json({ 
         success: true, 
         message: 'Result already recorded for this IP',
-        isNewResult: false 
+        isNewResult: false,
+        existingAgent: existingResult.agent
       });
     }
     
@@ -81,6 +103,9 @@ export async function POST(request: NextRequest) {
     
     results.push(newResult);
     writeResults(results);
+    
+    console.log('New result saved:', newResult);
+    console.log('Total results now:', results.length);
     
     return NextResponse.json({ 
       success: true, 
@@ -96,6 +121,8 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     const results = readResults();
+    console.log('GET Debug - Total results:', results.length);
+    console.log('All IPs:', results.map(r => ({ ip: r.ip, agent: r.agent })));
     
     // Calculate leaderboard
     const agentCounts: { [key: string]: number } = {};
@@ -108,6 +135,8 @@ export async function GET() {
     const leaderboard = Object.entries(agentCounts)
       .map(([agent, count]) => ({ agent, count }))
       .sort((a, b) => b.count - a.count);
+    
+    console.log('Leaderboard:', leaderboard);
     
     return NextResponse.json({
       success: true,
