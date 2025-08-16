@@ -1095,12 +1095,18 @@
 }
 
 /* Agent Detail Navigation Styles */
+.agentDetailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 0 16px;
+  margin-bottom: 8px;
+}
+
 .breadcrumb {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 16px 0 16px;
-  margin-bottom: 8px;
 }
 
 .backButton {

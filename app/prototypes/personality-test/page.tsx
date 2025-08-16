@@ -2363,32 +2363,38 @@ export default function NotionAgentTest() {
       {showLeaderboard && (
         <div className={styles.modalOverlay} onClick={closeLeaderboard}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            {leaderboardView === 'detail' && selectedAgent && (
-              <div className={styles.breadcrumb}>
-                <button className={styles.backButton} onClick={backToLeaderboard}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 12H5m7-7l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            {leaderboardView === 'detail' && selectedAgent ? (
+              <div className={styles.agentDetailHeader}>
+                <div className={styles.breadcrumb}>
+                  <button className={styles.backButton} onClick={backToLeaderboard}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 12H5m7-7l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <div className={styles.breadcrumbText}>
+                    <span className={styles.breadcrumbResults} onClick={backToLeaderboard}>Results</span>
+                    <span className={styles.breadcrumbSeparator}>/</span>
+                    <span className={styles.breadcrumbCurrent}>Agent details</span>
+                  </div>
+                </div>
+                <button className={styles.closeButton} onClick={closeLeaderboard}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                   </svg>
                 </button>
-                <div className={styles.breadcrumbText}>
-                  <span className={styles.breadcrumbResults} onClick={backToLeaderboard}>Results</span>
-                  <span className={styles.breadcrumbSeparator}>/</span>
-                  <span className={styles.breadcrumbCurrent}>Agent details</span>
-                </div>
+              </div>
+            ) : (
+              <div className={styles.modalHeader}>
+                <h2 className={styles.modalTitle}>Results leaderboard</h2>
+                <button className={styles.closeButton} onClick={closeLeaderboard}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </button>
               </div>
             )}
-            
-            <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>
-                {leaderboardView === 'detail' && selectedAgent ? 'Agent details' : 'Results leaderboard'}
-              </h2>
-              <button className={styles.closeButton} onClick={closeLeaderboard}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </button>
-            </div>
             
             <div className={styles.modalContent}>
               {isLoadingLeaderboard ? (
