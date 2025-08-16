@@ -2411,8 +2411,8 @@ export default function NotionAgentTest() {
                     {leaderboardData.map((entry, index) => {
                       const percentage = totalResults > 0 ? ((entry.count / totalResults) * 100).toFixed(1) : '0';
                       return (
-                        <div key={entry.agent} className={styles.leaderboardItem} onClick={() => openAgentDetail(entry.agent)}>
-                          <div className={styles.rankInfo}>
+                        <div key={entry.agent} className={styles.leaderboardItem}>
+                          <div className={styles.rankInfo} onClick={() => openAgentDetail(entry.agent)}>
                             <img 
                               src={getAgentImage(entry.agent)} 
                               alt={entry.agent}

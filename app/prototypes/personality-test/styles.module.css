@@ -803,16 +803,8 @@
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 16px;
-  cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 8px;
-}
-
-.leaderboardItem:hover {
-  background: #f8f8f8;
-  border-color: #e0e0e0;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .rankInfo {
@@ -821,6 +813,17 @@
   gap: 6px;
   margin-bottom: -4px;
   line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  margin-left: -8px;
+  margin-right: 8px;
+}
+
+.rankInfo:hover {
+  background: #f0f0f0;
+  transform: translateX(2px);
 }
 
 .agentIcon {
