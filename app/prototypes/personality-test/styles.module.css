@@ -825,6 +825,7 @@
   opacity: 0;
   transition: opacity 0.2s ease;
   margin-left: 4px;
+  transform: translateY(-8px);
 }
 
 .rankInfo:hover .agentArrow {
@@ -1098,9 +1099,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 0 24px 0;
-  margin-bottom: 24px;
-  margin-left: -16px;
+  padding: 16px 16px 0 16px;
+  margin-bottom: 8px;
 }
 
 .backButton {
@@ -1154,7 +1154,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0;
+  padding: 0;
   min-height: 400px;
 }
 
