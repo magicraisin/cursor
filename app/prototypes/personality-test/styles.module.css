@@ -738,7 +738,8 @@
   max-width: 600px;
   width: 100%;
   max-height: 80vh;
-  overflow: hidden;
+  overflow-x: visible;
+  overflow-y: hidden;
   box-shadow: 0px 16px 50px 0px rgba(0, 0, 0, 0.2);
 }
 
@@ -1107,7 +1108,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: -12px;
+  margin-left: -32px;
 }
 
 .backButton {
@@ -1196,7 +1197,7 @@
   .breadcrumb {
     padding: 12px 0 16px 0;
     margin-bottom: 16px;
-    margin-left: -12px;
+    margin-left: -32px;
   }
   
   .breadcrumbText {
