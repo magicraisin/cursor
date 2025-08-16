@@ -1099,15 +1099,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 24px 0 24px;
+  padding: 24px 24px 0 0;
   margin-bottom: 24px;
+  margin-left: 24px;
 }
 
 .breadcrumb {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: -8px;
 }
 
 .backButton {
