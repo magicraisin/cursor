@@ -673,9 +673,9 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: white;
-  color: #666;
-  border: 1px solid #e0e0e0;
+  background: #2c2c2c;
+  color: white;
+  border: 1px solid #2c2c2c;
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 14px;
@@ -689,8 +689,8 @@
 }
 
 .leaderboardButton:hover {
-  background: #f8f8f8;
-  border-color: #d0d0d0;
+  background: #404040;
+  border-color: #404040;
 }
 
 .fixedRetakeButton {
