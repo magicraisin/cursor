@@ -1917,8 +1917,26 @@ export default function NotionAgentTest() {
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [leaderboardView, setLeaderboardView] = useState<'list' | 'detail'>('list');
+  const [debugLogs, setDebugLogs] = useState<string[]>([]);
+  const [showDebug, setShowDebug] = useState(false);
 
   const profileCardRef = useRef<HTMLDivElement>(null);
+
+  // Debug logging function
+  const addDebugLog = (message: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = `[${timestamp}] ${message}`;
+    console.log(logEntry);
+    setDebugLogs(prev => [...prev.slice(-10), logEntry]); // Keep last 10 logs
+  };
+
+  // Add browser info on load
+  useEffect(() => {
+    const userAgent = navigator.userAgent;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
+    addDebugLog(`🌐 Browser: ${isMobile ? 'Mobile' : 'Desktop'}`);
+    addDebugLog(`📱 User Agent: ${userAgent.substring(0, 50)}...`);
+  }, []);
 
   // Preload images for the next question
   useEffect(() => {
@@ -2045,7 +2063,7 @@ export default function NotionAgentTest() {
   const saveResult = async (finalSequence: string) => {
     try {
       const agent = agents[finalSequence];
-      console.log('Saving result:', { agent: agent.name, sequence: finalSequence });
+      addDebugLog(`Saving result: ${agent.name} (${finalSequence})`);
       
       const response = await fetch('/api/personality-results', {
         method: 'POST',
@@ -2059,13 +2077,15 @@ export default function NotionAgentTest() {
       });
       
       const data = await response.json();
-      console.log('Save result response:', data);
+      addDebugLog(`Save response: ${JSON.stringify(data)}`);
       
       if (data.isNewResult === false) {
-        console.log('Result not saved - duplicate IP detected. Existing agent:', data.existingAgent);
+        addDebugLog(`❌ Duplicate IP! Existing: ${data.existingAgent}`);
+      } else {
+        addDebugLog(`✅ New result saved successfully!`);
       }
     } catch (error) {
-      console.error('Failed to save result:', error);
+      addDebugLog(`❌ Save failed: ${error}`);
     }
   };
 
@@ -2199,18 +2219,18 @@ export default function NotionAgentTest() {
   const fetchLeaderboard = async () => {
     setIsLoadingLeaderboard(true);
     try {
-      console.log('Fetching leaderboard...');
+      addDebugLog('Fetching leaderboard...');
       const response = await fetch('/api/personality-results');
       const data = await response.json();
-      console.log('Leaderboard response:', data);
+      addDebugLog(`Fetch response: ${JSON.stringify(data)}`);
       
       if (data.success) {
         setLeaderboardData(data.leaderboard);
         setTotalResults(data.totalResults);
-        console.log('Leaderboard updated:', data.leaderboard, 'Total:', data.totalResults);
+        addDebugLog(`📊 Leaderboard: ${data.totalResults} total, ${data.leaderboard.length} unique agents`);
       }
     } catch (error) {
-      console.error('Failed to fetch leaderboard:', error);
+      addDebugLog(`❌ Fetch failed: ${error}`);
     } finally {
       setIsLoadingLeaderboard(false);
     }
@@ -2491,6 +2511,95 @@ export default function NotionAgentTest() {
           </div>
         </div>
       )}
+
+      {/* Debug Panel */}
+      <div 
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          zIndex: 10000
+        }}
+      >
+        <button
+          onClick={() => setShowDebug(!showDebug)}
+          style={{
+            background: '#333',
+            color: 'white',
+            border: 'none',
+            borderRadius: '50px',
+            width: '60px',
+            height: '60px',
+            cursor: 'pointer',
+            fontSize: '24px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+          }}
+        >
+          🐛
+        </button>
+        
+        {showDebug && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '70px',
+              right: '0',
+              width: '350px',
+              maxHeight: '400px',
+              background: 'rgba(0,0,0,0.9)',
+              color: 'white',
+              borderRadius: '8px',
+              padding: '15px',
+              fontSize: '12px',
+              fontFamily: 'monospace',
+              overflow: 'auto',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.4)'
+            }}
+          >
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: '10px',
+              borderBottom: '1px solid #444',
+              paddingBottom: '8px'
+            }}>
+              <strong>🔍 Debug Logs</strong>
+              <button
+                onClick={() => setDebugLogs([])}
+                style={{
+                  background: '#444',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '4px 8px',
+                  cursor: 'pointer',
+                  fontSize: '10px'
+                }}
+              >
+                Clear
+              </button>
+            </div>
+            
+            {debugLogs.length === 0 ? (
+              <p style={{ color: '#888', fontStyle: 'italic' }}>No logs yet...</p>
+            ) : (
+              debugLogs.map((log, index) => (
+                <div 
+                  key={index}
+                  style={{ 
+                    marginBottom: '5px',
+                    wordBreak: 'break-word',
+                    lineHeight: '1.4'
+                  }}
+                >
+                  {log}
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 } 
