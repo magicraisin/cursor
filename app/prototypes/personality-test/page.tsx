@@ -1325,7 +1325,7 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
         <div 
           className={styles.roamingContent}
         >
-          <h1 className={styles.title}>What Notion agent are you?</h1>
+          <h1 className={styles.title}>What Notion Agent Are You?</h1>
           <p className={styles.description}>
             Answer 11 questions to reveal what Notion agent<br />aligns most closely with your personality.
           </p>
