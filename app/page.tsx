@@ -6,7 +6,7 @@ export default function Home() {
   // Only the personality test prototype
   const prototypes = [
     {
-      title: 'What Notion Agent are you?',
+      title: 'What Notion agent are you?',
       description: 'Answer 11 questions to reveal what Notion agent\naligns most closely with your personality.',
       path: '/prototypes/personality-test'
     },
