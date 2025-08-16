@@ -58,11 +58,713 @@ interface CollisionBox {
   height: number;
 }
 
+interface MiniAgent {
+  id: string;
+  image: string;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  rotation: number;
+}
+
+function MiniRoamingAgents({ leaderboardData, totalResults }: { 
+  leaderboardData: any[], 
+  totalResults: number 
+}) {
+  const [frameWidth, setFrameWidth] = useState(400);
+  const [frameHeight, setFrameHeight] = useState(180);
+  const MINI_SPEED = 0.3;
+  
+  // Update frame dimensions based on container size
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        setFrameWidth(containerWidth);
+        
+        // Height based on screen size
+        const screenWidth = window.innerWidth;
+        if (screenWidth <= 480) {
+          setFrameHeight(120);
+        } else if (screenWidth <= 768) {
+          setFrameHeight(140);
+        } else {
+          setFrameHeight(180);
+        }
+      }
+    };
+    
+    // Initial update
+    setTimeout(updateDimensions, 100); // Small delay to ensure container is rendered
+    
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+  
+  // Calculate agent size based on total participants (smaller when more people)
+  const getAgentSize = (totalParticipants: number): number => {
+    if (totalParticipants <= 5) return 40;
+    if (totalParticipants <= 15) return 30;
+    if (totalParticipants <= 30) return 25;
+    if (totalParticipants <= 50) return 20;
+    return 15; // Very small for lots of participants
+  };
+  
+  const agentSize = getAgentSize(totalResults);
+  const agentRadius = agentSize / 2;
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | undefined>(undefined);
+  const [miniAgents, setMiniAgents] = useState<MiniAgent[]>([]);
+  
+  // Generate agents based on leaderboard data
+  useEffect(() => {
+    const agents: MiniAgent[] = [];
+    let agentId = 0;
+    
+    leaderboardData.forEach(entry => {
+      // Add one agent for each person who got this result
+      for (let i = 0; i < entry.count; i++) {
+        const x = agentRadius + Math.random() * (frameWidth - 2 * agentRadius);
+        const y = agentRadius + Math.random() * (frameHeight - 2 * agentRadius);
+        
+        // Get the correct agent image filename - use same logic as main getAgentImage function
+        const getAgentImageFilename = (agentName: string): string => {
+          // Handle special cases first
+          if (agentName === 'Spiral Notebook/Greek God') {
+            return 'greek-god.png';
+          }
+          
+          // Handle renamed agents that still use original filenames
+          if (agentName === 'Whoosh Arrow') {
+            return 'single-arrow.png';
+          }
+          if (agentName === 'Repetition') {
+            return 'repeat-cycle.png';
+          }
+          if (agentName === 'Clock') {
+            return 'time-schedule.png';
+          }
+          if (agentName === 'Swish') {
+            return 'single-loop.png';
+          }
+          
+          // Convert agent name to filename format
+          const filename = agentName.toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace('/', '-');
+          return `${filename}.png`;
+        };
+
+        agents.push({
+          id: `mini-${agentId++}`,
+          image: getAgentImageFilename(entry.agent),
+          x,
+          y,
+          vx: (Math.random() - 0.5) * MINI_SPEED * 2,
+          vy: (Math.random() - 0.5) * MINI_SPEED * 2,
+          radius: agentRadius,
+          rotation: Math.random() * 360,
+        });
+      }
+    });
+    
+    setMiniAgents(agents);
+  }, [leaderboardData, totalResults, agentRadius, frameWidth, frameHeight]);
+  
+  // Animation loop
+  useEffect(() => {
+    const animate = () => {
+      setMiniAgents(prevAgents => {
+        return prevAgents.map(agent => {
+          let newX = agent.x + agent.vx;
+          let newY = agent.y + agent.vy;
+          let newVx = agent.vx;
+          let newVy = agent.vy;
+          
+          // Bounce off walls
+          if (newX - agent.radius <= 0 || newX + agent.radius >= frameWidth) {
+            newVx = -newVx * 0.8;
+            newX = Math.max(agent.radius, Math.min(frameWidth - agent.radius, newX));
+          }
+          
+          if (newY - agent.radius <= 0 || newY + agent.radius >= frameHeight) {
+            newVy = -newVy * 0.8;
+            newY = Math.max(agent.radius, Math.min(frameHeight - agent.radius, newY));
+          }
+          
+          return {
+            ...agent,
+            x: newX,
+            y: newY,
+            vx: newVx,
+            vy: newVy,
+            rotation: agent.rotation + 1,
+          };
+        });
+      });
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    if (miniAgents.length > 0) {
+      animationRef.current = requestAnimationFrame(animate);
+    }
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [miniAgents.length]);
+  
+  const handleExpandFullScreen = () => {
+    // Create the data to pass to the full screen view
+    const fullScreenData = {
+      leaderboardData,
+      totalResults,
+      agentSize,
+      miniAgents
+    };
+    
+    // Open in new tab
+    const newTab = window.open('', '_blank');
+    if (newTab) {
+      // Create the HTML content for the full screen view
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Notion Agent Activity - Full Screen</title>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+              background: #F7F6F3;
+              font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
+              height: 100vh;
+              overflow: hidden;
+            }
+            .fullScreenContainer {
+              position: relative;
+              width: 100vw;
+              height: 100vh;
+              background: #F7F6F3;
+              overflow: hidden;
+            }
+            .fullScreenAgent {
+              position: absolute;
+              border-radius: 50%;
+              overflow: hidden;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: transparent;
+              z-index: 10;
+              padding: 0;
+              margin: 0;
+              transition: transform 0.1s ease;
+            }
+            .fullScreenAgent img {
+              display: block;
+              object-fit: cover;
+              border-radius: 50%;
+              width: 100%;
+              height: 100%;
+            }
+            .floatingLeaderboard {
+              position: fixed;
+              top: 16px;
+              left: 16px;
+              width: 300px;
+              max-height: calc(100vh - 32px);
+              background: rgba(255, 255, 255, 0.95);
+              backdrop-filter: blur(10px);
+              border-radius: 12px;
+              border: 1px solid rgba(0, 0, 0, 0.1);
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+              z-index: 100;
+              display: flex;
+              flex-direction: column;
+            }
+            .leaderboardHeader {
+              padding: 16px;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+              background: rgba(255, 255, 255, 0.5);
+              border-radius: 12px 12px 0 0;
+            }
+            .leaderboardTitle {
+              font-size: 18px;
+              font-weight: 600;
+              color: #2c2c2c;
+              margin: 0;
+            }
+            .leaderboardSubtitle {
+              font-size: 14px;
+              color: #666;
+              margin: 4px 0 0 0;
+            }
+            .leaderboardContent {
+              flex: 1;
+              overflow-y: auto;
+              padding: 0 0 16px 0;
+            }
+            .leaderboardItem {
+              display: flex;
+              align-items: center;
+              padding: 12px 16px;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            .leaderboardItem:last-child {
+              border-bottom: none;
+            }
+            .leaderboardRank {
+              font-size: 16px;
+              font-weight: 600;
+              color: #2c2c2c;
+              min-width: 24px;
+              margin-right: 12px;
+            }
+            .leaderboardAgent {
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+              margin-right: 12px;
+              overflow: hidden;
+            }
+            .leaderboardAgent img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+            .leaderboardInfo {
+              flex: 1;
+            }
+            .leaderboardName {
+              font-size: 14px;
+              font-weight: 500;
+              color: #2c2c2c;
+              margin: 0 0 2px 0;
+            }
+            .leaderboardPersonality {
+              font-size: 11px;
+              color: #666;
+              font-family: 'SF Mono', monospace;
+            }
+            .leaderboardCount {
+              font-size: 16px;
+              font-weight: 600;
+              color: #2c2c2c;
+            }
+          </style>
+        </head>
+        <body>
+          <div id="container" class="fullScreenContainer"></div>
+          <div class="floatingLeaderboard">
+            <div class="leaderboardHeader">
+              <h3 class="leaderboardTitle">Leaderboard</h3>
+              <p class="leaderboardSubtitle">${totalResults} participant${totalResults === 1 ? '' : 's'}</p>
+            </div>
+            <div id="leaderboardContent" class="leaderboardContent">
+              <!-- Leaderboard items will be inserted here -->
+            </div>
+          </div>
+          <script>
+            const leaderboardData = ${JSON.stringify(leaderboardData)};
+            const totalResults = ${totalResults};
+            
+            // Full screen dimensions
+            const frameWidth = window.innerWidth;
+            const frameHeight = window.innerHeight;
+            const SPEED = 0.4;
+            
+            // Calculate scaled agent size for full screen
+            const getFullScreenAgentSize = (totalParticipants) => {
+              const baseSize = Math.min(frameWidth, frameHeight) * 0.08; // 8% of smallest dimension
+              if (totalParticipants <= 5) return Math.max(baseSize, 80);
+              if (totalParticipants <= 15) return Math.max(baseSize * 0.8, 60);
+              if (totalParticipants <= 30) return Math.max(baseSize * 0.6, 45);
+              if (totalParticipants <= 50) return Math.max(baseSize * 0.5, 35);
+              return Math.max(baseSize * 0.4, 25);
+            };
+            
+            const agentSize = getFullScreenAgentSize(totalResults);
+            const agentRadius = agentSize / 2;
+            
+            // Generate agents
+            const agents = [];
+            let agentId = 0;
+            
+            const getAgentImageFilename = (agentName) => {
+              if (agentName === 'Spiral Notebook/Greek God') return 'greek-god.png';
+              if (agentName === 'Whoosh Arrow') return 'single-arrow.png';
+              if (agentName === 'Repetition') return 'repeat-cycle.png';
+              if (agentName === 'Clock') return 'time-schedule.png';
+              if (agentName === 'Swish') return 'single-loop.png';
+              return agentName.toLowerCase().replace(/\\s+/g, '-').replace('/', '-') + '.png';
+            };
+            
+            leaderboardData.forEach(entry => {
+              for (let i = 0; i < entry.count; i++) {
+                const x = agentRadius + Math.random() * (frameWidth - 2 * agentRadius);
+                const y = agentRadius + Math.random() * (frameHeight - 2 * agentRadius);
+                
+                agents.push({
+                  id: 'full-' + agentId++,
+                  image: getAgentImageFilename(entry.agent),
+                  x,
+                  y,
+                  vx: (Math.random() - 0.5) * SPEED * 2,
+                  vy: (Math.random() - 0.5) * SPEED * 2,
+                  radius: agentRadius,
+                  rotation: Math.random() * 360,
+                });
+              }
+            });
+            
+            // Create agent elements
+            const container = document.getElementById('container');
+            const agentElements = {};
+            
+            agents.forEach(agent => {
+              const agentEl = document.createElement('div');
+              agentEl.className = 'fullScreenAgent';
+              agentEl.style.width = agentSize + 'px';
+              agentEl.style.height = agentSize + 'px';
+              
+              const img = document.createElement('img');
+              img.src = '/images/agents/' + agent.image;
+              img.alt = 'Agent';
+              agentEl.appendChild(img);
+              
+              container.appendChild(agentEl);
+              agentElements[agent.id] = agentEl;
+            });
+            
+            // Animation loop
+            const animate = () => {
+              agents.forEach(agent => {
+                let newX = agent.x + agent.vx;
+                let newY = agent.y + agent.vy;
+                
+                // Bounce off walls
+                if (newX - agent.radius <= 0 || newX + agent.radius >= frameWidth) {
+                  agent.vx = -agent.vx * 0.8;
+                  newX = Math.max(agent.radius, Math.min(frameWidth - agent.radius, newX));
+                }
+                
+                if (newY - agent.radius <= 0 || newY + agent.radius >= frameHeight) {
+                  agent.vy = -agent.vy * 0.8;
+                  newY = Math.max(agent.radius, Math.min(frameHeight - agent.radius, newY));
+                }
+                
+                agent.x = newX;
+                agent.y = newY;
+                agent.rotation += 0.5;
+                
+                // Update element position
+                const el = agentElements[agent.id];
+                if (el) {
+                  el.style.left = (agent.x - agent.radius) + 'px';
+                  el.style.top = (agent.y - agent.radius) + 'px';
+                  el.style.transform = 'rotate(' + agent.rotation + 'deg)';
+                }
+              });
+              
+              requestAnimationFrame(animate);
+            };
+            
+            // Populate leaderboard
+            const populateLeaderboard = () => {
+              const leaderboardContent = document.getElementById('leaderboardContent');
+              
+              leaderboardData.forEach((entry, index) => {
+                const item = document.createElement('div');
+                item.className = 'leaderboardItem';
+                
+                const rank = document.createElement('div');
+                rank.className = 'leaderboardRank';
+                rank.textContent = (index + 1).toString();
+                
+                const agentDiv = document.createElement('div');
+                agentDiv.className = 'leaderboardAgent';
+                
+                const agentImg = document.createElement('img');
+                agentImg.src = '/images/agents/' + getAgentImageFilename(entry.agent);
+                agentImg.alt = entry.agent;
+                agentDiv.appendChild(agentImg);
+                
+                const info = document.createElement('div');
+                info.className = 'leaderboardInfo';
+                
+                const name = document.createElement('div');
+                name.className = 'leaderboardName';
+                name.textContent = entry.agent;
+                
+                const personality = document.createElement('div');
+                personality.className = 'leaderboardPersonality';
+                personality.textContent = entry.personality;
+                
+                info.appendChild(name);
+                info.appendChild(personality);
+                
+                const count = document.createElement('div');
+                count.className = 'leaderboardCount';
+                count.textContent = entry.count.toString();
+                
+                item.appendChild(rank);
+                item.appendChild(agentDiv);
+                item.appendChild(info);
+                item.appendChild(count);
+                
+                leaderboardContent.appendChild(item);
+              });
+            };
+            
+            populateLeaderboard();
+            animate();
+          </script>
+        </body>
+        </html>
+      `;
+      
+      newTab.document.write(htmlContent);
+      newTab.document.close();
+    }
+  };
+
+  if (totalResults === 0) return null;
+  
+  return (
+    <div className={styles.miniRoamingContainer} ref={containerRef}>
+      <button className={styles.expandButton} onClick={handleExpandFullScreen} title="Open full screen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+      {miniAgents.map(agent => (
+        <div
+          key={agent.id}
+          className={styles.miniRoamingAgent}
+          style={{
+            left: `${agent.x - agent.radius}px`,
+            top: `${agent.y - agent.radius}px`,
+            width: `${agentSize}px`,
+            height: `${agentSize}px`,
+            transform: `rotate(${agent.rotation}deg)`,
+          }}
+        >
+          <img
+            src={`/images/agents/${agent.image}`}
+            alt="mini agent"
+            style={{ width: '100%', height: '100%' }}
+          />
+        </div>
+      ))}
+      
+
+    </div>
+  );
+  }
+
+
+function BackgroundRoamingAgents({ agentName }: { agentName: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | undefined>(undefined);
+  const [backgroundAgents, setBackgroundAgents] = useState<MiniAgent[]>([]);
+  
+  const AGENT_COUNT = 30;
+  const AGENT_SIZE = 100; // Larger background agents
+  const AGENT_RADIUS = AGENT_SIZE / 2;
+  const BACKGROUND_SPEED = 0.25; // Slower background movement
+  
+  // Get agent image using same logic as main component
+  const getAgentImagePath = (name: string): string => {
+    if (name === 'Spiral Notebook/Greek God') {
+      return '/images/agents/greek-god.png';
+    }
+    
+    // Handle renamed agents that still use original filenames
+    if (name === 'Whoosh Arrow') {
+      return '/images/agents/single-arrow.png';
+    }
+    if (name === 'Repetition') {
+      return '/images/agents/repeat-cycle.png';
+    }
+    if (name === 'Clock') {
+      return '/images/agents/time-schedule.png';
+    }
+    if (name === 'Swish') {
+      return '/images/agents/single-loop.png';
+    }
+    
+    const filename = name.toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace('/', '-');
+    return `/images/agents/${filename}.png`;
+  };
+
+  // Initialize background agents
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const containerWidth = window.innerWidth;
+    const containerHeight = window.innerHeight;
+    
+    const agents: MiniAgent[] = Array.from({ length: AGENT_COUNT }, (_, index) => {
+      const x = AGENT_RADIUS + Math.random() * (containerWidth - 2 * AGENT_RADIUS);
+      const y = AGENT_RADIUS + Math.random() * (containerHeight - 2 * AGENT_RADIUS);
+      
+      return {
+        id: `bg-${index}`,
+        image: getAgentImagePath(agentName),
+        x,
+        y,
+        vx: (Math.random() - 0.5) * BACKGROUND_SPEED * 2,
+        vy: (Math.random() - 0.5) * BACKGROUND_SPEED * 2,
+        radius: AGENT_RADIUS,
+        rotation: Math.random() * 360,
+      };
+    });
+    
+    setBackgroundAgents(agents);
+  }, [agentName]);
+
+  // Animation loop for background agents
+  useEffect(() => {
+    const animate = () => {
+      setBackgroundAgents(prevAgents => {
+        const updatedAgents = prevAgents.map(agent => {
+          let newX = agent.x + agent.vx;
+          let newY = agent.y + agent.vy;
+          let newVx = agent.vx;
+          let newVy = agent.vy;
+          
+          const containerWidth = window.innerWidth;
+          const containerHeight = window.innerHeight;
+          
+          // Bounce off walls
+          if (newX - agent.radius <= 0 || newX + agent.radius >= containerWidth) {
+            newVx = -newVx * 0.8;
+            newX = Math.max(agent.radius, Math.min(containerWidth - agent.radius, newX));
+          }
+          
+          if (newY - agent.radius <= 0 || newY + agent.radius >= containerHeight) {
+            newVy = -newVy * 0.8;
+            newY = Math.max(agent.radius, Math.min(containerHeight - agent.radius, newY));
+          }
+          
+          return {
+            ...agent,
+            x: newX,
+            y: newY,
+            vx: newVx,
+            vy: newVy,
+            rotation: agent.rotation + 0.1, // Much slower rotation
+          };
+        });
+
+        // Check for agent-to-agent collisions
+        for (let i = 0; i < updatedAgents.length; i++) {
+          for (let j = i + 1; j < updatedAgents.length; j++) {
+            const agent1 = updatedAgents[i];
+            const agent2 = updatedAgents[j];
+            
+            const dx = agent2.x - agent1.x;
+            const dy = agent2.y - agent1.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const minDistance = agent1.radius + agent2.radius;
+            
+            if (distance < minDistance) {
+              // Collision detected - calculate bounce
+              const angle = Math.atan2(dy, dx);
+              const sin = Math.sin(angle);
+              const cos = Math.cos(angle);
+              
+              // Rotate velocities to collision coordinate system
+              const v1x = agent1.vx * cos + agent1.vy * sin;
+              const v1y = agent1.vy * cos - agent1.vx * sin;
+              const v2x = agent2.vx * cos + agent2.vy * sin;
+              const v2y = agent2.vy * cos - agent2.vx * sin;
+              
+              // Swap velocities in collision direction (elastic collision)
+              const newV1x = v2x;
+              const newV2x = v1x;
+              
+              // Rotate velocities back to original coordinate system
+              updatedAgents[i].vx = newV1x * cos - v1y * sin;
+              updatedAgents[i].vy = v1y * cos + newV1x * sin;
+              updatedAgents[j].vx = newV2x * cos - v2y * sin;
+              updatedAgents[j].vy = v2y * cos + newV2x * sin;
+              
+              // Separate agents to prevent overlap
+              const overlap = minDistance - distance;
+              const separateX = (overlap / 2) * cos;
+              const separateY = (overlap / 2) * sin;
+              
+              updatedAgents[i].x -= separateX;
+              updatedAgents[i].y -= separateY;
+              updatedAgents[j].x += separateX;
+              updatedAgents[j].y += separateY;
+            }
+          }
+        }
+        
+        return updatedAgents;
+      });
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    if (backgroundAgents.length > 0) {
+      animationRef.current = requestAnimationFrame(animate);
+    }
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [backgroundAgents.length]);
+
+  return (
+    <div className={styles.backgroundRoamingContainer} ref={containerRef}>
+      {backgroundAgents.map(agent => (
+        <div
+          key={agent.id}
+          className={styles.backgroundRoamingAgent}
+          style={{
+            left: `${agent.x - agent.radius}px`,
+            top: `${agent.y - agent.radius}px`,
+            width: `${AGENT_SIZE}px`,
+            height: `${AGENT_SIZE}px`,
+            transform: `rotate(${agent.rotation}deg)`,
+          }}
+        >
+          <img
+            src={agent.image}
+            alt="background agent"
+            style={{ width: '100%', height: '100%' }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
   const AGENT_SIZE = 120;
   const AGENT_RADIUS = AGENT_SIZE / 2;
   const COLLISION_RADIUS = AGENT_SIZE * 0.42; // Balanced collision radius for realistic contact
   const SPEED = 0.2;
+  
+  // Mini roaming agents constants
+  const MINI_FRAME_WIDTH = 400;
+  const MINI_FRAME_HEIGHT = 180;
+  const MINI_SPEED = 0.3;
   
   // Text collision areas (centered on screen)
   const getTextCollisionBoxes = (): CollisionBox[] => {
@@ -638,10 +1340,45 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
 
 const questions: Question[] = [
   {
+    text: "What does your inbox look like?",
+    answers: [
+      { image: "/images/agents/3A.png", value: "S" },
+      { image: "/images/agents/3B.png", value: "U" }
+    ]
+  },
+  {
+    text: "If someone shows you a painting, are you more likely to comment on",
+    answers: [
+      { text: "The emotions or ideas it appears to convey", value: "A" },
+      { text: "The objects, colors, and techniques that you notice", value: "C" }
+    ]
+  },
+  {
+    text: "It's 8pm on a Sunday. You're home in your comfy clothes. Your very good friend reaches out and asks to hang out.",
+    answers: [
+      { text: "Nah, it's time for bed soon.", value: "I" },
+      { text: "Yes, of course! Where are we meeting?", value: "T" }
+    ]
+  },
+  {
     text: "Do you work to live or live to work?",
     answers: [
       { text: "Work to live", value: "L" },
       { text: "Live to work", value: "W" }
+    ]
+  },
+  {
+    text: "You're going on a vacation with your friends. Which better matches your travel philosophy?",
+    answers: [
+      { text: "Reservations are in and I've made a Notion itinerary", value: "S" },
+      { text: "Let's not plan too much and take it one day at a time", value: "U" }
+    ]
+  },
+  {
+    text: "Given a choice would you rather",
+    answers: [
+      { text: "Work alone and own a project end-to-end", value: "I" },
+      { text: "Work with a close-knit team and collaborate throughout", value: "T" }
     ]
   },
   {
@@ -652,17 +1389,24 @@ const questions: Question[] = [
     ]
   },
   {
-    text: "What does your inbox look like?",
+    text: "If someone asks what success means to you, do you answer in terms of:",
     answers: [
-      { image: "/images/agents/3a.png", value: "S" },
-      { image: "/images/agents/3b.png", value: "U" }
+      { text: "Core values and life direction", value: "A" },
+      { text: "Measurable outcomes and concrete achievements", value: "C" }
+    ]
+  },
+  {
+    text: "When starting a new project, which do you prefer?",
+    answers: [
+      { text: "Make a detailed plan with clear goals before starting", value: "S" },
+      { text: "Dive in and figure things out as you go", value: "U" }
     ]
   },
   {
     text: "What templates are you interested in?",
     answers: [
-      { image: "/images/agents/4a.png", value: "A" },
-      { image: "/images/agents/4b.png", value: "C" }
+      { image: "/images/agents/4A.png", value: "A" },
+      { image: "/images/agents/4B.png", value: "C" }
     ]
   },
   {
@@ -673,6 +1417,61 @@ const questions: Question[] = [
     ]
   }
 ];
+
+// Question dimension mapping
+const questionDimensions: { [key: number]: string } = {
+  0: 'SU',  // Question 1: Inbox organization
+  1: 'AC',  // Question 2: Painting comment
+  2: 'TI',  // Question 3: Sunday evening plans
+  3: 'WL',  // Question 4: Work to live vs Live to work
+  4: 'SU',  // Question 5: Vacation planning
+  5: 'TI',  // Question 6: Work style preference
+  6: 'TI',  // Question 7: My ideal day
+  7: 'AC',  // Question 8: Success definition
+  8: 'SU',  // Question 9: Project planning
+  9: 'AC',  // Question 10: Templates
+  10: 'YD'  // Question 11: Lead vs Harmony
+};
+
+// Calculate final personality type using majority vote for multi-question dimensions
+const calculatePersonalityType = (answers: { [key: number]: string }): string => {
+  const dimensionVotes: { [key: string]: { [key: string]: number } } = {
+    WL: {},
+    TI: {},
+    SU: {},
+    AC: {},
+    YD: {}
+  };
+
+  // Count votes for each dimension
+  Object.entries(answers).forEach(([questionIndex, answer]) => {
+    const dimension = questionDimensions[parseInt(questionIndex)];
+    if (dimension && dimensionVotes[dimension]) {
+      dimensionVotes[dimension][answer] = (dimensionVotes[dimension][answer] || 0) + 1;
+    }
+  });
+
+  // Determine final letter for each dimension
+  const finalLetters: { [key: string]: string } = {};
+  
+  Object.entries(dimensionVotes).forEach(([dimension, votes]) => {
+    // Find the letter with the most votes
+    let maxVotes = 0;
+    let winningLetter = '';
+    
+    Object.entries(votes).forEach(([letter, count]) => {
+      if (count > maxVotes) {
+        maxVotes = count;
+        winningLetter = letter;
+      }
+    });
+    
+    finalLetters[dimension] = winningLetter;
+  });
+
+  // Build the final personality sequence: WTSAY order
+  return finalLetters['WL'] + finalLetters['TI'] + finalLetters['SU'] + finalLetters['AC'] + finalLetters['YD'];
+};
 
 const agents: { [key: string]: AgentProfile } = {
   "WTUAD": {
@@ -730,7 +1529,7 @@ const agents: { [key: string]: AgentProfile } = {
     ]
   },
   "WTSAD": {
-    name: "Single Arrow",
+    name: "Whoosh Arrow",
     strengths: [
       "Finishes three things while others are still arguing about what to have for lunch",
       "Can spot the actual problem in a room full of people discussing symptoms",
@@ -743,7 +1542,7 @@ const agents: { [key: string]: AgentProfile } = {
     ]
   },
   "WTSAY": {
-    name: "Repeat Cycle",
+    name: "Repetition",
     strengths: [
       "Masters of creating efficient, repeatable processes",
       "Great at building team alignment around structured approaches",
@@ -783,7 +1582,7 @@ const agents: { [key: string]: AgentProfile } = {
     ]
   },
   "WISCD": {
-    name: "Time Schedule",
+    name: "Clock",
     strengths: [
       "Always prepared, the type of person who packs snacks for a 20-minute drive",
       "Can turn your wildest dreams into a perfectly color-coded spreadsheet",
@@ -796,16 +1595,17 @@ const agents: { [key: string]: AgentProfile } = {
     ]
   },
   "WISCY": {
-    name: "Brackets",
+    name: "Book Wiki",
+    image: "book-wiki.png",
     strengths: [
-      "The human equivalent of a Swiss Army knife - has a tool for everything",
-      "Can get everyone on the same page even when they're reading different books",
-      "Makes boring processes actually fun somehow"
+      "Walking encyclopedia who somehow makes learning fun",
+      "Amazing at connecting random facts into breakthrough insights",
+      "Builds consensus by helping everyone understand the 'why'"
     ],
     weaknesses: [
-      "Breaks down when there's no instruction manual",
-      "Gets the group chat anxiety when people start arguing",
-      "Would rather eat pineapple pizza than make someone upset"
+      "Falls down Wikipedia rabbit holes instead of making decisions",
+      "Can be indecisive when the team needs quick action",
+      "Gets overwhelmed when there's no clear research path"
     ]
   },
   "WISAD": {
@@ -874,17 +1674,16 @@ const agents: { [key: string]: AgentProfile } = {
     ]
   },
   "WIUCY": {
-    name: "Book Wiki",
-    image: "book-wiki.png",
+    name: "Brackets",
     strengths: [
-      "Walking encyclopedia who somehow makes learning fun",
-      "Amazing at connecting random facts into breakthrough insights",
-      "Builds consensus by helping everyone understand the 'why'"
+      "The human equivalent of a Swiss Army knife - has a tool for everything",
+      "Can get everyone on the same page even when they're reading different books",
+      "Makes boring processes actually fun somehow"
     ],
     weaknesses: [
-      "Falls down Wikipedia rabbit holes instead of making decisions",
-      "Can be indecisive when the team needs quick action",
-      "Gets overwhelmed when there's no clear research path"
+      "Breaks down when there's no instruction manual",
+      "Gets the group chat anxiety when people start arguing",
+      "Would rather eat pineapple pizza than make someone upset"
     ]
   },
   "LIUAD": {
@@ -901,7 +1700,7 @@ const agents: { [key: string]: AgentProfile } = {
     ]
   },
   "LIUAY": {
-    name: "Single Loop",
+    name: "Swish",
     strengths: [
       "Excellent at working independently while building team consensus",
       "Great at finding creative solutions in ambiguous situations",
@@ -968,16 +1767,16 @@ const agents: { [key: string]: AgentProfile } = {
     ]
   },
   "LTUCD": {
-    name: "Command",
+    name: "Phone",
     strengths: [
-      "Excellent at taking charge of chaotic team situations",
-      "Great at turning abstract visions into concrete action plans",
-      "Can rally teams around practical solutions under pressure"
+      "Amazing at coordinating complex team projects with clear structure",
+      "Great at turning abstract visions into concrete, actionable plans",
+      "Excellent at driving results while maintaining team collaboration"
     ],
     weaknesses: [
-      "Can be impatient with team members who need more structure",
-      "Sometimes bulldozes through without considering all perspectives",
-      "Gets frustrated when projects become too abstract or theoretical"
+      "Can get overwhelmed when managing too many team communications",
+      "Sometimes bulldozes through individual concerns for team efficiency",
+      "Gets frustrated when projects become too abstract or open-ended"
     ]
   },
   "LTUCY": {
@@ -1022,16 +1821,16 @@ const agents: { [key: string]: AgentProfile } = {
     ]
   },
   "LTSCD": {
-    name: "Phone",
+    name: "Command",
     strengths: [
-      "Amazing at coordinating complex team projects with clear structure",
-      "Great at turning abstract visions into concrete, actionable plans",
-      "Excellent at driving results while maintaining team collaboration"
+      "Excellent at taking charge of chaotic team situations",
+      "Great at turning abstract visions into concrete action plans",
+      "Can rally teams around practical solutions under pressure"
     ],
     weaknesses: [
-      "Can get overwhelmed when managing too many team communications",
-      "Sometimes bulldozes through individual concerns for team efficiency",
-      "Gets frustrated when projects become too abstract or open-ended"
+      "Can be impatient with team members who need more structure",
+      "Sometimes bulldozes through without considering all perspectives",
+      "Gets frustrated when projects become too abstract or theoretical"
     ]
   },
   "LTSCY": {
@@ -1140,11 +1939,55 @@ export default function NotionAgentTest() {
       return '/images/agents/greek-god.png';
     }
     
+    // Handle renamed agents that still use original filenames
+    if (agentName === 'Whoosh Arrow') {
+      return '/images/agents/single-arrow.png';
+    }
+    if (agentName === 'Repetition') {
+      return '/images/agents/repeat-cycle.png';
+    }
+    if (agentName === 'Clock') {
+      return '/images/agents/time-schedule.png';
+    }
+    if (agentName === 'Swish') {
+      return '/images/agents/single-loop.png';
+    }
+    
     // Convert agent name to filename format
     const filename = agentName.toLowerCase()
       .replace(/\s+/g, '-')
       .replace('/', '-');
     return `/images/agents/${filename}.png`;
+  };
+
+  const getAgentCardImage = (agentName: string): string => {
+    // Map agent names to the new agent card images
+    let cardName = agentName;
+    
+    // Handle special cases to match the exact filenames in the new agent cards folder
+    if (agentName === 'Spiral Notebook/Greek God' || agentName === 'The Greek God') {
+      cardName = 'Greek god';
+    } else if (agentName === 'Cloud Flower') {
+      cardName = 'Cloud flower';
+    } else if (agentName === 'Double Copy') {
+      cardName = 'Double Copy';
+    } else if (agentName === 'Infinity Glasses') {
+      cardName = 'Infinity Glasses';
+    } else if (agentName === 'Repetition') {
+      cardName = 'Repeat Cycle';
+    } else if (agentName === 'Whoosh Arrow') {
+      cardName = 'Single arrow';
+    } else if (agentName === 'Swish') {
+      cardName = 'Single loop';
+    } else if (agentName === 'Clock') {
+      cardName = 'Time schedule';
+    } else if (agentName === 'Book Wiki') {
+      cardName = 'Book Wiki';
+    } else if (agentName === 'Spiky') {
+      cardName = 'DONE Spiky';
+    }
+    
+    return `/images/new agent cards/${cardName}.png`;
   };
 
   const getBinaryChoices = (sequence: string) => {
@@ -1178,6 +2021,7 @@ export default function NotionAgentTest() {
     const newAnswers = { ...answers, [currentQuestion]: selectedAnswer };
     setAnswers(newAnswers);
     
+    // Still build sequence for backward compatibility/debugging, but use new calculation for final result
     const newSequence = sequence + selectedAnswer;
     setSequence(newSequence);
     
@@ -1187,8 +2031,12 @@ export default function NotionAgentTest() {
       setSelectedAnswer(newAnswers[currentQuestion + 1] || null);
     } else {
       setCurrentStep('result');
+      // Calculate final personality type using majority vote system
+      const finalPersonalityType = calculatePersonalityType(newAnswers);
+      // Update sequence state with the final calculated type
+      setSequence(finalPersonalityType);
       // Save result to backend
-      saveResult(newSequence);
+      saveResult(finalPersonalityType);
     }
   };
 
@@ -1259,22 +2107,33 @@ export default function NotionAgentTest() {
   };
 
   const saveAsImage = async () => {
-    if (profileCardRef.current) {
+    const agent = agents[sequence];
+    if (agent) {
       try {
-        const canvas = await html2canvas(profileCardRef.current, {
-          backgroundColor: '#ffffff',
-          scale: 2, // Higher quality
-          useCORS: true,
-          allowTaint: true,
-        });
-        
-        // Create download link
-        const link = document.createElement('a');
-        link.download = `my-notion-agent-${agents[sequence].name.toLowerCase().replace(/\s+/g, '-')}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
+        // Find the agent card image element
+        const agentCardElement = document.querySelector(`.${styles.agentCardImage}`) as HTMLImageElement;
+        if (agentCardElement) {
+          // Create a canvas to draw the agent card image
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Use the natural dimensions of the agent card image
+          canvas.width = agentCardElement.naturalWidth;
+          canvas.height = agentCardElement.naturalHeight;
+          
+          if (ctx) {
+            // Draw the agent card image directly
+            ctx.drawImage(agentCardElement, 0, 0);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `my-notion-agent-card-${agent.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+          }
+        }
       } catch (error) {
-        console.error('Error generating image:', error);
+        console.error('Error generating agent card image:', error);
       }
     }
   };
@@ -1365,7 +2224,7 @@ export default function NotionAgentTest() {
             {question.answers.map((answer, index) => (
               <button
                 key={index}
-                className={`${styles.answerButton} ${answer.image ? styles.imageAnswer : ''} ${currentQuestion === 3 && answer.image ? styles.question4 : ''} ${selectedAnswer === answer.value ? styles.selected : ''}`}
+                className={`${styles.answerButton} ${answer.image ? styles.imageAnswer : ''} ${currentQuestion === 3 && answer.image ? styles.question4 : ''} ${currentQuestion === 9 && answer.image ? styles.question10 : ''} ${selectedAnswer === answer.value ? styles.selected : ''}`}
                 onClick={() => selectAnswer(answer.value)}
               >
                 {answer.image ? (
@@ -1405,8 +2264,14 @@ export default function NotionAgentTest() {
   // Result screen
   const agent = agents[sequence];
   
+  // Safety check - if agent doesn't exist, don't render background agents
+  if (!agent) {
+    return <div className={styles.container}>Loading...</div>;
+  }
+  
   return (
     <div className={styles.container}>
+      <BackgroundRoamingAgents agentName={agent.name} />
       <div className={styles.result}>
         <div className={styles.saveDropdown}>
           <button className={styles.saveButton}>
@@ -1423,7 +2288,7 @@ export default function NotionAgentTest() {
                 <line x1="9" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth="2"/>
                 <line x1="9" y1="17" x2="13" y2="17" stroke="currentColor" strokeWidth="2"/>
               </svg>
-              Results card
+              Entire card
             </button>
             <button className={styles.saveMenuItem} onClick={() => saveImageOnly()}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1431,113 +2296,21 @@ export default function NotionAgentTest() {
                 <path d="m9,9h0a3,3 0 0,0 6,0h0" stroke="currentColor" strokeWidth="2"/>
                 <path d="m9,15a3,3 0 0,0 6,0" stroke="currentColor" strokeWidth="2"/>
               </svg>
-              Agent image
+              Agent portrait
             </button>
           </div>
         </div>
         
-        <div ref={profileCardRef} className={styles.profileCard}>
-          <div className={styles.agentHeaderContainer}>
-            <div className={styles.agentHeader}>
-              <div className={styles.agentImageContainer}>
-                <img 
-                  src={getAgentImage(agent.name)} 
-                  alt={agent.name}
-                  className={styles.agentImage}
-                />
-              </div>
-              <div className={styles.agentInfo}>
-                <div className={styles.resultSubtitle}>Your Notion Agent is</div>
-                <div className={styles.resultTitle}>{agent.name}</div>
-              </div>
-            </div>
-            <div className={styles.headerDivider}></div>
-          </div>
-          
-          <div className={styles.traitsSection}>
-            <div className={styles.traitColumn}>
-              <h3 className={styles.traitTitle}>👍 Strengths</h3>
-              <ul className={styles.traitList}>
-                {agent.strengths.map((strength, index) => (
-                  <li key={index} className={styles.traitItem}>{strength}</li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className={styles.traitColumn}>
-              <h3 className={styles.traitTitle}>👎 Weaknesses</h3>
-              <ul className={styles.traitList}>
-                {agent.weaknesses.map((weakness, index) => (
-                  <li key={index} className={styles.traitItem}>{weakness}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className={styles.binaryChoices}>
-              {(() => {
-                const choices = getBinaryChoices(sequence);
-                return (
-                  <>
-                                        <div className={styles.binaryItem}>
-                      <span className={styles.binaryLabel}><span className={styles.letterContainer}>ORIENTATION</span></span>
-                      <div className={styles.toggleContainer}>
-                        <div className={`${styles.toggleOption} ${choices.workLife === 'Work to live' ? styles.active : ''}`}>
-                          Work to live
-                        </div>
-                        <div className={`${styles.toggleOption} ${choices.workLife === 'Live to work' ? styles.active : ''}`}>
-                          Live to work
-                        </div>
-                      </div>
-                    </div>
-                    <div className={styles.binaryItem}>
-                      <span className={styles.binaryLabel}><span className={styles.letterContainer}>COLLABORATION</span></span>
-                      <div className={styles.toggleContainer}>
-                        <div className={`${styles.toggleOption} ${choices.collaboration === 'Independent' ? styles.active : ''}`}>
-                          Independent
-                        </div>
-                        <div className={`${styles.toggleOption} ${choices.collaboration === 'Collaborative' ? styles.active : ''}`}>
-                          Collaborative
-                        </div>
-                      </div>
-                    </div>
-                    <div className={styles.binaryItem}>
-                      <span className={styles.binaryLabel}><span className={styles.letterContainer}>ORGANIZATION</span></span>
-                      <div className={styles.toggleContainer}>
-                        <div className={`${styles.toggleOption} ${choices.structure === 'Structured' ? styles.active : ''}`}>
-                          Structured
-                        </div>
-                        <div className={`${styles.toggleOption} ${choices.structure === 'Unstructured' ? styles.active : ''}`}>
-                          Unstructured
-                        </div>
-                      </div>
-                    </div>
-                    <div className={styles.binaryItem}>
-                      <span className={styles.binaryLabel}><span className={styles.letterContainer}>PERCEPTION</span></span>
-                                            <div className={styles.toggleContainer}>
-                        <div className={`${styles.toggleOption} ${choices.thinking === 'Abstract' ? styles.active : ''}`}>
-                          Abstract
-                        </div>
-                        <div className={`${styles.toggleOption} ${choices.thinking === 'Concrete' ? styles.active : ''}`}>
-                          Concrete
-                        </div>
-                      </div>
-                    </div>
-                    <div className={styles.binaryItem}>
-                      <span className={styles.binaryLabel}><span className={styles.letterContainer}>PRIORITY</span></span>
-                      <div className={styles.toggleContainer}>
-                        <div className={`${styles.toggleOption} ${choices.approach === 'Impact' ? styles.active : ''}`}>
-                          Impact
-                        </div>
-                        <div className={`${styles.toggleOption} ${choices.approach === 'Harmony' ? styles.active : ''}`}>
-                          Harmony
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
+        <div 
+          ref={profileCardRef}
+          className={styles.profileCard}
+        >
+          <img 
+            src={getAgentCardImage(agent.name)} 
+            alt={`${agent.name} Agent Card`}
+            className={styles.agentCardImage}
+            draggable={false}
+          />
         </div>
         
         <button className={styles.fixedRetakeButton} onClick={restartTest}>
@@ -1576,6 +2349,10 @@ export default function NotionAgentTest() {
                 <div className={styles.loading}>Loading leaderboard...</div>
               ) : (
                 <>
+                  <MiniRoamingAgents 
+                    leaderboardData={leaderboardData} 
+                    totalResults={totalResults}
+                  />
                   <div className={styles.leaderboardList}>
                     {leaderboardData.map((entry, index) => {
                       const percentage = totalResults > 0 ? ((entry.count / totalResults) * 100).toFixed(1) : '0';

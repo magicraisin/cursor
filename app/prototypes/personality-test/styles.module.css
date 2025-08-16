@@ -1,14 +1,14 @@
 .container {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #F7F6F3;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
+  padding: 20px;
+  overflow-y: auto;
 }
 
 /* Landing Page Styles */
@@ -273,6 +273,33 @@
   background: #F8F8F7;
 }
 
+.imageAnswer.question10 {
+  background: #F8F8F7;
+}
+
+.imageAnswer.question10:hover {
+  background: #F8F8F7;
+}
+
+.imageAnswer.question10::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+}
+
+.imageAnswer.question10:hover::after {
+  background: rgba(0, 0, 0, 0);
+}
+
+.imageAnswer.question10.selected {
+  background: #F8F8F7;
+}
+
 .answerImage {
   width: 100%;
   height: 100%;
@@ -333,20 +360,24 @@
 /* Result Styles */
 .result {
   text-align: center;
-  max-width: 700px;
+  max-width: 600px;
   width: 100%;
   background: white;
   border-radius: 40px;
   box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1);
   padding: 16px 40px 28px 40px;
   position: relative;
+  z-index: 10;
 }
 
 .profileCard {
   /* This element will be captured in the image */
-  background: white;
-  padding: 16px 40px 28px 40px;
+  background: transparent;
+  padding: 0;
   border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .resultTitle {
@@ -393,6 +424,13 @@
   width: 140px;
   height: 140px;
   object-fit: contain;
+}
+
+.agentCardImage {
+  width: 100%;
+  height: auto;
+  border-radius: 40px;
+  display: block;
 }
 
 .agentName {
@@ -541,11 +579,11 @@
 }
 
 .saveButton {
-  background: #F7F6F3;
+  background: white;
   color: #4a4a4a;
-  border: none;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -556,7 +594,8 @@
 }
 
 .saveButton:hover {
-  background: #e8e7e4;
+  background: #f8f8f8;
+  border-color: #d0d0d0;
 }
 
 .saveMenu {
@@ -572,7 +611,7 @@
   transform: translateY(-10px);
   transition: all 0.2s ease;
   z-index: 1000;
-  min-width: 140px;
+  min-width: 180px;
   margin-top: 4px;
   padding: 2px 0;
 }
@@ -634,7 +673,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: transparent;
+  background: white;
   color: #666;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -650,15 +689,15 @@
 }
 
 .leaderboardButton:hover {
-  background: #f7f6f3;
-  border-color: #d3d3d0;
+  background: #f8f8f8;
+  border-color: #d0d0d0;
 }
 
 .fixedRetakeButton {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  background: transparent;
+  background: white;
   color: #666;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -674,8 +713,8 @@
 }
 
 .fixedRetakeButton:hover {
-  background: #f7f6f3;
-  border-color: #d3d3d0;
+  background: #f8f8f8;
+  border-color: #d0d0d0;
 }
 
 /* Modal Styles */
@@ -825,9 +864,8 @@
 @media (max-width: 768px) {
   .container {
     min-height: 100vh;
-    padding: 20px 10px;
-    align-items: flex-start;
-    padding-top: 40px;
+    padding: 10px;
+    align-items: center;
   }
   
   .testContent {
@@ -898,13 +936,16 @@
     margin: 0 10px;
     max-height: 90vh;
   }
+  
+  .miniRoamingContainer {
+    height: 140px;
+  }
 }
 
 @media (max-width: 480px) {
   .container {
-    padding: 16px 8px;
-    padding-top: 32px;
-    align-items: flex-start;
+    padding: 8px;
+    align-items: center;
   }
   
   .testContent,
@@ -938,4 +979,100 @@
     font-size: 13px;
     padding: 6px 0;
   }
+  
+  .miniRoamingContainer {
+    height: 120px;
+  }
 }
+
+/* Mini Roaming Agents Styles */
+.miniRoamingContainer {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: #F7F6F3;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  margin: 0 0 24px 0;
+  overflow: hidden;
+}
+
+.expandButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 20;
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expandButton:hover {
+  color: #666;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.miniRoamingAgent {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  z-index: 10;
+  padding: 0;
+  margin: 0;
+}
+
+.miniRoamingAgent img {
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+/* Background Roaming Agents Styles */
+.backgroundRoamingContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.backgroundRoamingAgent {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  opacity: 1;
+  pointer-events: none;
+  padding: 0;
+  margin: 0;
+}
+
+.backgroundRoamingAgent img {
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+
+
