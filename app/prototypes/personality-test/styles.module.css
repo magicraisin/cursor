@@ -800,8 +800,19 @@
 
 .leaderboardItem {
   background: transparent;
+  border: 1px solid transparent;
   border-radius: 8px;
-  padding: 16px 0;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.leaderboardItem:hover {
+  background: #f8f8f8;
+  border-color: #e0e0e0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .rankInfo {
@@ -1074,5 +1085,102 @@
   height: 100%;
 }
 
+/* Agent Detail Navigation Styles */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0 24px 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 24px;
+}
 
+.backButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.breadcrumbText {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.breadcrumbResults {
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.breadcrumbResults:hover {
+  color: #666;
+}
+
+.breadcrumbSeparator {
+  color: #ccc;
+  font-weight: 300;
+}
+
+.breadcrumbCurrent {
+  color: #2c2c2c;
+  font-weight: 600;
+}
+
+.agentDetailContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  min-height: 400px;
+}
+
+.agentDetailCard {
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.agentDetailCardImage {
+  width: 100%;
+  height: auto;
+  border-radius: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .breadcrumb {
+    padding: 12px 0 16px 0;
+    margin-bottom: 16px;
+  }
+  
+  .breadcrumbText {
+    font-size: 14px;
+  }
+  
+  .agentDetailContent {
+    padding: 16px 0;
+    min-height: 300px;
+  }
+  
+  .agentDetailCard {
+    max-width: 400px;
+  }
+}
 

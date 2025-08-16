@@ -1915,6 +1915,8 @@ export default function NotionAgentTest() {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [totalResults, setTotalResults] = useState(0);
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [leaderboardView, setLeaderboardView] = useState<'list' | 'detail'>('list');
 
   const profileCardRef = useRef<HTMLDivElement>(null);
 
@@ -2208,6 +2210,18 @@ export default function NotionAgentTest() {
 
   const closeLeaderboard = () => {
     setShowLeaderboard(false);
+    setLeaderboardView('list');
+    setSelectedAgent(null);
+  };
+
+  const openAgentDetail = (agentName: string) => {
+    setSelectedAgent(agentName);
+    setLeaderboardView('detail');
+  };
+
+  const backToLeaderboard = () => {
+    setLeaderboardView('list');
+    setSelectedAgent(null);
   };
 
   const progress = ((currentQuestion) / questions.length) * 100;
@@ -2362,6 +2376,31 @@ export default function NotionAgentTest() {
             <div className={styles.modalContent}>
               {isLoadingLeaderboard ? (
                 <div className={styles.loading}>Loading leaderboard...</div>
+              ) : leaderboardView === 'detail' && selectedAgent ? (
+                <>
+                  <div className={styles.breadcrumb}>
+                    <button className={styles.backButton} onClick={backToLeaderboard}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 12H5m7-7l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    <div className={styles.breadcrumbText}>
+                      <span className={styles.breadcrumbResults} onClick={backToLeaderboard}>Results</span>
+                      <span className={styles.breadcrumbSeparator}>/</span>
+                      <span className={styles.breadcrumbCurrent}>{selectedAgent}</span>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.agentDetailContent}>
+                    <div className={styles.agentDetailCard}>
+                      <img 
+                        src={getAgentCardImage(selectedAgent)} 
+                        alt={`${selectedAgent} Agent Card`}
+                        className={styles.agentDetailCardImage}
+                      />
+                    </div>
+                  </div>
+                </>
               ) : (
                 <>
                   <MiniRoamingAgents 
@@ -2372,7 +2411,7 @@ export default function NotionAgentTest() {
                     {leaderboardData.map((entry, index) => {
                       const percentage = totalResults > 0 ? ((entry.count / totalResults) * 100).toFixed(1) : '0';
                       return (
-                        <div key={entry.agent} className={styles.leaderboardItem}>
+                        <div key={entry.agent} className={styles.leaderboardItem} onClick={() => openAgentDetail(entry.agent)}>
                           <div className={styles.rankInfo}>
                             <img 
                               src={getAgentImage(entry.agent)} 
