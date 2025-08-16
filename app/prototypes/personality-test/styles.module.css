@@ -1099,7 +1099,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 24px 0 0;
+  padding: 24px 24px 0 24px;
   margin-bottom: 24px;
 }
 
@@ -1107,7 +1107,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: 24px;
 }
 
 .backButton {
