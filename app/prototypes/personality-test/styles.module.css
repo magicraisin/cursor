@@ -1107,7 +1107,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: 8px;
+  margin-left: -12px;
 }
 
 .backButton {
@@ -1196,6 +1196,7 @@
   .breadcrumb {
     padding: 12px 0 16px 0;
     margin-bottom: 16px;
+    margin-left: -12px;
   }
   
   .breadcrumbText {
