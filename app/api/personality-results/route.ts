@@ -10,7 +10,7 @@ interface PersonalityResult {
 
 const KV_KEY = 'personality-results';
 
-// Read existing results from KV
+// Read existing results from KV storage
 async function readResults(): Promise<PersonalityResult[]> {
   try {
     console.log('Reading results from KV...');
