@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { kv } from '@vercel/kv';
 
 interface PersonalityResult {
   ip: string;
@@ -9,44 +8,29 @@ interface PersonalityResult {
   timestamp: number;
 }
 
-const dataFilePath = path.join(process.cwd(), 'data', 'personality-results.json');
+const KV_KEY = 'personality-results';
 
-// Ensure data directory exists
-function ensureDataDirectory() {
-  const dataDir = path.dirname(dataFilePath);
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-}
-
-// Read existing results
-function readResults(): PersonalityResult[] {
-  ensureDataDirectory();
-  if (!fs.existsSync(dataFilePath)) {
-    return [];
-  }
+// Read existing results from KV
+async function readResults(): Promise<PersonalityResult[]> {
   try {
-    const data = fs.readFileSync(dataFilePath, 'utf8');
-    return JSON.parse(data);
-  } catch {
+    console.log('Reading results from KV...');
+    const data = await kv.get<PersonalityResult[]>(KV_KEY);
+    console.log('KV read result:', data ? `${data.length} entries` : 'null/empty');
+    return data || [];
+  } catch (error) {
+    console.error('ERROR reading from KV:', error);
     return [];
   }
 }
 
-// Write results
-function writeResults(results: PersonalityResult[]) {
+// Write results to KV
+async function writeResults(results: PersonalityResult[]) {
   try {
     console.log('writeResults called with:', results.length, 'entries');
-    console.log('Data file path:', dataFilePath);
+    console.log('Writing to KV key:', KV_KEY);
     
-    ensureDataDirectory();
-    console.log('Data directory ensured');
-    
-    const jsonString = JSON.stringify(results, null, 2);
-    console.log('JSON string created, length:', jsonString.length);
-    
-    fs.writeFileSync(dataFilePath, jsonString);
-    console.log('File write completed successfully');
+    await kv.set(KV_KEY, results);
+    console.log('KV write completed successfully');
   } catch (error) {
     console.error('ERROR in writeResults:', error);
     throw error;
@@ -96,7 +80,7 @@ export async function POST(request: NextRequest) {
     console.log('POST Debug:', { agent, sequence, ip });
     
     console.log('Attempting to read existing results...');
-    const results = readResults();
+    const results = await readResults();
     console.log('Existing results:', results.length, 'entries');
     console.log('Current results data:', results);
     
@@ -125,8 +109,8 @@ export async function POST(request: NextRequest) {
     results.push(newResult);
     console.log('Results array after push:', results);
     
-    console.log('Attempting to write results to file...');
-    writeResults(results);
+    console.log('Attempting to write results to KV...');
+    await writeResults(results);
     console.log('Write completed successfully');
     
     console.log('New result saved:', newResult);
@@ -153,7 +137,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const results = readResults();
+    const results = await readResults();
     console.log('GET Debug - Total results:', results.length);
     console.log('All IPs:', results.map(r => ({ ip: r.ip, agent: r.agent })));
     
