@@ -1936,6 +1936,28 @@ export default function NotionAgentTest() {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
     addDebugLog(`🌐 Browser: ${isMobile ? 'Mobile' : 'Desktop'}`);
     addDebugLog(`📱 User Agent: ${userAgent.substring(0, 50)}...`);
+    
+    // Debug console for finding the button
+    console.log('🐛 DEBUG BUTTON SHOULD BE VISIBLE IN BOTTOM-RIGHT CORNER');
+    console.log('Debug panel state:', { showDebug, debugLogs: debugLogs.length });
+    console.log('💡 TIP: Press "D" key to toggle debug panel if button is not visible');
+    
+    // Add keyboard shortcut to toggle debug (press 'd' key)
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'd' || e.key === 'D') {
+        setShowDebug(prev => {
+          console.log('🐛 Debug toggled via keyboard:', !prev);
+          return !prev;
+        });
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyPress);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
   }, []);
 
   // Preload images for the next question
@@ -2079,7 +2101,9 @@ export default function NotionAgentTest() {
       const data = await response.json();
       addDebugLog(`Save response: ${JSON.stringify(data)}`);
       
-      if (data.isNewResult === false) {
+      if (!data.success) {
+        addDebugLog(`❌ API Error: ${data.error || 'Unknown error'}`);
+      } else if (data.isNewResult === false) {
         addDebugLog(`❌ Duplicate IP! Existing: ${data.existingAgent}`);
       } else {
         addDebugLog(`✅ New result saved successfully!`);
@@ -2524,16 +2548,18 @@ export default function NotionAgentTest() {
         <button
           onClick={() => setShowDebug(!showDebug)}
           style={{
-            background: '#333',
+            background: '#ff4444',
             color: 'white',
-            border: 'none',
+            border: '2px solid white',
             borderRadius: '50px',
-            width: '60px',
-            height: '60px',
+            width: '80px',
+            height: '80px',
             cursor: 'pointer',
-            fontSize: '24px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+            fontSize: '32px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+            animation: 'none'
           }}
+          title="Debug Console"
         >
           🐛
         </button>

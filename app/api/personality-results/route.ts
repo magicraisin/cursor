@@ -35,8 +35,22 @@ function readResults(): PersonalityResult[] {
 
 // Write results
 function writeResults(results: PersonalityResult[]) {
-  ensureDataDirectory();
-  fs.writeFileSync(dataFilePath, JSON.stringify(results, null, 2));
+  try {
+    console.log('writeResults called with:', results.length, 'entries');
+    console.log('Data file path:', dataFilePath);
+    
+    ensureDataDirectory();
+    console.log('Data directory ensured');
+    
+    const jsonString = JSON.stringify(results, null, 2);
+    console.log('JSON string created, length:', jsonString.length);
+    
+    fs.writeFileSync(dataFilePath, jsonString);
+    console.log('File write completed successfully');
+  } catch (error) {
+    console.error('ERROR in writeResults:', error);
+    throw error;
+  }
 }
 
 // Get client IP
@@ -72,13 +86,19 @@ function getClientIP(request: NextRequest): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const { agent, sequence } = await request.json();
+    console.log('=== POST REQUEST START ===');
+    const requestBody = await request.json();
+    console.log('Request body:', requestBody);
+    
+    const { agent, sequence } = requestBody;
     const ip = getClientIP(request);
     
     console.log('POST Debug:', { agent, sequence, ip });
     
+    console.log('Attempting to read existing results...');
     const results = readResults();
     console.log('Existing results:', results.length, 'entries');
+    console.log('Current results data:', results);
     
     // Check if this IP has already submitted a result
     const existingResult = results.find(result => result.ip === ip);
@@ -101,8 +121,13 @@ export async function POST(request: NextRequest) {
       timestamp: Date.now()
     };
     
+    console.log('Adding new result to array...');
     results.push(newResult);
+    console.log('Results array after push:', results);
+    
+    console.log('Attempting to write results to file...');
     writeResults(results);
+    console.log('Write completed successfully');
     
     console.log('New result saved:', newResult);
     console.log('Total results now:', results.length);
@@ -113,8 +138,16 @@ export async function POST(request: NextRequest) {
       isNewResult: true 
     });
   } catch (error) {
-    console.error('Error saving personality result:', error);
-    return NextResponse.json({ success: false, error: 'Failed to save result' }, { status: 500 });
+    console.error('=== ERROR SAVING PERSONALITY RESULT ===');
+    console.error('Error details:', error);
+    console.error('Error type:', typeof error);
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    
+    return NextResponse.json({ 
+      success: false, 
+      error: `Failed to save result: ${error instanceof Error ? error.message : 'Unknown error'}` 
+    }, { status: 500 });
   }
 }
 
