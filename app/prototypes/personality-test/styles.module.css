@@ -990,7 +990,37 @@
   .resultsContainer {
     background: white !important;
     align-items: flex-start;
-    padding: 24px !important; /* 24px padding as requested */
+    padding: 16px 24px 24px 24px !important; /* 16px top padding, 24px others */
+    height: 100vh !important; /* Fixed height to prevent scrolling */
+    max-height: 100vh !important; /* Ensure no overflow */
+    overflow: hidden !important; /* Prevent scrolling */
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  /* Mobile results card - remove border/shadow and adjust spacing */
+  .result {
+    background: white !important;
+    border-radius: 0 !important; /* Remove border radius */
+    box-shadow: none !important; /* Remove shadow/border */
+    padding: 0 !important; /* Remove padding to maximize image space */
+    margin: 0 !important;
+    width: 100% !important; /* Full width available */
+    height: auto !important; /* Auto height to fit content */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+
+  /* Mobile results image - larger size (10% increase) */
+  .result .agentCardImage {
+    width: 550px !important; /* 10% larger than 500px */
+    height: 660px !important; /* 10% larger than 600px */
+    margin-top: 0 !important; /* Remove top margin for mobile */
+    object-fit: contain !important;
+    max-width: calc(100vw - 48px) !important; /* Ensure it fits in viewport with padding */
+    max-height: calc(100vh - 100px) !important; /* Ensure it fits in viewport */
   }
   
   /* Mobile test screen - full viewport without scroll - moved to earlier position */
@@ -1092,6 +1122,8 @@
     max-width: none !important; /* Remove width constraints */
     text-align: left !important; /* Left-align question text on mobile */
     box-sizing: border-box !important; /* Ensure proper width calculation */
+    word-wrap: break-word !important; /* Allow text to wrap properly */
+    overflow-wrap: break-word !important; /* Modern property for text wrapping */
   }
 
   /* Answers section - flexible height with space for fixed bottom buttons */
@@ -1121,14 +1153,14 @@
     width: 100% !important;
     aspect-ratio: 1 / 1.07 !important; /* Target 1:1.07 ratio */
     height: auto !important;
-    max-height: calc(100vh - 280px) !important; /* Constrain height to prevent cut-off by buttons */
+    max-height: calc(100vh - 296px) !important; /* Reduced by 16px (was 280px, now 296px) to prevent cut-off */
   }
 
   /* Fallback for browsers without aspect-ratio support */
   @supports not (aspect-ratio: 1 / 1.07) {
     .imageAnswer {
-      height: calc(min(100vw * 1.07 - 48px, 100vh - 280px)) !important; /* Full width minus padding, but constrained by viewport */
-      max-height: calc(100vh - 280px) !important; /* Prevent cut-off by buttons */
+      height: calc(min(100vw * 1.07 - 48px, 100vh - 296px)) !important; /* Reduced by 16px (was 280px, now 296px) */
+      max-height: calc(100vh - 296px) !important; /* Reduced by 16px to prevent cut-off by buttons */
     }
   }
 
