@@ -830,7 +830,7 @@
 }
 
 .modalContent {
-  padding: 24px;
+  padding: 0 24px 24px 24px; /* Remove top padding to eliminate space above miniRoamingContainer */
   overflow-y: auto;
   height: calc(652px - 80px); /* Fixed height minus header space */
   flex: 1; /* Take remaining space */
