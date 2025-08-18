@@ -2664,7 +2664,7 @@ export default function NotionAgentTest() {
           
           <h2 className={styles.question}>{question.text}</h2>
           
-          <div className={`${styles.answers} ${question.answers.some(answer => answer.image) ? styles.imageAnswers : ''}`}>
+                          <div className={`${styles.answers} ${question.answers.some(answer => answer.image) ? styles.imageAnswers : ''} ${currentQuestion === 2 ? styles.question3 : ''}`}>
             {question.answers.map((answer, index) => (
               <button
                 key={index}

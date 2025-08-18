@@ -200,6 +200,11 @@
   margin-top: 24px; /* Additional 24px space between question and first text answer */
 }
 
+/* Reduced spacing for question 3 specifically */
+.answers.question3:not(.imageAnswers) {
+  margin-top: 8px; /* Reduced by 16px from 24px to 8px for question 3 */
+}
+
 .answers.imageAnswers {
   flex-direction: row;
   gap: 24px;
