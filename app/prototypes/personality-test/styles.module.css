@@ -662,19 +662,13 @@
   visibility: hidden;
   transform: translateY(-10px);
   /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
-  z-index: 10000; /* Increased from 1000 to ensure it appears above everything */
+  z-index: 1000;
   min-width: 180px;
   margin-top: 4px;
   padding: 2px 0;
 }
 
 .saveDropdown:hover .saveMenu {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.saveMenu:hover {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -836,7 +830,7 @@
 }
 
 .modalContent {
-  padding: 0 24px 24px 24px; /* Remove top padding to eliminate space above miniRoamingContainer */
+  padding: 24px;
   overflow-y: auto;
   height: calc(652px - 80px); /* Fixed height minus header space */
   flex: 1; /* Take remaining space */
@@ -1001,7 +995,7 @@
     padding: 16px 24px 24px 24px !important; /* 16px top padding, 24px others */
     height: 100vh !important; /* Fixed height to prevent scrolling */
     max-height: 100vh !important; /* Ensure no overflow */
-    overflow: visible !important; /* Allow dropdown to be visible outside container */
+    overflow: hidden !important; /* Prevent scrolling */
     display: flex !important;
     justify-content: center !important;
   }
@@ -1392,7 +1386,7 @@
     margin: 0 auto !important; /* Center the card */
     display: flex !important;
     flex-direction: column !important;
-    overflow: hidden !important; /* Prevent content overflow */
+    overflow: visible !important; /* Allow save dropdown to overflow container */
     flex-shrink: 0 !important; /* Prevent container from shrinking */
   }
 
@@ -1582,6 +1576,7 @@
     width: auto !important;
     display: inline-block !important;
     order: 0 !important;
+    z-index: 50 !important; /* Ensure save dropdown appears above other elements */
   }
   
   .saveButton {

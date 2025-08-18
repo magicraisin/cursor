@@ -222,24 +222,7 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
   
   const handleExpandFullScreen = () => {
     // Generate complete leaderboard including 0-count agents
-    // Convert AGENT_IMAGES filenames to agent names
-    const getAgentNameFromImage = (imageName: string): string => {
-      const name = imageName.replace('.png', '').replace(/-/g, ' ');
-      // Handle special cases
-      if (name === 'book wiki') return 'Book Wiki';
-      if (name === 'cloud flower') return 'Cloud Flower';
-      if (name === 'double copy') return 'Double Copy';
-      if (name === 'greek god') return 'Greek God';
-      if (name === 'infinity glasses') return 'Infinity Glasses';
-      if (name === 'repeat cycle') return 'Repetition';
-      if (name === 'single arrow') return 'Whoosh Arrow';
-      if (name === 'single loop') return 'Swish';
-      if (name === 'time schedule') return 'Clock';
-      // Capitalize first letter of each word
-      return name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    };
-    
-    const allAgentNames = AGENT_IMAGES.map(imageName => getAgentNameFromImage(imageName));
+    const allAgentNames = Object.values(agents).map(agent => agent.name);
     const apiDataMap = new Map(leaderboardData.map(entry => [entry.agent, entry.count]));
     const completeLeaderboard = allAgentNames.map(agentName => ({
       agent: agentName,
@@ -406,7 +389,6 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               display: flex;
               align-items: center;
               justify-content: center;
-              padding: 16px;
             }
             
             .agentModalOverlay {
@@ -424,61 +406,19 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               background: white;
               border-radius: 12px;
               box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-              width: 576px;
-              height: 652px;
+              max-width: 90vw;
+              max-height: 90vh;
               overflow: hidden;
               z-index: 1001;
-              flex-shrink: 0;
-              display: flex;
-              flex-direction: column;
             }
             
-            .agentModalBody {
-              padding: 20px;
+            .agentModalHeader {
               display: flex;
-              justify-content: center;
               align-items: center;
-              flex: 1;
-            }
-            
-            .agentModalBody img {
-              max-width: 100%;
-              max-height: 100%;
-              object-fit: contain;
-              border-radius: 8px;
-            }
-
-            /* Responsive behavior for short viewports - same logic as leaderboard modal */
-            @media (max-height: 700px) {
-              .agentModal {
-                align-items: flex-start !important;
-                justify-content: center !important;
-                padding-top: 24px !important;
-                padding-bottom: 24px !important;
-                min-height: 100vh !important;
-                max-height: 100vh !important;
-                overflow-y: auto !important;
-              }
-              
-              .agentModalContent {
-                width: 576px !important;
-                height: 652px !important;
-                max-height: none !important;
-                flex-shrink: 0 !important;
-                margin: 0 !important;
-              }
-            }
-
-            /* Mobile adjustments */
-            @media (max-width: 768px) {
-              .agentModalContent {
-                width: calc(100vw - 32px) !important;
-                max-width: 576px !important;
-                height: 652px !important;
-                max-height: none !important;
-                flex-shrink: 0 !important;
-                margin: 0 !important;
-              }
+              justify-content: space-between;
+              padding: 16px 20px;
+              border-bottom: 1px solid #e5e7eb;
+              background: #f9fafb;
             }
             
             .agentModalClose {
@@ -497,6 +437,20 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
             
             .agentModalClose:hover {
               background: #e5e7eb;
+            }
+            
+            .agentModalBody {
+              padding: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            
+            .agentModalBody img {
+              max-width: 100%;
+              max-height: 60vh;
+              object-fit: contain;
+              border-radius: 8px;
             }
             
             .leaderboardChevron {
@@ -563,14 +517,6 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               if (agentName === 'Clock') return 'time-schedule.png';
               if (agentName === 'Swish') return 'single-loop.png';
               return agentName.toLowerCase().replace(/\\s+/g, '-').replace('/', '-') + '.png';
-            };
-            
-            // Helper function to get display name for agents in leaderboard
-            const getAgentDisplayName = (agentName) => {
-              if (agentName === 'Book Wiki') {
-                return 'Wiki';
-              }
-              return agentName;
             };
             
             // Agent card image mapping for modal
@@ -648,7 +594,6 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
                 agents.push({
                   id: 'full-' + agentId++,
                   image: getAgentImageFilename(entry.agent),
-                  agentName: entry.agent, // Store the agent name for modal functionality
                   x,
                   y,
                   vx: (Math.random() - 0.5) * SPEED * 2,
@@ -668,10 +613,6 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               agentEl.className = 'fullScreenAgent';
               agentEl.style.width = agentSize + 'px';
               agentEl.style.height = agentSize + 'px';
-              agentEl.style.cursor = 'pointer';
-              
-              // Add click handler to open agent modal
-              agentEl.onclick = () => openAgentModal(agent.agentName);
               
               const img = document.createElement('img');
               img.src = '/images/agents/' + agent.image;
@@ -733,7 +674,7 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
                 
                 const agentImg = document.createElement('img');
                 agentImg.src = '/images/agents/' + getAgentImageFilename(entry.agent);
-                agentImg.alt = getAgentDisplayName(entry.agent);
+                agentImg.alt = entry.agent;
                 agentDiv.appendChild(agentImg);
                 
                 const info = document.createElement('div');
@@ -749,7 +690,7 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
                 
                 const name = document.createElement('div');
                 name.className = 'leaderboardName';
-                name.textContent = getAgentDisplayName(entry.agent);
+                name.textContent = entry.agent;
                 
                 const chevron = document.createElement('svg');
                 chevron.setAttribute('width', '16');
@@ -1635,7 +1576,7 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
       return 1.1 + ((progress - 0.5) * 2) * (-0.1);
     }
   };
-  
+
   return (
     <div className={styles.roamingContainer} ref={canvasRef}>
       {/* Roaming agents */}
@@ -1660,8 +1601,8 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
           <img
             src={`/images/agents/${agent.image}`}
             alt={agent.image}
-                />
-              </div>
+          />
+        </div>
       ))}
 
       {/* Overlay content */}
@@ -1677,198 +1618,1108 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
           </p>
           <button className={styles.getStartedButton} onClick={onStartTest}>
             Get Started →
-        </button>
+          </button>
+        </div>
       </div>
-            </div>
     </div>
   );
 }
 
-// Sample questions for the personality test
-const SAMPLE_QUESTIONS: Question[] = [
+const questions: Question[] = [
   {
     text: "What does your inbox look like?",
     answers: [
-      { image: "/images/agents/apple.png", value: "A" },
-      { image: "/images/agents/banana.png", value: "B" },
-      { image: "/images/agents/coffee.png", value: "C" },
-      { image: "/images/agents/heart.png", value: "D" }
+      { image: "/images/agents/3A.png", value: "S" },
+      { image: "/images/agents/3B.png", value: "U" }
     ]
   },
   {
-    text: "How do you prefer to work?",
+    text: "If someone shows you a painting, are you more likely to comment on",
     answers: [
-      { text: "Solo focus time", value: "A" },
-      { text: "Collaborative brainstorming", value: "B" },
-      { text: "Structured planning", value: "C" },
-      { text: "Creative exploration", value: "D" }
+      { text: "The emotions or ideas it appears to convey", value: "A" },
+      { text: "The objects, colors, and techniques that you notice", value: "C" }
     ]
   },
   {
-    text: "When facing a complex problem, you:",
+    text: "It's 8pm on a Sunday. You're home in your comfy clothes. Your very good friend reaches out and asks to hang out.",
     answers: [
-      { text: "Break it down systematically", value: "A" },
-      { text: "Brainstorm creative solutions", value: "B" },
-      { text: "Research best practices", value: "C" },
-      { text: "Dive in and learn by doing", value: "D" }
+      { text: "Nah, it's time for bed soon.", value: "I" },
+      { text: "Yes, of course! Where are we meeting?", value: "T" }
     ]
   },
   {
-    text: "Your ideal workspace is:",
+    text: "Do you work to live or live to work?",
     answers: [
-      { image: "/images/agents/book.png", value: "A" },
-      { image: "/images/agents/music.png", value: "B" },
-      { image: "/images/agents/gear.png", value: "C" },
-      { image: "/images/agents/lightbulb.png", value: "D" }
+      { text: "Work to live", value: "L" },
+      { text: "Live to work", value: "W" }
     ]
   },
   {
-    text: "When learning something new, you prefer to:",
+    text: "You're going on a vacation with your friends. Which better matches your travel philosophy?",
     answers: [
-      { text: "Read comprehensive guides", value: "A" },
-      { text: "Watch video tutorials", value: "B" },
-      { text: "Practice hands-on exercises", value: "C" },
-      { text: "Discuss with experts", value: "D" }
+      { text: "Reservations are in and I've made a Notion itinerary", value: "S" },
+      { text: "Let's not plan too much and take it one day at a time", value: "U" }
     ]
   },
   {
-    text: "Your communication style is:",
+    text: "Given a choice would you rather",
     answers: [
-      { text: "Clear and direct", value: "A" },
-      { text: "Warm and encouraging", value: "B" },
-      { text: "Detailed and thorough", value: "C" },
-      { text: "Creative and inspiring", value: "D" }
+      { text: "Work alone and own a project end-to-end", value: "I" },
+      { text: "Work with a close-knit team and collaborate throughout", value: "T" }
     ]
   },
   {
-    text: "When making decisions, you rely most on:",
+    text: "My ideal day:",
     answers: [
-      { image: "/images/agents/math.png", value: "A" },
-      { image: "/images/agents/heart.png", value: "B" },
-      { image: "/images/agents/research.png", value: "C" },
-      { image: "/images/agents/lightbulb.png", value: "D" }
+      { image: "/images/agents/2A.png", value: "I" },
+      { image: "/images/agents/2B.png", value: "T" }
     ]
   },
   {
-    text: "Your approach to deadlines is:",
+    text: "If someone asks what success means to you, do you answer in terms of:",
     answers: [
-      { text: "Plan and finish early", value: "A" },
-      { text: "Work steadily toward the goal", value: "B" },
-      { text: "Research thoroughly first", value: "C" },
-      { text: "Burst of creativity at the end", value: "D" }
+      { text: "Core values and life direction", value: "A" },
+      { text: "Measurable outcomes and concrete achievements", value: "C" }
     ]
   },
   {
-    text: "When helping others, you tend to:",
+    text: "When starting a new project, which do you prefer?",
     answers: [
-      { text: "Provide step-by-step instructions", value: "A" },
-      { text: "Offer emotional support", value: "B" },
-      { text: "Share relevant resources", value: "C" },
-      { text: "Inspire them to find their own way", value: "D" }
+      { text: "Make a detailed plan with clear goals before starting", value: "S" },
+      { text: "Dive in and figure things out as you go", value: "U" }
     ]
   },
   {
-    text: "Your ideal notification style is:",
+    text: "Which templates do you prefer?",
     answers: [
-      { image: "/images/agents/bell.png", value: "A" },
-      { image: "/images/agents/coffee.png", value: "B" },
-      { image: "/images/agents/gear.png", value: "C" },
-      { image: "/images/agents/single-eye.png", value: "D" }
+      { image: "/images/agents/4A.png", value: "A" },
+      { image: "/images/agents/4B.png", value: "C" }
     ]
   },
   {
-    text: "When organizing information, you prefer:",
+    text: "Do you prefer to take the lead and prioritize outcomes or cooperate and maintain harmony?",
     answers: [
-      { text: "Structured categories and tags", value: "A" },
-      { text: "Visual boards and layouts", value: "B" },
-      { text: "Detailed databases and lists", value: "C" },
-      { text: "Flexible notes and ideas", value: "D" }
+      { text: "Prioritize outcomes", value: "D" },
+      { text: "Prioritize harmony", value: "Y" }
     ]
   }
 ];
 
-// Main personality test component
-export default function PersonalityTestPage() {
-  const [currentStep, setCurrentStep] = useState<'home' | 'test' | 'results'>('home');
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [result, setResult] = useState<string | null>(null);
+// Question dimension mapping
+const questionDimensions: { [key: number]: string } = {
+  0: 'SU',  // Question 1: Inbox organization
+  1: 'AC',  // Question 2: Painting comment
+  2: 'TI',  // Question 3: Sunday evening plans
+  3: 'WL',  // Question 4: Work to live vs Live to work
+  4: 'SU',  // Question 5: Vacation planning
+  5: 'TI',  // Question 6: Work style preference
+  6: 'TI',  // Question 7: My ideal day
+  7: 'AC',  // Question 8: Success definition
+  8: 'SU',  // Question 9: Project planning
+  9: 'AC',  // Question 10: Templates
+  10: 'YD'  // Question 11: Lead vs Harmony
+};
 
-  const handleStartTest = () => {
-    setCurrentStep('test');
-    setCurrentQuestion(0);
-    setAnswers([]);
+// Calculate final personality type using majority vote for multi-question dimensions
+const calculatePersonalityType = (answers: { [key: number]: string }): string => {
+  const dimensionVotes: { [key: string]: { [key: string]: number } } = {
+    WL: {},
+    TI: {},
+    SU: {},
+    AC: {},
+    YD: {}
   };
 
-  const handleAnswer = (value: string) => {
-    const newAnswers = [...answers, value];
+  // Count votes for each dimension
+  Object.entries(answers).forEach(([questionIndex, answer]) => {
+    const dimension = questionDimensions[parseInt(questionIndex)];
+    if (dimension && dimensionVotes[dimension]) {
+      dimensionVotes[dimension][answer] = (dimensionVotes[dimension][answer] || 0) + 1;
+    }
+  });
+
+  // Determine final letter for each dimension
+  const finalLetters: { [key: string]: string } = {};
+  
+  Object.entries(dimensionVotes).forEach(([dimension, votes]) => {
+    // Find the letter with the most votes
+    let maxVotes = 0;
+    let winningLetter = '';
+    
+    Object.entries(votes).forEach(([letter, count]) => {
+      if (count > maxVotes) {
+        maxVotes = count;
+        winningLetter = letter;
+      }
+    });
+    
+    finalLetters[dimension] = winningLetter;
+  });
+
+  // Build the final personality sequence: WTSAY order
+  return finalLetters['WL'] + finalLetters['TI'] + finalLetters['SU'] + finalLetters['AC'] + finalLetters['YD'];
+};
+
+const agents: { [key: string]: AgentProfile } = {
+  "WTUAD": {
+    name: "Lightbulb",
+    image: "lightbulb.png",
+    strengths: [
+      "The ultimate idea generator - innovation is their middle name",
+      "Thrives in chaotic, unstructured environments where others get lost",
+      "Can see the big picture and connect abstract concepts like magic"
+    ],
+    weaknesses: [
+      "Hundreds of tabs open and proud of it",
+      "Has strong opinions about everything but forgets what they argued yesterday",
+      "Can't resist adding 'just one more feature' that completely changes everything"
+    ]
+  },
+  "WTUAY": {
+    name: "Scribble",
+    image: "scribble.png",
+    strengths: [
+      "Creative chaos master - turns messy brainstorms into breakthrough ideas",
+      "Thrives in unstructured environments where others get lost",
+      "Amazing at building team consensus around innovative concepts"
+    ],
+    weaknesses: [
+      "Starts more projects than humanly possible to finish",
+      "Gets excited about every new idea and forgets the old ones",
+      "Avoids making tough decisions that might hurt feelings"
+    ]
+  },
+  "WTUCD": {
+    name: "Bell",
+    strengths: [
+      "Always knows what's trending before it's cool",
+      "Excellent at reading the room and adapting to team dynamics",
+      "Can take abstract ideas and make them practical"
+    ],
+    weaknesses: [
+      "Gets distracted by shiny new things",
+      "Sometimes sacrifices depth for breadth", 
+      "FOMO is their middle name"
+    ]
+  },
+  "WTUCY": {
+    name: "Clippy",
+    strengths: [
+      "Always ready to help, even when you don't ask",
+      "Great at taking messy situations and finding practical solutions",
+      "Builds harmony while still getting concrete results"
+    ],
+    weaknesses: [
+      "Can be a little too helpful sometimes",
+      "Sometimes avoids taking charge when leadership is needed",
+      "Has strong opinions about font choices"
+    ]
+  },
+  "WTSAD": {
+    name: "Whoosh Arrow",
+    strengths: [
+      "Finishes three things while others are still arguing about what to have for lunch",
+      "Can spot the actual problem in a room full of people discussing symptoms",
+      "Turns your random 3 AM idea into reality before your morning coffee gets cold"
+    ],
+    weaknesses: [
+      "Gets a visible eye twitch when plans change or meetings run over",
+      "Has an allergic reaction to team bonding activities and trust falls",
+      "Will accidentally bulldoze through feelings like they're made of tissue paper"
+    ]
+  },
+  "WTSAY": {
+    name: "Repetition",
+    strengths: [
+      "Masters of creating efficient, repeatable processes",
+      "Great at building team alignment around structured approaches",
+      "Excellent at balancing big-picture thinking with practical execution"
+    ],
+    weaknesses: [
+      "Gets stressed when plans change or structure breaks down",
+      "Can be overly cautious about taking decisive action",
+      "Sometimes gets stuck perfecting the process instead of shipping"
+    ]
+  },
+  "WTSCY": {
+    name: "Notetaker",
+    image: "notetaker.png",
+    strengths: [
+      "Never misses a detail - the human version of meeting minutes",
+      "Creates structured systems that help teams stay organized",
+      "Builds consensus by making sure everyone's voice is documented"
+    ],
+    weaknesses: [
+      "Takes notes on their note-taking process",
+      "Sometimes gets stuck documenting instead of doing",
+      "Avoids tough decisions that might disrupt team harmony"
+    ]
+  },
+  "WTSCD": {
+    name: "Gear",
+    strengths: [
+      "Incredible at building robust systems that actually work",
+      "Great at seeing both the abstract design and concrete implementation",
+      "Takes charge of complex projects and drives them to completion"
+    ],
+    weaknesses: [
+      "Gets frustrated when team doesn't follow established processes",
+      "Can be inflexible when 'good enough' would be better than perfect",
+      "Sometimes bulldozes through team input in favor of efficiency"
+    ]
+  },
+  "WISCD": {
+    name: "Clock",
+    strengths: [
+      "Always prepared, the type of person who packs snacks for a 20-minute drive",
+      "Can turn your wildest dreams into a perfectly color-coded spreadsheet",
+      "Has backup plans for their backup plans"
+    ],
+    weaknesses: [
+      "Panics when someone shows up 3 minutes late to a meeting",
+      "Gets lost in the details and misses that the building is on fire",
+      "Will create a 12-step plan for making a sandwich"
+    ]
+  },
+  "WISCY": {
+    name: "Book Wiki",
+    image: "book-wiki.png",
+    strengths: [
+      "Walking encyclopedia who somehow makes learning fun",
+      "Amazing at connecting random facts into breakthrough insights",
+      "Builds consensus by helping everyone understand the 'why'"
+    ],
+    weaknesses: [
+      "Falls down Wikipedia rabbit holes instead of making decisions",
+      "Can be indecisive when the team needs quick action",
+      "Gets overwhelmed when there's no clear research path"
+    ]
+  },
+  "WISAD": {
+    name: "Formula",
+    strengths: [
+      "Can solve anything with the right equation and enough coffee",
+      "Turns abstract chaos into step-by-step instructions",
+      "Gets stuff done while others are still arguing about the font"
+    ],
+    weaknesses: [
+      "Dies a little inside when people don't follow the clearly labeled steps",
+      "Has zero patience for 'but what if we tried this random thing instead?'",
+      "Sometimes forgets that humans aren't spreadsheet cells"
+    ]
+  },
+  "WISAY": {
+    name: "Root",
+    strengths: [
+      "Deep thinker who creates solid foundations for complex projects",
+      "Great at building structured approaches to abstract problems",
+      "Excellent at consensus-building around thoughtful solutions"
+    ],
+    weaknesses: [
+      "Can overthink decisions and delay action",
+      "Gets paralyzed when structure breaks down or plans change",
+      "Sometimes gets stuck in analysis mode instead of executing"
+    ]
+  },
+  "WIUAD": {
+    name: "Infinity Glasses",
+    strengths: [
+      "Thrives in chaotic environments where others get overwhelmed",
+      "Amazing at connecting abstract concepts across different domains",
+      "Natural leader who can rally people around big, ambitious visions"
+    ],
+    weaknesses: [
+      "Can get lost in theoretical possibilities without concrete action",
+      "Gets frustrated with detailed implementation and practical constraints",
+      "Sometimes bulldozes through team input when excited about an idea"
+    ]
+  },
+  "WIUAY": {
+    name: "Math",
+    strengths: [
+      "Can see the forest, the trees, and somehow also the squirrels",
+      "Can connect your childhood trauma to your Netflix algorithm",
+      "Can make anyone understand anything using the right analogy"
+    ],
+    weaknesses: [
+      "Falls into rabbit holes and emerges three hours later having learned about medieval farming",
+      "Would rather debate the theory than actually pick something and go with it",
+      "Would rather build the perfect system than use the imperfect one that exists"
+    ]
+  },
+  "WIUCD": {
+    name: "Research",
+    strengths: [
+      "Knows the answer to everything... eventually",
+      "Can find connections between the most random topics",
+      "Makes order out of chaos when everyone else is lost"
+    ],
+    weaknesses: [
+      "Goes down rabbit holes and forgets what the original question was",
+      "Gets cranky when people want answers faster than Google can provide them",
+      "Has 47 browser tabs open and somehow that's 'organized'"
+    ]
+  },
+  "WIUCY": {
+    name: "Brackets",
+    strengths: [
+      "The human equivalent of a Swiss Army knife - has a tool for everything",
+      "Can get everyone on the same page even when they're reading different books",
+      "Makes boring processes actually fun somehow"
+    ],
+    weaknesses: [
+      "Breaks down when there's no instruction manual",
+      "Gets the group chat anxiety when people start arguing",
+      "Would rather eat pineapple pizza than make someone upset"
+    ]
+  },
+  "LIUAD": {
+    name: "Spiky",
+    strengths: [
+      "Brings fresh energy to stale projects and processes",
+      "Amazing at working independently in chaotic, unstructured environments",
+      "Great at taking big abstract visions and running with them"
+    ],
+    weaknesses: [
+      "Can be impatient with team coordination and consensus-building",
+      "Sometimes bulldozes through without considering practical constraints",
+      "Gets frustrated when forced into structured processes"
+    ]
+  },
+  "LIUAY": {
+    name: "Swish",
+    strengths: [
+      "Excellent at working independently while building team consensus",
+      "Great at finding creative solutions in ambiguous situations",
+      "Brings calm, thoughtful energy to chaotic projects"
+    ],
+    weaknesses: [
+      "Can get stuck in endless exploration and refinement cycles",
+      "Sometimes avoids making tough decisions that might upset people",
+      "Gets overwhelmed when forced into rigid timelines or processes"
+    ]
+  },
+  "LIUCD": {
+    name: "Cactus",
+    image: "cactus.png",
+    strengths: [
+      "Intimidating but secretly soft",
+      "Can make any group stop overthinking by asking 'but what are we actually going to do?'",
+      "Has mastered the art of being helpful without enabling helplessness"
+    ],
+    weaknesses: [
+      "Has a bad habit of laughing at the wrong moments",
+      "Will be a little too honest in your perf review",
+      "Has a habit of disappearing onto random side quests at the worst moments"
+    ]
+  },
+  "LIUCY": {
+    name: "Saucy",
+    image: "saucy.png",
+    strengths: [
+      "Adds flavor to boring projects and spices up team dynamics", 
+      "Great at finding creative solutions in messy situations",
+      "Perfect balance of independence and collaborative spirit"
+    ],
+    weaknesses: [
+      "Can be a little too spicy when projects get bland",
+      "Would rather wing it than follow a recipe, even when the recipe actually works",
+      "Gets frustrated when forced into rigid, tasteless processes"
+    ]
+  },
+  "LTUAD": {
+    name: "Heart",
+    strengths: [
+      "Shows up to your crisis with homemade soup and a vision board",
+      "Can rally people around a cause they just made up five minutes ago",
+      "Has mastered the art of meaningful eye contact without being creepy"
+    ],
+    weaknesses: [
+      "Cries easily",
+      "Treats every coincidence like it's a message meant specifically for them",
+      "Sometimes mistakes intensity for intimacy and scares people away"
+    ]
+  },
+  "LTUAY": {
+    name: "Cloud Flower",
+    strengths: [
+      "Can defuse any argument by asking if anyone wants herbal tea",
+      "Has perfected the art of saying 'that's interesting' in a way that makes people feel heard",
+      "Can make any harsh fluorescent lighting feel softer just by being there"
+    ],
+    weaknesses: [
+      "Won't be able to write down anything critical on your perf review. Except maybe \"Works too hard!!\"",
+      "Takes personal responsibility for every awkward pause in group conversations",
+      "Can't give directions without including emotional landmarks like 'turn left at where I had my first heartbreak'"
+    ]
+  },
+  "LTUCD": {
+    name: "Phone",
+    strengths: [
+      "Amazing at coordinating complex team projects with clear structure",
+      "Great at turning abstract visions into concrete, actionable plans",
+      "Excellent at driving results while maintaining team collaboration"
+    ],
+    weaknesses: [
+      "Can get overwhelmed when managing too many team communications",
+      "Sometimes bulldozes through individual concerns for team efficiency",
+      "Gets frustrated when projects become too abstract or open-ended"
+    ]
+  },
+  "LTUCY": {
+    name: "Banana",
+    strengths: [
+      "Can turn any struggle into quality comedic content and unhinged slack emojis",
+      "Always knows the perfect question to ask to get people talking",
+      "Can sense when someone needs a hug and somehow makes it not weird"
+    ],
+    weaknesses: [
+      "Sometimes takes a joke too far and overthinks it for weeks",
+      "Takes it as a personal failure when group chemistry just isn't working",
+      "Has never won an argument because they always see everyone's point"
+    ]
+  },
+  "LTSAD": {
+    name: "Book",
+    image: "book.png",
+    strengths: [
+      "Creates well-structured knowledge systems that teams actually use",
+      "Great at taking abstract concepts and organizing them into actionable plans",
+      "Natural leader who guides teams through complex information"
+    ],
+    weaknesses: [
+      "Can get frustrated when team doesn't follow their organized approach",
+      "Sometimes prioritizes getting it right over getting it done",
+      "Gets impatient when discussions become too theoretical"
+    ]
+  },
+  "LTSAY": {
+    name: "Music",
+    image: "music.png",
+    strengths: [
+      "Perfect at orchestrating team harmony around structured approaches",
+      "Great at finding the rhythm between big-picture vision and execution",
+      "Excellent at creating melodious collaboration between different personalities"
+    ],
+    weaknesses: [
+      "Can get stuck trying to make everyone sing in perfect harmony",
+      "Sometimes avoids discordant decisions that might upset the ensemble",
+      "Gets overwhelmed when the tempo changes or the score gets messy"
+    ]
+  },
+  "LTSCD": {
+    name: "Command",
+    strengths: [
+      "Excellent at taking charge of chaotic team situations",
+      "Great at turning abstract visions into concrete action plans",
+      "Can rally teams around practical solutions under pressure"
+    ],
+    weaknesses: [
+      "Can be impatient with team members who need more structure",
+      "Sometimes bulldozes through without considering all perspectives",
+      "Gets frustrated when projects become too abstract or theoretical"
+    ]
+  },
+  "LTSCY": {
+    name: "Double Copy",
+    strengths: [
+      "Perfect balance of structured planning and team collaboration",
+      "Great at creating backup plans and ensuring everyone's prepared",
+      "Excellent at building consensus around practical, concrete solutions"
+    ],
+    weaknesses: [
+      "Can get paralyzed trying to plan for every possible scenario",
+      "Sometimes avoids making decisions that might upset team harmony",
+      "Gets anxious when processes are unclear or timelines are ambiguous"
+    ]
+  },
+  "LISAD": {
+    name: "Greek God",
+    strengths: [
+      "Works best alone and somehow makes it look effortless",
+      "Can turn impossible dreams into actual to-do lists",
+      "Has main character energy and the skills to back it up"
+    ],
+    weaknesses: [
+      "Group projects make them break out in hives",
+      "Gets so caught up in the big picture they forget to eat lunch",
+      "Would rather do everything themselves than explain it twice"
+    ]
+  },
+  "LISAY": {
+    name: "Umbrella",
+    strengths: [
+      "Excellent at working independently while building team consensus",
+      "Great at creating structured approaches to abstract, complex problems",
+      "Perfect balance of thoughtful planning and collaborative execution"
+    ],
+    weaknesses: [
+      "Can get stuck in analysis mode when quick decisions are needed",
+      "Sometimes avoids taking strong positions to maintain harmony",
+      "Gets overwhelmed when structure breaks down or processes become unclear"
+    ]
+  },
+  "LISCD": {
+    name: "Coffee",
+    strengths: [
+      "Runs on pure energy and somehow makes 6 AM meetings bearable",
+      "Can power through any task with enough caffeine and determination",
+      "The human equivalent of a motivational poster, but actually useful"
+    ],
+    weaknesses: [
+      "Gets the jitters when too many people want to 'touch base'",
+      "Crashes hard after giving everyone else their daily dose of enthusiasm",
+      "Needs concrete goals or starts bouncing off the walls"
+    ]
+  },
+  "LISCY": {
+    name: "Apple",
+    strengths: [
+      "The one who always has a tide pen on them",
+      "The human equivalent of a really good multivitamin - quietly essential",
+      "Great at gentle parenting their friends through their bad life decisions"
+    ],
+    weaknesses: [
+      "Savior complex",
+      "Sometimes forgets that not everyone wants to optimize their life",
+      "Won't stop cleaning up other people's homes"
+    ]
+  }
+};
+
+interface LeaderboardEntry {
+  agent: string;
+  count: number;
+}
+
+export default function NotionAgentTest() {
+  const [currentStep, setCurrentStep] = useState<'landing' | 'test' | 'result'>('landing');
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [sequence, setSequence] = useState('');
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
+  const [totalResults, setTotalResults] = useState(0);
+  const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [leaderboardView, setLeaderboardView] = useState<'list' | 'detail'>('list');
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  const profileCardRef = useRef<HTMLDivElement>(null);
+
+  // Mobile detection effect
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+
+
+  // Preload images for the next question
+  useEffect(() => {
+    if (currentStep === 'test' && currentQuestion < questions.length - 1) {
+      const nextQuestion = questions[currentQuestion + 1];
+      if (nextQuestion.answers.some(answer => answer.image)) {
+        nextQuestion.answers.forEach(answer => {
+          if (answer.image) {
+            const img = new Image();
+            img.src = answer.image;
+          }
+        });
+      }
+    }
+  }, [currentQuestion, currentStep]);
+
+  const getAgentImage = (agentName: string) => {
+    // Handle special cases first
+    if (agentName === 'Greek God') {
+      return '/images/agents/greek-god.png';
+    }
+    
+    // Handle renamed agents that still use original filenames
+    if (agentName === 'Whoosh Arrow') {
+      return '/images/agents/single-arrow.png';
+    }
+    if (agentName === 'Repetition') {
+      return '/images/agents/repeat-cycle.png';
+    }
+    if (agentName === 'Clock') {
+      return '/images/agents/time-schedule.png';
+    }
+    if (agentName === 'Swish') {
+      return '/images/agents/single-loop.png';
+    }
+    
+    // Convert agent name to filename format
+    const filename = agentName.toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace('/', '-');
+    return `/images/agents/${filename}.png`;
+  };
+
+  const getAgentCardImage = (agentName: string): string => {
+    // Map agent names to the result card images in /images/agent-cards/
+    // These use the exact names from the "new agent cards" folder
+    const nameMapping: { [key: string]: string } = {
+      'Greek God': 'Greek god.png',
+      'Cloud Flower': 'Cloud flower.png',
+      'Double Copy': 'Double Copy.png',
+      'Infinity Glasses': 'Infinity Glasses.png',
+      'Repetition': 'Repeat Cycle.png',
+      'Whoosh Arrow': 'Single arrow.png',
+      'Swish': 'Single loop.png',
+      'Clock': 'Time schedule.png',
+      'Book Wiki': 'Book Wiki.png',
+      'Apple': 'Apple.png',
+      'Banana': 'Banana.png',
+      'Bell': 'Bell.png',
+      'Book': 'Book.png',
+      'Brackets': 'Brackets.png',
+      'Cactus': 'Cactus.png',
+      'Clippy': 'Clippy.png',
+      'Coffee': 'Coffee.png',
+      'Command': 'Command.png',
+      'Formula': 'Formula.png',
+      'Gear': 'Gear.png',
+      'Heart': 'Heart.png',
+      'Lightbulb': 'Lightbulb.png',
+      'Math': 'Math.png',
+      'Music': 'Music.png',
+      'Notetaker': 'Notetaker.png',
+      'Phone': 'Phone.png',
+      'Research': 'Research.png',
+      'Root': 'Root.png',
+      'Saucy': 'Saucy.png',
+      'Scribble': 'Scribble.png',
+      'Spiky': 'Spiky.png',
+      'Umbrella': 'Umbrella.png'
+    };
+    
+    const filename = nameMapping[agentName] || `${agentName}.png`;
+    // Add cache busting parameter for Greek God to ensure fresh image loads
+    const cacheBuster = agentName === 'Greek God' ? `?v=${Date.now()}` : '';
+    return `/images/agent-cards/${filename}${cacheBuster}`;
+  };
+
+  const getBinaryChoices = (sequence: string) => {
+    const [first, second, third, fourth, fifth] = sequence.split('');
+    
+    return {
+      workLife: first === 'W' ? 'Live to work' : 'Work to live',
+      collaboration: second === 'T' ? 'Collaborative' : 'Independent', 
+      structure: third === 'S' ? 'Structured' : 'Unstructured',
+      thinking: fourth === 'A' ? 'Abstract' : 'Concrete',
+      approach: fifth === 'D' ? 'Impact' : 'Harmony'
+    };
+  };
+
+  const startTest = () => {
+    setCurrentStep('test');
+    setCurrentQuestion(0);
+    setSequence('');
+    setSelectedAnswer(null);
+    setAnswers({});
+  };
+
+  const selectAnswer = (value: string) => {
+    setSelectedAnswer(value);
+  };
+
+  const nextQuestion = () => {
+    if (!selectedAnswer) return;
+    
+    // Blur any focused elements to prevent blue outline on next question
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    
+    // Save the current answer
+    const newAnswers = { ...answers, [currentQuestion]: selectedAnswer };
     setAnswers(newAnswers);
     
-    if (currentQuestion < SAMPLE_QUESTIONS.length - 1) {
+    // Still build sequence for backward compatibility/debugging, but use new calculation for final result
+    const newSequence = sequence + selectedAnswer;
+    setSequence(newSequence);
+    
+    if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
+      // Load the previously selected answer for the next question
+      setSelectedAnswer(newAnswers[currentQuestion + 1] || null);
     } else {
-      // Test complete - determine result based on answers
-      const agentNames = ['Apple', 'Banana', 'Coffee', 'Heart', 'Lightbulb', 'Music'];
-      const randomResult = agentNames[Math.floor(Math.random() * agentNames.length)];
-      setResult(randomResult);
-      setCurrentStep('results');
+      setCurrentStep('result');
+      // Calculate final personality type using majority vote system
+      const finalPersonalityType = calculatePersonalityType(newAnswers);
+      // Update sequence state with the final calculated type
+      setSequence(finalPersonalityType);
+      // Save result to backend
+      saveResult(finalPersonalityType);
     }
   };
 
-  const handleReturnHome = () => {
-    setCurrentStep('home');
-    setCurrentQuestion(0);
-    setAnswers([]);
-    setResult(null);
+  // Generate or get existing session ID for this browser
+  const getSessionId = () => {
+    let sessionId = localStorage.getItem('personality-test-session-id');
+    if (!sessionId) {
+      // Generate a unique session ID: timestamp + random string
+      sessionId = `session-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+      localStorage.setItem('personality-test-session-id', sessionId);
+    } else {
+    }
+    return sessionId;
   };
 
-  if (currentStep === 'home') {
-    return <GravityHomepage onStartTest={handleStartTest} />;
+  // Check if this browser has already taken the test
+  const hasAlreadyTakenTest = () => {
+    return localStorage.getItem('personality-test-completed') === 'true';
+  };
+
+  // Mark test as completed for this browser
+  const markTestCompleted = () => {
+    localStorage.setItem('personality-test-completed', 'true');
+  };
+
+  // Check test completion status on component mount
+  useEffect(() => {
+    const hasCompleted = hasAlreadyTakenTest();
+    const sessionId = localStorage.getItem('personality-test-session-id');
+  }, []);
+
+  // Add keyboard shortcut for Enter key to proceed to next question
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Only proceed if we're in the test phase and Enter is pressed
+      if (e.key === 'Enter' && currentStep === 'test' && selectedAnswer) {
+        e.preventDefault(); // Prevent any default form submission
+        nextQuestion();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [currentStep, selectedAnswer, nextQuestion]);
+
+  const saveResult = async (finalSequence: string) => {
+    try {
+      const agent = agents[finalSequence];
+      
+      // Check if user has already taken test in this browser
+      if (hasAlreadyTakenTest()) {
+        return;
+      }
+      
+      const sessionId = getSessionId();
+      
+      const response = await fetch('/api/personality-results', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          agent: agent.name,
+          sequence: finalSequence,
+          sessionId: sessionId,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (!data.success) {
+        console.error('API Error:', data.error || 'Unknown error');
+      } else if (data.isNewResult === false) {
+        console.log('Duplicate session:', data.existingAgent);
+      } else {
+        console.log('New result saved successfully!');
+        // Mark test as completed to prevent future submissions from this browser
+        markTestCompleted();
+      }
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
+  };
+
+  const previousQuestion = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+      // Remove the last answer from sequence
+      setSequence(sequence.slice(0, -1));
+      // Load the previously selected answer for the previous question
+      setSelectedAnswer(answers[currentQuestion - 1] || null);
+    } else {
+      // If on question 1, go back to landing page
+      setCurrentStep('landing');
+      setCurrentQuestion(0);
+      setSequence('');
+      setSelectedAnswer(null);
+      setAnswers({});
+    }
+  };
+
+  // Add keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only handle arrow keys during the test phase
+      if (currentStep !== 'test') return;
+
+      if (event.key === 'ArrowRight' && selectedAnswer) {
+        event.preventDefault();
+        nextQuestion();
+        // Remove focus from any button to prevent highlight
+        (document.activeElement as HTMLElement)?.blur();
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        previousQuestion();
+        // Remove focus from any button to prevent highlight
+        (document.activeElement as HTMLElement)?.blur();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentStep, selectedAnswer]);
+
+  const restartTest = () => {
+    setCurrentStep('landing');
+    setCurrentQuestion(0);
+    setSequence('');
+    setSelectedAnswer(null);
+    setAnswers({});
+    // Reset the "test completed" flag to allow retaking for testing purposes
+    localStorage.removeItem('personality-test-completed');
+    console.log('Test restarted - cleared completion flag');
+  };
+
+  const saveAsImage = async () => {
+    const agent = agents[sequence];
+    if (agent) {
+      try {
+        // Get the agent card image element
+        const agentCardElement = document.querySelector(`.${styles.agentCardImage}`) as HTMLImageElement;
+        if (agentCardElement) {
+          // Create a canvas to draw the agent card image
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          // Use the natural dimensions of the agent card image
+          canvas.width = agentCardElement.naturalWidth;
+          canvas.height = agentCardElement.naturalHeight;
+
+          if (ctx) {
+            // Draw the agent card image directly
+            ctx.drawImage(agentCardElement, 0, 0);
+
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `my-notion-agent-card-${agent.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+          }
+        }
+      } catch (error) {
+        console.error('Error generating agent card image:', error);
+      }
+    }
+  };
+
+  const saveImageOnly = async () => {
+    const agent = agents[sequence];
+    if (agent) {
+      try {
+        // Since we're showing new agent cards, we need to load the original agent image
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        // Get the original agent image path (not the card image)
+        const originalAgentImagePath = getAgentImage(agent.name);
+        
+        img.onload = () => {
+          // Create a canvas to draw just the agent image
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          canvas.width = 200; // Higher resolution for better quality
+          canvas.height = 200;
+          
+          if (ctx) {
+            // White background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw the agent image centered
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `${agent.name.toLowerCase().replace(/\s+/g, '-')}-agent-portrait.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+          }
+        };
+        
+        img.onerror = () => {
+          console.error('Error loading agent image:', originalAgentImagePath);
+        };
+        
+        img.src = originalAgentImagePath;
+        
+      } catch (error) {
+        console.error('Error generating agent image:', error);
+      }
+    }
+  };
+
+  const generateCompleteLeaderboard = (apiLeaderboard: LeaderboardEntry[]): LeaderboardEntry[] => {
+    // Get all possible agent names from the agents object
+    const allAgentNames = Object.values(agents).map(agent => agent.name);
+    
+    // Create a map from API data for quick lookup
+    const apiDataMap = new Map(apiLeaderboard.map(entry => [entry.agent, entry.count]));
+    
+    // Generate complete leaderboard with all agents
+    const completeLeaderboard: LeaderboardEntry[] = allAgentNames.map(agentName => {
+      let count = apiDataMap.get(agentName) || 0;
+      
+      // Adjust Clippy count by subtracting 2 to account for inaccurate test results
+      if (agentName === 'Clippy' && count > 1) {
+        count = count - 2;
+      } else if (agentName === 'Clippy' && count === 1) {
+        count = 0;
+      }
+      
+      return {
+        agent: agentName,
+        count: count
+      };
+    });
+    
+    // Sort by count (descending), then by name (ascending) for consistent ordering
+    return completeLeaderboard.sort((a, b) => {
+      if (b.count !== a.count) {
+        return b.count - a.count; // Higher counts first
+      }
+      return a.agent.localeCompare(b.agent); // Alphabetical for same counts
+    });
+  };
+
+  const fetchLeaderboard = async () => {
+    try {
+      console.log('Fetching leaderboard...');
+      const response = await fetch('/api/personality-results');
+      const data = await response.json();
+      console.log('Fetch response:', data);
+      
+      if (data.leaderboard) {
+        const completeLeaderboard = generateCompleteLeaderboard(data.leaderboard);
+        setLeaderboardData(completeLeaderboard);
+        
+        // Adjust total results by subtracting up to 2 if Clippy had any results (to account for inaccurate tests)
+        let adjustedTotalResults = data.totalResults;
+        const clippyOriginalCount = data.leaderboard.find((entry: any) => entry.agent === 'Clippy')?.count || 0;
+        if (clippyOriginalCount > 1) {
+          adjustedTotalResults = data.totalResults - 2;
+        } else if (clippyOriginalCount === 1) {
+          adjustedTotalResults = data.totalResults - 1;
+        }
+        setTotalResults(adjustedTotalResults);
+        
+        console.log(`Complete Leaderboard: ${adjustedTotalResults} total, ${completeLeaderboard.length} total agents (${data.leaderboard.length} with results)`);
+      }
+    } catch (error) {
+      console.error('Fetch failed:', error);
+    }
+  };
+
+  const openLeaderboard = () => {
+    setShowLeaderboard(true);
+    fetchLeaderboard();
+  };
+
+  const closeLeaderboard = () => {
+    setShowLeaderboard(false);
+    setLeaderboardView('list');
+    setSelectedAgent(null);
+  };
+
+  const openAgentDetail = (agentName: string) => {
+    setSelectedAgent(agentName);
+    setLeaderboardView('detail');
+  };
+
+  const backToLeaderboard = () => {
+    setLeaderboardView('list');
+    setSelectedAgent(null);
+  };
+
+  const progress = ((currentQuestion) / questions.length) * 100;
+
+  if (currentStep === 'landing') {
+    return (
+      <div className={`${styles.container} ${styles.landingContainer}`}>
+        <GravityHomepage onStartTest={startTest} />
+      </div>
+    );
   }
 
   if (currentStep === 'test') {
-    const question = SAMPLE_QUESTIONS[currentQuestion];
+    const question = questions[currentQuestion];
+    
     return (
-      <div className={styles.container}>
+      <div className={`${styles.container} ${styles.testContainer}`}>
         <div className={styles.testContent}>
-          <h1 className={styles.question}>{question.text}</h1>
-          <div className={styles.answers}>
+          <div className={styles.progressBar}>
+            <div className={styles.progressFill} style={{ width: `${progress}%` }}></div>
+          </div>
+            <div className={styles.questionNumber}>
+            Question {currentQuestion + 1} of {questions.length}
+          </div>
+          
+          <h2 className={styles.question}>{question.text}</h2>
+          
+                          <div className={`${styles.answers} ${question.answers.some(answer => answer.image) ? styles.imageAnswers : ''} ${currentQuestion === 2 ? styles.question3 : ''}`}>
             {question.answers.map((answer, index) => (
               <button
                 key={index}
-                className={answer.image ? styles.imageAnswer : styles.textAnswer}
-                onClick={() => handleAnswer(answer.value)}
+                className={`${styles.answerButton} ${answer.image ? styles.imageAnswer : ''} ${currentQuestion === 3 && answer.image ? styles.question4 : ''} ${currentQuestion === 9 && answer.image ? styles.question10 : ''} ${selectedAnswer === answer.value ? styles.selected : ''}`}
+                onClick={() => selectAnswer(answer.value)}
               >
                 {answer.image ? (
-                  <img src={answer.image} alt={`Answer ${index + 1}`} />
+                  <img 
+                    src={answer.image} 
+                    alt={`Option ${index + 1}`} 
+                    className={styles.answerImage}
+                  />
                 ) : (
                   answer.text
                 )}
               </button>
             ))}
           </div>
-          <div className={styles.progress}>
-            Question {currentQuestion + 1} of {SAMPLE_QUESTIONS.length}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (currentStep === 'results' && result) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.resultsContainer}>
-          <div className={styles.result}>
-            <h1>Your Notion Agent</h1>
-            <h2>{result}</h2>
-            <img 
-              src={`/images/agent-cards/${result}.png`} 
-              alt={`${result} Agent Card`}
-              className={styles.agentCardImage}
-            />
-            <button onClick={handleReturnHome} className={styles.retakeButton}>
-              Take Test Again
+          
+          <div className={styles.navigationButtons}>
+            <button
+              className={styles.backButton}
+              onClick={previousQuestion}
+            >
+              Back
+            </button>
+            
+            <button
+              className={`${styles.nextButton} ${selectedAnswer ? styles.enabled : ''}`}
+              onClick={nextQuestion}
+              disabled={!selectedAnswer}
+            >
+              Next
             </button>
           </div>
         </div>
@@ -1876,5 +2727,220 @@ export default function PersonalityTestPage() {
     );
   }
 
-  return <GravityHomepage onStartTest={handleStartTest} />;
+  // Result screen
+  const agent = agents[sequence];
+  
+  // Safety check - if agent doesn't exist, don't render background agents
+  if (!agent) {
+    return <div className={styles.container}>Loading...</div>;
+  }
+  
+  return (
+    <div className={`${styles.container} ${styles.resultsContainer}`}>
+      <div className={styles.desktopOnlyBackground}>
+        <BackgroundRoamingAgents agentName={agent.name} />
+      </div>
+      <div className={styles.result}>
+        <div 
+          ref={profileCardRef}
+          className={styles.profileCard}
+        >
+          <img
+            src={getAgentCardImage(agent.name)}
+            alt={`${agent.name} Agent Card`}
+            className={styles.agentCardImage}
+            draggable={false}
+          />
+        </div>
+        
+        {/* Mobile: Buttons stacked at bottom, Desktop: Positioned as before */}
+        <div className={styles.mobileButtonStack}>
+          <button className={styles.leaderboardButton} onClick={openLeaderboard}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+              <path d="M2 12h20" stroke="currentColor" strokeWidth="2"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10a15.3 15.3 0 0 1 4-10z" stroke="currentColor" strokeWidth="2"/>
+            </svg>
+            Leaderboard
+          </button>
+          
+          <div className={styles.saveDropdown}>
+            <button 
+              className={styles.saveButton}
+              onClick={isMobile ? saveAsImage : undefined}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {isMobile ? (
+                  // Download icon for mobile
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                ) : (
+                  // Save icon for desktop
+                  <>
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="17,21 17,13 7,13 7,21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="7,3 7,8 15,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </>
+                )}
+              </svg>
+              Save
+              {!isMobile && (
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <polyline points="6,9 12,15 18,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+            </button>
+            {!isMobile && (
+              <div className={styles.saveMenu}>
+                <button className={styles.saveMenuItem} onClick={saveAsImage}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
+                    <line x1="9" y1="9" x2="15" y2="9" stroke="currentColor" strokeWidth="2"/>
+                    <line x1="9" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth="2"/>
+                    <line x1="9" y1="17" x2="13" y2="17" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  Entire card
+                </button>
+                <button className={styles.saveMenuItem} onClick={() => saveImageOnly()}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                    <path d="m9,9h0a3,3 0 0,0 6,0h0" stroke="currentColor" strokeWidth="2"/>
+                    <path d="m9,15a3,3 0 0,0 6,0" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  Agent portrait
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <button className={styles.fixedRetakeButton} onClick={restartTest}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 4v6h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Retake test
+          </button>
+        </div>
+      </div>
+      
+      {showLeaderboard && (
+        <div className={styles.modalOverlay} onClick={closeLeaderboard}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            {leaderboardView === 'detail' && selectedAgent ? (
+              <div className={styles.agentDetailHeader}>
+                <div className={styles.breadcrumb}>
+                  <button className={styles.backButton} onClick={backToLeaderboard}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 12H5m7-7l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <div className={styles.breadcrumbText}>
+                    <span className={styles.breadcrumbResults} onClick={backToLeaderboard}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.backChevron}>
+                        <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Results
+                    </span>
+                    <span className={styles.breadcrumbSeparator}>/</span>
+                    <span className={styles.breadcrumbCurrent}>Agent details</span>
+                  </div>
+                </div>
+                <button className={styles.closeButton} onClick={closeLeaderboard}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <div className={styles.modalHeader}>
+                <h2 className={styles.modalTitle}>Leaderboard</h2>
+                <button className={styles.closeButton} onClick={closeLeaderboard}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            )}
+            
+            <div className={styles.modalContent}>
+              {isLoadingLeaderboard ? (
+                <div className={styles.loading}>Loading leaderboard...</div>
+              ) : leaderboardView === 'detail' && selectedAgent ? (
+                <>
+                  
+                  <div className={styles.agentDetailContent}>
+                    <div className={styles.agentDetailCard}>
+                      <img
+                        src={getAgentCardImage(selectedAgent)}
+                        alt={`${selectedAgent} Agent Card`}
+                        className={styles.agentCardImage}
+                        draggable={false}
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <MiniRoamingAgents 
+                    leaderboardData={leaderboardData} 
+                    totalResults={totalResults}
+                  />
+                  <div className={styles.leaderboardList}>
+                    {leaderboardData.map((entry, index) => {
+                      const percentage = totalResults > 0 ? ((entry.count / totalResults) * 100).toFixed(1) : '0';
+                      const isZeroResults = entry.count === 0;
+                      return (
+                        <div key={entry.agent} className={`${styles.leaderboardItem} ${isZeroResults ? styles.zeroResults : ''}`}>
+                          <div className={styles.statsInfo}>
+                            <div className={styles.rankInfo} onClick={() => openAgentDetail(entry.agent)}>
+                              <img 
+                                src={getAgentImage(entry.agent)} 
+                                alt={entry.agent}
+                                className={styles.agentIcon}
+                              />
+                              <span className={styles.agentName}>{entry.agent}</span>
+                              <svg 
+                                width="16" 
+                                height="16" 
+                                viewBox="0 0 24 24" 
+                                fill="none" 
+                                xmlns="http://www.w3.org/2000/svg"
+                                className={styles.agentArrow}
+                              >
+                                <path 
+                                  d="M9 18l6-6-6-6" 
+                                  stroke="#999" 
+                                  strokeWidth="2" 
+                                  strokeLinecap="round" 
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <span className={styles.percentage}>{percentage}% ({entry.count})</span>
+                          </div>
+                          <div className={styles.progressBar}>
+                            <div 
+                              className={styles.progressFill} 
+                              style={{ width: `${percentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <div className={styles.totalResults}>
+                    Total participants: {totalResults}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+
+    </div>
+  );
 } 
