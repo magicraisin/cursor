@@ -802,7 +802,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px 24px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: none; /* Removed border to eliminate line above first agent */
   height: 80px; /* Fixed header height */
   flex-shrink: 0; /* Prevent header from shrinking */
   box-sizing: border-box; /* Include padding in height calculation */
@@ -1335,6 +1335,24 @@
   .miniRoamingContainer {
     height: 140px;
   }
+
+  /* Mobile modal responsive behavior - same logic as results card */
+  .modalOverlay {
+    align-items: flex-start !important; /* Top-align instead of center */
+    justify-content: center !important; /* Keep horizontal centering */
+    padding-top: 24px !important; /* 24px space above modal */
+    padding-bottom: 24px !important; /* Space below for scrolling */
+    min-height: 100vh !important; /* Full viewport height */
+    overflow-y: auto !important; /* Enable scrolling */
+  }
+  
+  /* Modal keeps the same dimensions - no scaling */
+  .modal {
+    width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
+    max-width: 576px !important; /* But don't exceed desktop width */
+    height: 652px !important; /* Fixed height */
+    flex-shrink: 0 !important; /* Prevent modal from shrinking */
+  }
 }
 
 /* Desktop styles - maintain original layout for larger screens */
@@ -1406,23 +1424,6 @@
       width: 500px !important; /* Same image size - reduced to 500px */
       height: 600px !important; /* Same image size */
       margin-top: 16px !important; /* Nudge image down by 16px */
-    }
-
-    /* Modal responsive behavior - same logic as results card */
-    .modalOverlay {
-      align-items: flex-start !important; /* Top-align instead of center */
-      justify-content: center !important; /* Keep horizontal centering */
-      padding-top: 24px !important; /* 24px space above modal */
-      padding-bottom: 24px !important; /* Space below for scrolling */
-      min-height: 100vh !important; /* Full viewport height */
-      overflow-y: auto !important; /* Enable scrolling */
-    }
-    
-    /* Modal keeps the same dimensions - no scaling */
-    .modal {
-      width: 576px !important; /* Same modal size */
-      height: 652px !important; /* Same modal size */
-      flex-shrink: 0 !important; /* Prevent modal from shrinking */
     }
   }
   
