@@ -993,25 +993,52 @@
     overflow: hidden; /* No scrolling within the content */
   }
   
-  /* Mobile question spacing adjustments - force override with !important */
+    /* Mobile question spacing adjustments - ULTRA TIGHT SPACING */
+  /* Target all possible variations to ensure override */
+  .testContainer .progressBar,
+  .container .progressBar,
   .progressBar {
-    margin-top: 8px !important; /* Small margin from top edge */
-    margin-bottom: 0 !important; /* Remove default bottom margin on mobile */
+    margin-top: 16px !important; /* 16px from top of screen */
+    margin-bottom: 16px !important; /* 16px gap to question number */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
-  
+
   /* Extra aggressive overrides to eliminate ALL spacing on mobile */
   .testContent {
     padding: 0 !important;
     margin: 0 !important;
     padding-top: 0 !important;
     margin-top: 0 !important;
+    gap: 0 !important; /* Remove any flexbox gaps */
   }
-  
+
+  /* Eliminate any extra spacing from containers */
+  .testContainer > *,
+  .container > *,
+  .testContent > * {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* First child should have top margin only for progress bar */
+  .testContainer > *:first-child,
+  .container > *:first-child,
+  .testContent > *:first-child {
+    margin-top: 16px !important; /* Only progress bar gets top margin */
+  }
+
+  /* Target all possible variations for question number */
+  .testContainer .questionNumber,
+  .container .questionNumber,
+  .testContent .questionNumber,
   .questionNumber {
-    margin-top: 24px !important; /* 24px gap below progress bar */
-    margin-bottom: 8px !important; /* 8px above question text */
+    margin-top: 0 !important; /* No additional top margin - rely on progressBar bottom margin */
+    margin-bottom: 8px !important; /* Only 8px above question text */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
-  
+
   .result {
     max-width: 100%;
     padding: 0 0 200px 0; /* Only bottom padding for button stack */
@@ -1019,11 +1046,16 @@
     width: 100%;
     position: relative;
   }
-  
+
+  /* Target all possible variations for question text */
+  .testContainer .question,
+  .container .question,
+  .testContent .question,
   .question {
     margin-top: 0 !important; /* Remove any top margin from question text */
+    margin-bottom: 24px !important; /* Reduced bottom margin */
+    padding-top: 0 !important;
     font-size: 24px;
-    margin-bottom: 30px;
   }
   
   .agentName {
