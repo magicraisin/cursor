@@ -1470,12 +1470,12 @@
   }
 }
 
-/* For short desktop screens (700px and below): Top-align with 40px space */
+/* For short desktop screens (700px and below): Center-align always */
 @media (min-width: 769px) and (max-height: 700px) {
   .resultsContainer {
-    align-items: flex-start !important; /* Top-align */
+    align-items: center !important; /* Center vertically always */
     justify-content: center !important; /* Center horizontally */
-    padding: 40px 232px 60px 232px !important; /* 40px top, maintain horizontal padding */
+    padding: 40px 232px !important; /* Consistent padding for centering */
     display: flex !important;
     min-height: 100vh !important;
   }
