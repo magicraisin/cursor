@@ -1049,19 +1049,19 @@
     gap: 16px !important;
   }
 
-  /* Image answers layout */
+  /* Image answers layout - stack vertically on mobile */
   .testContent .answers.imageAnswers {
-    flex-direction: row !important;
+    flex-direction: column !important;
     gap: 16px !important;
-    justify-content: space-between !important;
-    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
   }
 
-  /* Fix image answer aspect ratio on mobile */
+  /* Fix image answer aspect ratio on mobile - full width stacked */
   .imageAnswer {
     min-height: auto !important;
-    max-width: 45% !important; /* Two images side by side with gap */
-    width: 45% !important;
+    max-width: 100% !important; /* Full width for stacked layout */
+    width: 100% !important;
     aspect-ratio: 1 / 1.07 !important; /* Target 1:1.07 ratio */
     height: auto !important;
   }
@@ -1069,17 +1069,17 @@
   /* Fallback for browsers without aspect-ratio support */
   @supports not (aspect-ratio: 1 / 1.07) {
     .imageAnswer {
-      height: calc(45vw * 1.07) !important; /* Approximate 1:1.07 ratio */
-      max-height: 200px !important; /* Reasonable max height */
+      height: calc(100vw * 1.07 - 48px) !important; /* Full width minus padding, 1:1.07 ratio */
+      max-height: 400px !important; /* Reasonable max height for full width */
     }
   }
 
-  /* Ensure image answers container handles mobile layout */
+  /* Stack image answers vertically on mobile */
   .answers.imageAnswers {
-    flex-direction: row !important;
-    gap: 16px !important; /* Slightly reduce gap for mobile */
-    justify-content: space-between !important;
-    align-items: flex-start !important;
+    flex-direction: column !important; /* Stack vertically instead of side-by-side */
+    gap: 16px !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important; /* Stretch to full width */
   }
 
   /* Navigation buttons - at bottom of flex container */
