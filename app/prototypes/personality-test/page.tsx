@@ -2008,8 +2008,21 @@ export default function NotionAgentTest() {
   const [leaderboardView, setLeaderboardView] = useState<'list' | 'detail'>('list');
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
   const [showDebug, setShowDebug] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const profileCardRef = useRef<HTMLDivElement>(null);
+
+  // Mobile detection effect
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Debug logging function
   const addDebugLog = (message: string) => {
@@ -2474,36 +2487,51 @@ export default function NotionAgentTest() {
           </button>
           
           <div className={styles.saveDropdown}>
-            <button className={styles.saveButton}>
+            <button 
+              className={styles.saveButton}
+              onClick={isMobile ? saveAsImage : undefined}
+            >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <polyline points="17,21 17,13 7,13 7,21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <polyline points="7,3 7,8 15,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                {isMobile ? (
+                  // Download icon for mobile
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                ) : (
+                  // Save icon for desktop
+                  <>
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="17,21 17,13 7,13 7,21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="7,3 7,8 15,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </>
+                )}
               </svg>
               Save
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <polyline points="6,9 12,15 18,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              {!isMobile && (
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <polyline points="6,9 12,15 18,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
             </button>
-            <div className={styles.saveMenu}>
-              <button className={styles.saveMenuItem} onClick={saveAsImage}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
-                  <line x1="9" y1="9" x2="15" y2="9" stroke="currentColor" strokeWidth="2"/>
-                  <line x1="9" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth="2"/>
-                  <line x1="9" y1="17" x2="13" y2="17" stroke="currentColor" strokeWidth="2"/>
-                </svg>
-                Entire card
-              </button>
-              <button className={styles.saveMenuItem} onClick={() => saveImageOnly()}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                  <path d="m9,9h0a3,3 0 0,0 6,0h0" stroke="currentColor" strokeWidth="2"/>
-                  <path d="m9,15a3,3 0 0,0 6,0" stroke="currentColor" strokeWidth="2"/>
-                </svg>
-                Agent portrait
-              </button>
-            </div>
+            {!isMobile && (
+              <div className={styles.saveMenu}>
+                <button className={styles.saveMenuItem} onClick={saveAsImage}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
+                    <line x1="9" y1="9" x2="15" y2="9" stroke="currentColor" strokeWidth="2"/>
+                    <line x1="9" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth="2"/>
+                    <line x1="9" y1="17" x2="13" y2="17" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  Entire card
+                </button>
+                <button className={styles.saveMenuItem} onClick={() => saveImageOnly()}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                    <path d="m9,9h0a3,3 0 0,0 6,0h0" stroke="currentColor" strokeWidth="2"/>
+                    <path d="m9,15a3,3 0 0,0 6,0" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  Agent portrait
+                </button>
+              </div>
+            )}
           </div>
           
           <button className={styles.fixedRetakeButton} onClick={restartTest}>

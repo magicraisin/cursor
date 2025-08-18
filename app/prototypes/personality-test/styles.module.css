@@ -930,7 +930,7 @@
   .resultsContainer {
     background: white !important;
     align-items: flex-start;
-    padding: 24px;
+    padding: 24px !important; /* 24px padding as requested */
   }
   
   /* Mobile test screen - full viewport without scroll - moved to earlier position */
@@ -1053,10 +1053,14 @@
 
   .result {
     max-width: 100%;
-    padding: 0 0 200px 0; /* Only bottom padding for button stack */
+    padding: 24px 24px 200px 24px !important; /* 24px top padding as requested, maintain bottom for buttons */
     margin: 0;
     width: 100%;
     position: relative;
+    border: none !important; /* Remove border around results card on mobile */
+    box-shadow: none !important; /* Remove shadow as well for cleaner look */
+    border-radius: 0 !important; /* Remove border radius for mobile */
+    background: white !important; /* Ensure white background */
   }
   
   .agentName {
@@ -1157,9 +1161,13 @@
     gap: 8px;
   }
 
-  /* Mobile save button icons - show both save icon and chevron */
-  .saveButton svg {
-    display: inline !important; /* Show all SVG icons on mobile */
+  /* Mobile save button icons - show download icon only, hide chevron */
+  .saveButton svg:first-child {
+    display: inline !important; /* Show download icon on mobile */
+  }
+  
+  .saveButton svg:last-child {
+    display: none !important; /* Hide chevron on mobile */
   }
   
   .fixedRetakeButton {
