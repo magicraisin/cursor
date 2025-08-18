@@ -631,6 +631,7 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
                 agents.push({
                   id: 'full-' + agentId++,
                   image: getAgentImageFilename(entry.agent),
+                  agentName: entry.agent, // Store the agent name for modal functionality
                   x,
                   y,
                   vx: (Math.random() - 0.5) * SPEED * 2,
@@ -650,6 +651,10 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               agentEl.className = 'fullScreenAgent';
               agentEl.style.width = agentSize + 'px';
               agentEl.style.height = agentSize + 'px';
+              agentEl.style.cursor = 'pointer';
+              
+              // Add click handler to open agent modal
+              agentEl.onclick = () => openAgentModal(agent.agentName);
               
               const img = document.createElement('img');
               img.src = '/images/agents/' + agent.image;
@@ -1613,7 +1618,7 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
       return 1.1 + ((progress - 0.5) * 2) * (-0.1);
     }
   };
-
+  
   return (
     <div className={styles.roamingContainer} ref={canvasRef}>
       {/* Roaming agents */}
@@ -1638,8 +1643,8 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
           <img
             src={`/images/agents/${agent.image}`}
             alt={agent.image}
-          />
-        </div>
+                />
+              </div>
       ))}
 
       {/* Overlay content */}
@@ -1655,9 +1660,9 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
           </p>
           <button className={styles.getStartedButton} onClick={onStartTest}>
             Get Started →
-          </button>
-        </div>
+        </button>
       </div>
+            </div>
     </div>
   );
 } 
