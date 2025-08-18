@@ -893,6 +893,27 @@
     align-items: center;
   }
   
+  /* Override base container for test screens */
+  .container.testContainer {
+    padding: 0 24px 0 24px !important; /* No top padding */
+    margin: 0 !important; /* No margin */
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: white !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+  }
+  
   /* Mobile landing page - full viewport without scroll */
   .landingContainer {
     height: 100vh !important;
@@ -914,24 +935,7 @@
     padding: 24px;
   }
   
-  /* Mobile test screen - full viewport without scroll */
-  .container.testContainer {
-    background: white !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    padding: 0 24px 0 24px !important; /* No top padding - progress bar at very top */
-    height: 100vh !important;
-    min-height: 100vh !important;
-    max-height: 100vh !important;
-    overflow: hidden !important; /* No scrolling */
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
+  /* Mobile test screen - full viewport without scroll - moved to earlier position */
   
   /* Hide background agents on mobile */
   .desktopOnlyBackground {
@@ -993,6 +997,14 @@
   .progressBar {
     margin-top: 8px !important; /* Small margin from top edge */
     margin-bottom: 0 !important; /* Remove default bottom margin on mobile */
+  }
+  
+  /* Extra aggressive overrides to eliminate ALL spacing on mobile */
+  .testContent {
+    padding: 0 !important;
+    margin: 0 !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
   }
   
   .questionNumber {
