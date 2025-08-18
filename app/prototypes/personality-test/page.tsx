@@ -1703,6 +1703,87 @@ const SAMPLE_QUESTIONS: Question[] = [
       { text: "Structured planning", value: "C" },
       { text: "Creative exploration", value: "D" }
     ]
+  },
+  {
+    text: "When facing a complex problem, you:",
+    answers: [
+      { text: "Break it down systematically", value: "A" },
+      { text: "Brainstorm creative solutions", value: "B" },
+      { text: "Research best practices", value: "C" },
+      { text: "Dive in and learn by doing", value: "D" }
+    ]
+  },
+  {
+    text: "Your ideal workspace is:",
+    answers: [
+      { image: "/images/agents/book.png", value: "A" },
+      { image: "/images/agents/music.png", value: "B" },
+      { image: "/images/agents/gear.png", value: "C" },
+      { image: "/images/agents/lightbulb.png", value: "D" }
+    ]
+  },
+  {
+    text: "When learning something new, you prefer to:",
+    answers: [
+      { text: "Read comprehensive guides", value: "A" },
+      { text: "Watch video tutorials", value: "B" },
+      { text: "Practice hands-on exercises", value: "C" },
+      { text: "Discuss with experts", value: "D" }
+    ]
+  },
+  {
+    text: "Your communication style is:",
+    answers: [
+      { text: "Clear and direct", value: "A" },
+      { text: "Warm and encouraging", value: "B" },
+      { text: "Detailed and thorough", value: "C" },
+      { text: "Creative and inspiring", value: "D" }
+    ]
+  },
+  {
+    text: "When making decisions, you rely most on:",
+    answers: [
+      { image: "/images/agents/math.png", value: "A" },
+      { image: "/images/agents/heart.png", value: "B" },
+      { image: "/images/agents/research.png", value: "C" },
+      { image: "/images/agents/lightbulb.png", value: "D" }
+    ]
+  },
+  {
+    text: "Your approach to deadlines is:",
+    answers: [
+      { text: "Plan and finish early", value: "A" },
+      { text: "Work steadily toward the goal", value: "B" },
+      { text: "Research thoroughly first", value: "C" },
+      { text: "Burst of creativity at the end", value: "D" }
+    ]
+  },
+  {
+    text: "When helping others, you tend to:",
+    answers: [
+      { text: "Provide step-by-step instructions", value: "A" },
+      { text: "Offer emotional support", value: "B" },
+      { text: "Share relevant resources", value: "C" },
+      { text: "Inspire them to find their own way", value: "D" }
+    ]
+  },
+  {
+    text: "Your ideal notification style is:",
+    answers: [
+      { image: "/images/agents/bell.png", value: "A" },
+      { image: "/images/agents/coffee.png", value: "B" },
+      { image: "/images/agents/gear.png", value: "C" },
+      { image: "/images/agents/single-eye.png", value: "D" }
+    ]
+  },
+  {
+    text: "When organizing information, you prefer:",
+    answers: [
+      { text: "Structured categories and tags", value: "A" },
+      { text: "Visual boards and layouts", value: "B" },
+      { text: "Detailed databases and lists", value: "C" },
+      { text: "Flexible notes and ideas", value: "D" }
+    ]
   }
 ];
 
