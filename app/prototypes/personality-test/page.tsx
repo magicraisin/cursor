@@ -1684,23 +1684,61 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
   );
 }
 
-// Main PersonalityTest component that handles the test flow
+// Sample questions for the personality test
+const SAMPLE_QUESTIONS: Question[] = [
+  {
+    text: "What does your inbox look like?",
+    answers: [
+      { image: "/images/agents/apple.png", value: "A" },
+      { image: "/images/agents/banana.png", value: "B" },
+      { image: "/images/agents/coffee.png", value: "C" },
+      { image: "/images/agents/heart.png", value: "D" }
+    ]
+  },
+  {
+    text: "How do you prefer to work?",
+    answers: [
+      { text: "Solo focus time", value: "A" },
+      { text: "Collaborative brainstorming", value: "B" },
+      { text: "Structured planning", value: "C" },
+      { text: "Creative exploration", value: "D" }
+    ]
+  }
+];
+
+// Main personality test component
 export default function PersonalityTestPage() {
   const [currentStep, setCurrentStep] = useState<'home' | 'test' | 'results'>('home');
-  const [testResult, setTestResult] = useState<string | null>(null);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [result, setResult] = useState<string | null>(null);
 
   const handleStartTest = () => {
     setCurrentStep('test');
+    setCurrentQuestion(0);
+    setAnswers([]);
   };
 
-  const handleTestComplete = (result: string) => {
-    setTestResult(result);
-    setCurrentStep('results');
+  const handleAnswer = (value: string) => {
+    const newAnswers = [...answers, value];
+    setAnswers(newAnswers);
+    
+    if (currentQuestion < SAMPLE_QUESTIONS.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else {
+      // Test complete - determine result based on answers
+      const agentNames = ['Apple', 'Banana', 'Coffee', 'Heart', 'Lightbulb', 'Music'];
+      const randomResult = agentNames[Math.floor(Math.random() * agentNames.length)];
+      setResult(randomResult);
+      setCurrentStep('results');
+    }
   };
 
   const handleReturnHome = () => {
     setCurrentStep('home');
-    setTestResult(null);
+    setCurrentQuestion(0);
+    setAnswers([]);
+    setResult(null);
   };
 
   if (currentStep === 'home') {
@@ -1708,24 +1746,51 @@ export default function PersonalityTestPage() {
   }
 
   if (currentStep === 'test') {
-    // This would be the actual test component - for now return placeholder
+    const question = SAMPLE_QUESTIONS[currentQuestion];
     return (
-      <div style={{ padding: '50px', textAlign: 'center' }}>
-        <h1>Personality Test</h1>
-        <p>Test component would go here</p>
-        <button onClick={() => handleTestComplete('Sample Agent')}>
-          Complete Test (Sample)
-        </button>
+      <div className={styles.container}>
+        <div className={styles.testContent}>
+          <h1 className={styles.question}>{question.text}</h1>
+          <div className={styles.answers}>
+            {question.answers.map((answer, index) => (
+              <button
+                key={index}
+                className={answer.image ? styles.imageAnswer : styles.textAnswer}
+                onClick={() => handleAnswer(answer.value)}
+              >
+                {answer.image ? (
+                  <img src={answer.image} alt={`Answer ${index + 1}`} />
+                ) : (
+                  answer.text
+                )}
+              </button>
+            ))}
+          </div>
+          <div className={styles.progress}>
+            Question {currentQuestion + 1} of {SAMPLE_QUESTIONS.length}
+          </div>
+        </div>
       </div>
     );
   }
 
-  if (currentStep === 'results' && testResult) {
-    // This would be the results component - for now return placeholder  
+  if (currentStep === 'results' && result) {
     return (
-      <div style={{ padding: '50px', textAlign: 'center' }}>
-        <h1>Your Result: {testResult}</h1>
-        <button onClick={handleReturnHome}>Take Test Again</button>
+      <div className={styles.container}>
+        <div className={styles.resultsContainer}>
+          <div className={styles.result}>
+            <h1>Your Notion Agent</h1>
+            <h2>{result}</h2>
+            <img 
+              src={`/images/agent-cards/${result}.png`} 
+              alt={`${result} Agent Card`}
+              className={styles.agentCardImage}
+            />
+            <button onClick={handleReturnHome} className={styles.retakeButton}>
+              Take Test Again
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
