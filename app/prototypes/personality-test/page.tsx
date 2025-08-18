@@ -2586,10 +2586,19 @@ export default function NotionAgentTest() {
     const apiDataMap = new Map(apiLeaderboard.map(entry => [entry.agent, entry.count]));
     
     // Generate complete leaderboard with all agents
-    const completeLeaderboard: LeaderboardEntry[] = allAgentNames.map(agentName => ({
-      agent: agentName,
-      count: apiDataMap.get(agentName) || 0
-    }));
+    const completeLeaderboard: LeaderboardEntry[] = allAgentNames.map(agentName => {
+      let count = apiDataMap.get(agentName) || 0;
+      
+      // Adjust Clippy count by subtracting 1 to account for inaccurate test result
+      if (agentName === 'Clippy' && count > 0) {
+        count = count - 1;
+      }
+      
+      return {
+        agent: agentName,
+        count: count
+      };
+    });
     
     // Sort by count (descending), then by name (ascending) for consistent ordering
     return completeLeaderboard.sort((a, b) => {
@@ -2610,8 +2619,16 @@ export default function NotionAgentTest() {
       if (data.leaderboard) {
         const completeLeaderboard = generateCompleteLeaderboard(data.leaderboard);
         setLeaderboardData(completeLeaderboard);
-        setTotalResults(data.totalResults);
-        console.log(`Complete Leaderboard: ${data.totalResults} total, ${completeLeaderboard.length} total agents (${data.leaderboard.length} with results)`);
+        
+        // Adjust total results by subtracting 1 if Clippy had any results (to account for inaccurate test)
+        let adjustedTotalResults = data.totalResults;
+        const clippyOriginalCount = data.leaderboard.find((entry: any) => entry.agent === 'Clippy')?.count || 0;
+        if (clippyOriginalCount > 0) {
+          adjustedTotalResults = data.totalResults - 1;
+        }
+        setTotalResults(adjustedTotalResults);
+        
+        console.log(`Complete Leaderboard: ${adjustedTotalResults} total, ${completeLeaderboard.length} total agents (${data.leaderboard.length} with results)`);
       }
     } catch (error) {
       console.error('Fetch failed:', error);
