@@ -1341,18 +1341,7 @@
     display: block !important; /* Ensure it's visible on mobile */
   }
 
-  /* Mobile modal responsive behavior - same logic as results card - STRONGER SPECIFICITY */
-  .modalOverlay {
-    align-items: flex-start !important; /* Top-align instead of center */
-    justify-content: center !important; /* Keep horizontal centering */
-    padding: 24px 16px !important; /* 24px top/bottom, 16px sides for mobile */
-    min-height: 100vh !important; /* Full viewport height */
-    max-height: 100vh !important; /* Constrain height */
-    overflow-y: auto !important; /* Enable scrolling */
-    display: flex !important; /* Ensure flex layout */
-  }
-  
-  /* Modal keeps the same dimensions - no scaling - STRONGER SPECIFICITY */
+  /* Mobile modal width adjustments only - positioning handled by short viewport media query */
   .modal {
     width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
     max-width: 576px !important; /* But don't exceed desktop width */
@@ -1438,7 +1427,10 @@
     .modalOverlay {
       align-items: flex-start !important; /* Top-align instead of center */
       justify-content: center !important; /* Keep horizontal centering */
-      padding: 24px 16px !important; /* 24px top/bottom, 16px sides */
+      padding-top: 24px !important; /* Exactly 24px space above modal */
+      padding-bottom: 24px !important; /* Space below for scrolling */
+      padding-left: 16px !important; /* Sides */
+      padding-right: 16px !important; /* Sides */
       min-height: 100vh !important; /* Full viewport height */
       max-height: 100vh !important; /* Constrain height */
       overflow-y: auto !important; /* Enable scrolling */
