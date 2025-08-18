@@ -912,9 +912,10 @@
   
   .result {
     max-width: 100%;
-    padding: 24px 20px;
+    padding: 24px 20px 200px 20px; /* Add bottom padding for button stack */
     margin: 0;
     width: 100%;
+    position: relative;
   }
   
   .question {
@@ -960,21 +961,15 @@
     justify-content: center;
   }
   
-  /* Mobile results page button layout - stacked at bottom */
-  .result {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding-bottom: 200px; /* Space for button stack */
-  }
-  
+  /* Mobile agent card display */
   .profileCard {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 24px;
   }
+  
+
   
   .mobileButtonStack {
     position: fixed;
@@ -1042,7 +1037,7 @@
   
   .result {
     display: block;
-    padding-bottom: 0;
+    padding: 120px 232px; /* Restore original desktop padding */
   }
   
   .profileCard {
