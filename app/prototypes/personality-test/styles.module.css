@@ -946,11 +946,68 @@
     justify-content: center;
   }
   
+  /* Mobile results page button layout - stacked at bottom */
+  .result {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 200px; /* Space for button stack */
+  }
+  
+  .profileCard {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .mobileButtonStack {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+  }
+  
   .leaderboardButton {
     position: static;
-    margin-top: 16px;
     width: 100%;
     justify-content: center;
+    order: 1; /* First button */
+  }
+  
+  .saveDropdown {
+    position: static;
+    width: 100%;
+    order: 2; /* Second button */
+  }
+  
+  .saveButton {
+    width: 100%;
+    justify-content: center;
+    background: white;
+    color: #666;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .fixedRetakeButton {
+    position: static;
+    width: 100%;
+    justify-content: center;
+    order: 3; /* Third button */
   }
   
   .modal {
@@ -960,6 +1017,59 @@
   
   .miniRoamingContainer {
     height: 140px;
+  }
+}
+
+/* Desktop styles - maintain original layout for larger screens */
+@media (min-width: 769px) {
+  .mobileButtonStack {
+    display: contents; /* Use normal document flow on desktop */
+  }
+  
+  .result {
+    display: block;
+    padding-bottom: 0;
+  }
+  
+  .profileCard {
+    display: block;
+  }
+  
+  .saveDropdown {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: auto;
+  }
+  
+  .saveButton {
+    width: auto;
+    background: white;
+    color: #666;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .leaderboardButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: auto;
+  }
+  
+  .fixedRetakeButton {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: auto;
   }
 }
 
