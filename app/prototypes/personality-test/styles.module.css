@@ -897,6 +897,7 @@
   color: #2c2c2c;
   font-size: 16px;
   font-weight: 600;
+  transform: translateY(1px); /* Move 1px down to align with profile picture */
 }
 
 .statsInfo {
