@@ -1090,7 +1090,7 @@
   /* Answers section - flexible height with space for fixed bottom buttons */
   .testContent .answers {
     flex: 1 !important; /* Take remaining space */
-    margin: 0 0 100px 0 !important; /* 100px bottom margin to account for fixed navigation buttons */
+    margin: 0 0 76px 0 !important; /* Reduced bottom margin to account for smaller button spacing */
     padding: 0 !important;
     overflow-y: auto !important;
     display: flex !important;
@@ -1114,14 +1114,14 @@
     width: 100% !important;
     aspect-ratio: 1 / 1.07 !important; /* Target 1:1.07 ratio */
     height: auto !important;
-    max-height: calc(100vh - 320px) !important; /* Constrain height to prevent cut-off by buttons */
+    max-height: calc(100vh - 280px) !important; /* Constrain height to prevent cut-off by buttons */
   }
 
   /* Fallback for browsers without aspect-ratio support */
   @supports not (aspect-ratio: 1 / 1.07) {
     .imageAnswer {
-      height: calc(min(100vw * 1.07 - 48px, 100vh - 320px)) !important; /* Full width minus padding, but constrained by viewport */
-      max-height: calc(100vh - 320px) !important; /* Prevent cut-off by buttons */
+      height: calc(min(100vw * 1.07 - 48px, 100vh - 280px)) !important; /* Full width minus padding, but constrained by viewport */
+      max-height: calc(100vh - 280px) !important; /* Prevent cut-off by buttons */
     }
   }
 
@@ -1140,7 +1140,7 @@
     left: 0 !important;
     right: 0 !important;
     margin: 0 !important;
-    padding: 16px 20px 40px 20px !important; /* Add side padding to match visual alignment */
+    padding: 16px 20px 16px 20px !important; /* Reduced bottom padding to 16px */
     background: white !important; /* White background to separate from content */
     display: flex !important;
     flex-direction: row !important; /* Side by side buttons on mobile */
