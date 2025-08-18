@@ -787,12 +787,14 @@
 .modal {
   background: white;
   border-radius: 12px;
-  max-width: 600px;
-  width: 100%;
-  max-height: 90vh; /* Increased from 80vh for more height */
+  width: 600px; /* Fixed width to prevent dimension changes */
+  height: 700px; /* Fixed height to prevent dimension changes */
   overflow-x: visible;
   overflow-y: hidden;
   box-shadow: 0px 16px 50px 0px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0; /* Prevent modal from shrinking */
+  display: flex; /* Flex layout for consistent structure */
+  flex-direction: column; /* Stack header and content */
 }
 
 .modalHeader {
@@ -801,6 +803,9 @@
   align-items: center;
   padding: 24px 24px 16px;
   border-bottom: 1px solid #f0f0f0;
+  height: 80px; /* Fixed header height */
+  flex-shrink: 0; /* Prevent header from shrinking */
+  box-sizing: border-box; /* Include padding in height calculation */
 }
 
 .modalTitle {
@@ -827,7 +832,10 @@
 .modalContent {
   padding: 24px;
   overflow-y: auto;
-  max-height: calc(80vh - 80px);
+  height: calc(700px - 80px); /* Fixed height minus header space */
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
 }
 
 .loading {
@@ -1791,9 +1799,9 @@
   justify-content: center;
   align-items: center;
   padding: 0;
-  min-height: 400px;
-  margin-bottom: 24px;
-  margin-top: -32px; /* Reduce space above agent card */
+  height: 100%; /* Fill available modal content space */
+  margin-bottom: 0; /* Remove margin to maximize space */
+  margin-top: 0; /* Remove margin to maximize space */
 }
 
 .agentDetailCard {
@@ -1822,10 +1830,18 @@
     font-size: 14px;
   }
   
+  /* Mobile modal adjustments */
+  .modal {
+    width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
+    max-width: 600px !important; /* But don't exceed desktop width */
+    height: 700px !important; /* Keep same height */
+  }
+
   .agentDetailContent {
     padding: 16px 0;
-    min-height: 300px;
-    margin-top: -32px; /* Reduce space above agent card on mobile */
+    height: 100% !important; /* Fill available space */
+    margin-top: 0 !important; /* Remove margin on mobile */
+    margin-bottom: 0 !important; /* Remove margin on mobile */
   }
   
   .agentDetailCard {
