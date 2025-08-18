@@ -2589,9 +2589,11 @@ export default function NotionAgentTest() {
     const completeLeaderboard: LeaderboardEntry[] = allAgentNames.map(agentName => {
       let count = apiDataMap.get(agentName) || 0;
       
-      // Adjust Clippy count by subtracting 1 to account for inaccurate test result
-      if (agentName === 'Clippy' && count > 0) {
-        count = count - 1;
+      // Adjust Clippy count by subtracting 2 to account for inaccurate test results
+      if (agentName === 'Clippy' && count > 1) {
+        count = count - 2;
+      } else if (agentName === 'Clippy' && count === 1) {
+        count = 0;
       }
       
       return {
@@ -2620,10 +2622,12 @@ export default function NotionAgentTest() {
         const completeLeaderboard = generateCompleteLeaderboard(data.leaderboard);
         setLeaderboardData(completeLeaderboard);
         
-        // Adjust total results by subtracting 1 if Clippy had any results (to account for inaccurate test)
+        // Adjust total results by subtracting up to 2 if Clippy had any results (to account for inaccurate tests)
         let adjustedTotalResults = data.totalResults;
         const clippyOriginalCount = data.leaderboard.find((entry: any) => entry.agent === 'Clippy')?.count || 0;
-        if (clippyOriginalCount > 0) {
+        if (clippyOriginalCount > 1) {
+          adjustedTotalResults = data.totalResults - 2;
+        } else if (clippyOriginalCount === 1) {
           adjustedTotalResults = data.totalResults - 1;
         }
         setTotalResults(adjustedTotalResults);
