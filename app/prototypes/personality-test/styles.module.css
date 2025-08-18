@@ -961,6 +961,12 @@
     padding: 20px;
     max-width: 90%;
     text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 24px;
+    transform: translateY(-5vh); /* Move content up slightly for perfect centering */
   }
   
   .testContent {
@@ -1121,6 +1127,12 @@
   .result {
     display: block;
     padding: 120px 232px; /* Restore original desktop padding */
+  }
+  
+  /* Desktop homepage content - restore original positioning */
+  .roamingContent {
+    transform: none !important; /* Remove mobile transform on desktop */
+    gap: inherit;
   }
   
   .profileCard {
