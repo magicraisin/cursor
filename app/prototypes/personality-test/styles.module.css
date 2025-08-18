@@ -1004,60 +1004,57 @@
     overflow: hidden; /* No scrolling within the content */
   }
   
-    /* NUCLEAR MOBILE SOLUTION - Absolute positioning to bypass CSS cascade */
+  /* MOBILE SOLUTION - Proper flexbox layout with consistent spacing */
   .testContainer {
     position: relative !important;
   }
   
   .testContent {
     position: relative !important;
-    padding: 0 !important;
+    padding: 16px 24px 24px 24px !important;
     margin: 0 !important;
     height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: white !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
 
-  /* Force exact positioning for each element */
+  /* Top section with progress bar and question */
   .testContent .progressBar {
-    position: absolute !important;
-    top: 16px !important;
-    left: 24px !important;
-    right: 24px !important;
-    margin: 0 !important;
+    margin: 0 0 28px 0 !important;
     padding: 0 !important;
   }
 
   .testContent .questionNumber {
-    position: absolute !important;
-    top: 48px !important; /* 16px (progress bar top) + 4px (bar height) + 28px gap */
-    left: 24px !important;
-    right: 24px !important;
-    margin: 0 !important;
+    margin: 0 0 8px 0 !important;
     padding: 0 !important;
   }
 
   .testContent .question {
-    position: absolute !important;
-    top: 80px !important; /* 48px (question number top) + 24px (question number height) + 8px gap */
-    left: 24px !important;
-    right: 24px !important;
-    margin: 0 !important;
+    margin: 0 0 32px 0 !important; /* Consistent 32px spacing below question */
     padding: 0 !important;
-    font-size: 24px;
+    font-size: 24px !important;
   }
 
-  /* Position other elements below */
+  /* Answers section - flexible height */
   .testContent .answers {
-    position: absolute !important;
-    top: 180px !important; /* Leave space for question */
-    left: 24px !important;
-    right: 24px !important;
-    bottom: 160px !important; /* More space for fixed buttons with background */
+    flex: 1 !important; /* Take remaining space */
+    margin: 0 0 24px 0 !important; /* 24px above navigation buttons */
+    padding: 0 !important;
     overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
   }
 
-  /* Add spacing for text-only questions */
-  .testContent .answers:not(.imageAnswers) {
-    top: 204px !important; /* Add 24px more space for text questions */
+  /* Image answers layout */
+  .testContent .answers.imageAnswers {
+    flex-direction: row !important;
+    gap: 16px !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
   }
 
   /* Fix image answer aspect ratio on mobile */
@@ -1085,17 +1082,16 @@
     align-items: flex-start !important;
   }
 
+  /* Navigation buttons - at bottom of flex container */
   .testContent .navigationButtons {
-    position: fixed !important;
-    bottom: 40px !important;
-    left: 24px !important;
-    right: 24px !important;
     margin: 0 !important;
-    padding: 0 !important;
-    z-index: 100 !important; /* Ensure buttons stay on top */
-    background: white !important; /* Add background for visibility */
-    padding-top: 16px !important; /* Add some breathing room */
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow for separation */
+    padding: 16px 0 40px 0 !important; /* Top padding for separation, bottom for viewport clearance */
+    background: white !important;
+    display: flex !important;
+    flex-direction: column !important; /* Stack buttons vertically on mobile */
+    gap: 12px !important;
+    align-items: stretch !important;
+    width: 100% !important;
   }
 
   .result {
