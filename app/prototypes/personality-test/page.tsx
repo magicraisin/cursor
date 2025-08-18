@@ -2187,6 +2187,24 @@ export default function NotionAgentTest() {
     const sessionId = localStorage.getItem('personality-test-session-id');
   }, []);
 
+  // Add keyboard shortcut for Enter key to proceed to next question
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Only proceed if we're in the test phase and Enter is pressed
+      if (e.key === 'Enter' && currentStep === 'test' && selectedAnswer) {
+        e.preventDefault(); // Prevent any default form submission
+        nextQuestion();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [currentStep, selectedAnswer, nextQuestion]);
+
   const saveResult = async (finalSequence: string) => {
     try {
       const agent = agents[finalSequence];
