@@ -2384,7 +2384,7 @@ export default function NotionAgentTest() {
     const question = questions[currentQuestion];
     
     return (
-      <div className={styles.container}>
+      <div className={`${styles.container} ${styles.testContainer}`}>
         <div className={styles.testContent}>
           <div className={styles.progressBar}>
             <div className={styles.progressFill} style={{ width: `${progress}%` }}></div>
@@ -2445,8 +2445,10 @@ export default function NotionAgentTest() {
   }
   
   return (
-    <div className={styles.container}>
-      <BackgroundRoamingAgents agentName={agent.name} />
+    <div className={`${styles.container} ${styles.resultsContainer}`}>
+      <div className={styles.desktopOnlyBackground}>
+        <BackgroundRoamingAgents agentName={agent.name} />
+      </div>
       <div className={styles.result}>
         <div 
           ref={profileCardRef}

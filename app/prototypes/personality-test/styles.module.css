@@ -893,6 +893,24 @@
     align-items: center;
   }
   
+  /* Mobile-specific containers */
+  .resultsContainer {
+    background: white !important;
+    align-items: flex-start;
+    padding: 24px;
+  }
+  
+  .testContainer {
+    background: white !important;
+    align-items: flex-start;
+    padding: 24px 24px 0 24px;
+  }
+  
+  /* Hide background agents on mobile */
+  .desktopOnlyBackground {
+    display: none;
+  }
+  
   /* Mobile title adjustments */
   .title {
     font-size: 36px; /* Smaller on mobile */
@@ -905,14 +923,18 @@
   
   .testContent {
     max-width: 100%;
-    padding: 24px 20px;
+    padding: 0;
     margin: 0;
     width: 100%;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    text-align: left;
   }
   
   .result {
     max-width: 100%;
-    padding: 24px 20px 200px 20px; /* Add bottom padding for button stack */
+    padding: 0 0 200px 0; /* Only bottom padding for button stack */
     margin: 0;
     width: 100%;
     position: relative;
@@ -965,8 +987,8 @@
   .profileCard {
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-bottom: 24px;
+    align-items: flex-start;
+    margin-bottom: 0;
   }
   
 
@@ -1031,6 +1053,11 @@
 
 /* Desktop styles - maintain original layout for larger screens */
 @media (min-width: 769px) {
+  /* Show background agents on desktop */
+  .desktopOnlyBackground {
+    display: block;
+  }
+  
   .mobileButtonStack {
     display: contents; /* Use normal document flow on desktop */
   }
