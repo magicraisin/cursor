@@ -788,7 +788,7 @@
   background: white;
   border-radius: 12px;
   width: 600px; /* Fixed width to match result card container */
-  height: 700px; /* Updated to match result card container height */
+  height: 676px; /* Updated to match result card container height (reduced by 24px) */
   overflow-x: visible;
   overflow-y: hidden;
   box-shadow: 0px 16px 50px 0px rgba(0, 0, 0, 0.2);
@@ -832,7 +832,7 @@
 .modalContent {
   padding: 24px;
   overflow-y: auto;
-  height: calc(700px - 80px); /* Fixed height minus header space */
+  height: calc(676px - 80px); /* Fixed height minus header space */
   flex: 1; /* Take remaining space */
   display: flex;
   flex-direction: column;
@@ -1330,7 +1330,7 @@
   .result {
     text-align: center !important;
     width: 600px !important; /* Container width as requested */
-    height: 700px !important; /* Reduced height to 700px */
+    height: 676px !important; /* Reduced height by 24px (700px - 24px) */
     background: white !important;
     border-radius: 40px !important;
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1) !important;
@@ -1367,7 +1367,7 @@
     /* Container and image keep the same dimensions - no scaling */
     .result {
       width: 600px !important; /* Same container size */
-      height: 700px !important; /* Same container size */
+      height: 676px !important; /* Same container size - reduced by 24px */
     }
     
     .result .agentCardImage {
@@ -1819,7 +1819,7 @@
   .modal {
     width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
     max-width: 600px !important; /* But don't exceed desktop width */
-    height: 700px !important; /* Updated to match result card height */
+    height: 676px !important; /* Updated to match result card height (reduced by 24px) */
   }
 
   .agentDetailContent {
