@@ -37,7 +37,36 @@ async function writeResults(results: PersonalityResult[]) {
   }
 }
 
-// No longer needed - using browser-based sessionId instead of IP detection
+// Get client IP
+function getClientIP(request: NextRequest): string {
+  // Get various IP headers (Vercel uses these)
+  const forwarded = request.headers.get('x-forwarded-for');
+  const realIP = request.headers.get('x-real-ip');
+  const vercelIP = request.headers.get('x-vercel-forwarded-for');
+  const userAgent = request.headers.get('user-agent') || '';
+  
+  console.log('IP Detection Debug:', {
+    forwarded,
+    realIP, 
+    vercelIP,
+    userAgent: userAgent.substring(0, 100)
+  });
+  
+  // Try different IP headers in order of preference
+  if (vercelIP) {
+    return vercelIP.split(',')[0].trim();
+  }
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  if (realIP) {
+    return realIP;
+  }
+  
+  // Create a unique identifier combining IP and User-Agent for better uniqueness
+  const fallbackId = `unknown-${userAgent.replace(/[^a-zA-Z0-9]/g, '').substring(0, 20)}-${Date.now().toString().slice(-6)}`;
+  return fallbackId;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -133,5 +162,60 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     return NextResponse.json({ success: false, error: 'Failed to fetch leaderboard' }, { status: 500 });
+  }
+}
+
+// Temporary DELETE method to clear specific agent data
+export async function DELETE(request: NextRequest) {
+  try {
+    const url = new URL(request.url);
+    const agent = url.searchParams.get('agent');
+    
+    if (!agent) {
+      return NextResponse.json({ success: false, error: 'Agent parameter required' }, { status: 400 });
+    }
+    
+    console.log(`🔍 Reading current results to clear ${agent} data...`);
+    const results = await readResults();
+    console.log(`📊 Found ${results.length} total results`);
+    
+    // Count current results for the specified agent
+    const agentResults = results.filter(result => result.agent === agent);
+    console.log(`🤖 Found ${agentResults.length} ${agent} results to remove`);
+    
+    if (agentResults.length === 0) {
+      return NextResponse.json({ 
+        success: true, 
+        message: `No ${agent} data found to clear`,
+        removedCount: 0,
+        totalResults: results.length
+      });
+    }
+    
+    // Filter out the specified agent's results
+    const filteredResults = results.filter(result => result.agent !== agent);
+    console.log(`📝 Keeping ${filteredResults.length} non-${agent} results`);
+    
+    // Write the filtered results back to KV
+    console.log('💾 Writing filtered results back to KV...');
+    await writeResults(filteredResults);
+    
+    console.log(`✅ Successfully cleared ${agent} data!`);
+    console.log(`📈 Removed ${agentResults.length} ${agent} results`);
+    console.log(`📊 Total results now: ${filteredResults.length}`);
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: `Successfully cleared ${agentResults.length} ${agent} results`,
+      removedCount: agentResults.length,
+      totalResults: filteredResults.length
+    });
+    
+  } catch (error) {
+    console.error('❌ Error clearing agent data:', error);
+    return NextResponse.json({ 
+      success: false, 
+      error: `Failed to clear agent data: ${error instanceof Error ? error.message : 'Unknown error'}` 
+    }, { status: 500 });
   }
 } 
