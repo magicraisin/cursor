@@ -1732,7 +1732,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: -32px;
+  margin-left: -40px; /* Nudged 8px further left (was -32px) */
 }
 
 .backButton {
