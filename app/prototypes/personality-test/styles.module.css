@@ -1038,17 +1038,51 @@
     top: 180px !important; /* Leave space for question */
     left: 24px !important;
     right: 24px !important;
-    bottom: 120px !important; /* Leave space for buttons */
+    bottom: 160px !important; /* More space for fixed buttons with background */
     overflow-y: auto !important;
   }
 
+  /* Add spacing for text-only questions */
+  .testContent .answers:not(.imageAnswers) {
+    top: 204px !important; /* Add 24px more space for text questions */
+  }
+
+  /* Fix image answer aspect ratio on mobile */
+  .imageAnswer {
+    min-height: auto !important;
+    max-width: 45% !important; /* Two images side by side with gap */
+    width: 45% !important;
+    aspect-ratio: 1 / 1.07 !important; /* Target 1:1.07 ratio */
+    height: auto !important;
+  }
+
+  /* Fallback for browsers without aspect-ratio support */
+  @supports not (aspect-ratio: 1 / 1.07) {
+    .imageAnswer {
+      height: calc(45vw * 1.07) !important; /* Approximate 1:1.07 ratio */
+      max-height: 200px !important; /* Reasonable max height */
+    }
+  }
+
+  /* Ensure image answers container handles mobile layout */
+  .answers.imageAnswers {
+    flex-direction: row !important;
+    gap: 16px !important; /* Slightly reduce gap for mobile */
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+  }
+
   .testContent .navigationButtons {
-    position: absolute !important;
+    position: fixed !important;
     bottom: 40px !important;
     left: 24px !important;
     right: 24px !important;
     margin: 0 !important;
     padding: 0 !important;
+    z-index: 100 !important; /* Ensure buttons stay on top */
+    background: white !important; /* Add background for visibility */
+    padding-top: 16px !important; /* Add some breathing room */
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow for separation */
   }
 
   .result {
