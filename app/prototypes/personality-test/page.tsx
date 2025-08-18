@@ -1416,7 +1416,7 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
             What Notion <span className={styles.titleBreak}>Agent Are You?</span>
           </h1>
           <p className={styles.description}>
-            Answer 11 questions to reveal what Notion agent aligns most closely with your personality.
+            Answer 11 questions to reveal what Notion agent<span className={styles.desktopBreak}><br /></span> aligns most closely with your personality.
           </p>
           <button className={styles.getStartedButton} onClick={onStartTest}>
             Get Started →

@@ -948,6 +948,10 @@
     display: block; /* Force line break on mobile */
   }
   
+  .desktopBreak {
+    display: none; /* Hide desktop line break on mobile */
+  }
+  
   /* Mobile landing page content centering */
   .roamingOverlay {
     display: flex !important;
@@ -1163,6 +1167,10 @@
     justify-content: center !important;
     padding: 40px !important;
     max-width: 600px !important;
+  }
+  
+  .desktopBreak {
+    display: inline !important; /* Show desktop line break on desktop */
   }
   
   /* Desktop landing container - restore original behavior */
