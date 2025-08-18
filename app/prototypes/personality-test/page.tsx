@@ -2136,6 +2136,11 @@ export default function NotionAgentTest() {
   const nextQuestion = () => {
     if (!selectedAnswer) return;
     
+    // Blur any focused elements to prevent blue outline on next question
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    
     // Save the current answer
     const newAnswers = { ...answers, [currentQuestion]: selectedAnswer };
     setAnswers(newAnswers);

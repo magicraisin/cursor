@@ -215,6 +215,11 @@
   cursor: pointer;
   /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   text-align: left;
+  outline: none; /* Remove focus outline */
+}
+
+.answerButton:focus {
+  outline: none; /* Ensure no focus outline on focus */
 }
 
 .answerButton:hover {
@@ -242,6 +247,11 @@
   overflow: hidden;
   box-sizing: border-box;
   position: relative;
+  outline: none; /* Remove focus outline */
+}
+
+.imageAnswer:focus {
+  outline: none; /* Ensure no focus outline on focus */
 }
 
 .imageAnswer:hover {
@@ -351,6 +361,11 @@
   font-weight: 500;
   cursor: pointer;
   /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  outline: none; /* Remove focus outline */
+}
+
+.backButton:focus {
+  outline: none; /* Ensure no focus outline on focus */
 }
 
 .backButton:hover {
@@ -370,6 +385,11 @@
   /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   opacity: 0.5;
   pointer-events: none;
+  outline: none; /* Remove focus outline */
+}
+
+.nextButton:focus {
+  outline: none; /* Ensure no focus outline on focus */
 }
 
 .nextButton.enabled {
