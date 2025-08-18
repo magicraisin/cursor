@@ -474,10 +474,6 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
           <div class="agentModal" id="agentModal" style="display: none;">
             <div class="agentModalOverlay" onclick="closeAgentModal()"></div>
             <div class="agentModalContent">
-              <div class="agentModalHeader">
-                <h2 id="agentModalTitle"></h2>
-                <button class="agentModalClose" onclick="closeAgentModal()">✕</button>
-              </div>
               <div class="agentModalBody">
                 <img id="agentModalImage" src="" alt="" />
               </div>
@@ -562,10 +558,8 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
             // Modal functions
             const openAgentModal = (agentName) => {
               const modal = document.getElementById('agentModal');
-              const title = document.getElementById('agentModalTitle');
               const image = document.getElementById('agentModalImage');
               
-              title.textContent = agentName;
               image.src = getAgentCardImage(agentName);
               image.alt = agentName + ' Agent Card';
               
