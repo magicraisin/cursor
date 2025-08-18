@@ -139,7 +139,7 @@
   box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1);
   padding: 16px 40px 24px 40px;
   text-align: center;
-  height: 580px; /* Fixed height to prevent jumpiness */
+  height: 548px; /* Fixed height to prevent jumpiness - reduced by 32px */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -1352,7 +1352,7 @@
     border-radius: 40px !important; /* Original 40px border-radius */
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1) !important; /* Original shadow */
     text-align: center !important; /* Original text alignment */
-    height: 580px !important; /* Keep fixed height for consistency */
+    height: 548px !important; /* Keep fixed height for consistency - reduced by 32px */
     display: flex !important; /* Keep flex layout */
     flex-direction: column !important; /* Keep column direction */
     justify-content: flex-start !important; /* Keep flex start */
