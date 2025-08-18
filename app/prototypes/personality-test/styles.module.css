@@ -1155,6 +1155,11 @@
     align-items: center;
     gap: 8px;
   }
+
+  /* Mobile save button icons - show both save icon and chevron */
+  .saveButton svg {
+    display: inline !important; /* Show all SVG icons on mobile */
+  }
   
   .fixedRetakeButton {
     position: static;
@@ -1350,9 +1355,13 @@
     order: 0 !important;
   }
   
-  /* Show save button icons on desktop (restore chevron) */
-  .saveButton svg {
-    display: inline !important;
+  /* Desktop save button icons - hide save icon, show chevron only */
+  .saveButton svg:first-child {
+    display: none !important; /* Hide the save/document icon on desktop */
+  }
+  
+  .saveButton svg:last-child {
+    display: inline !important; /* Show the chevron/dropdown arrow on desktop */
   }
   
   .leaderboardButton {
