@@ -893,6 +893,20 @@
     align-items: center;
   }
   
+  /* Mobile landing page - full viewport without scroll */
+  .landingContainer {
+    height: 100vh !important;
+    min-height: 100vh;
+    max-height: 100vh;
+    padding: 0;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
   /* Mobile-specific containers */
   .resultsContainer {
     background: white !important;
@@ -919,6 +933,21 @@
   
   .titleBreak {
     display: block; /* Force line break on mobile */
+  }
+  
+  /* Mobile landing page content centering */
+  .roamingOverlay {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  .roamingContent {
+    padding: 20px;
+    max-width: 90%;
+    text-align: center;
   }
   
   .testContent {

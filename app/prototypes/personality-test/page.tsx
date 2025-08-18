@@ -2374,7 +2374,7 @@ export default function NotionAgentTest() {
 
   if (currentStep === 'landing') {
     return (
-      <div className={styles.container}>
+      <div className={`${styles.container} ${styles.landingContainer}`}>
         <GravityHomepage onStartTest={startTest} />
       </div>
     );
