@@ -811,12 +811,50 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
       const containerWidth = window.innerWidth;
       const containerHeight = window.innerHeight;
       
-      console.log('Initializing agents with dimensions:', containerWidth, 'x', containerHeight);
+      // Mobile detection and agent count optimization
+      const isMobile = containerWidth <= 768;
+      const maxAgents = isMobile ? 10 : AGENT_IMAGES.length; // 10 on mobile, 32 on desktop
+      
+      // Button area avoidance (center area where content is)
+      const buttonAreaTop = containerHeight * 0.35; // Approximate top of centered content
+      const buttonAreaBottom = containerHeight * 0.65; // Approximate bottom of centered content
+      const buttonAreaLeft = Math.max(0, (containerWidth - 600) / 2 - 50); // Content max-width 600px + buffer
+      const buttonAreaRight = Math.min(containerWidth, (containerWidth + 600) / 2 + 50);
+      
+      console.log('Initializing agents:', {
+        dimensions: `${containerWidth}x${containerHeight}`,
+        isMobile,
+        agentCount: maxAgents,
+        buttonArea: { top: buttonAreaTop, bottom: buttonAreaBottom, left: buttonAreaLeft, right: buttonAreaRight }
+      });
 
-      const initialAgents: RoamingAgent[] = AGENT_IMAGES.map((image, index) => {
-        // Generate random positions across the full screen (use full radius for positioning)
-        const x = AGENT_RADIUS + Math.random() * (containerWidth - 2 * AGENT_RADIUS);
-        const y = AGENT_RADIUS + Math.random() * (containerHeight - 2 * AGENT_RADIUS);
+      const selectedImages = AGENT_IMAGES.slice(0, maxAgents); // Take only the needed amount
+      const initialAgents: RoamingAgent[] = selectedImages.map((image, index) => {
+        // Generate random positions avoiding the button area
+        let x, y;
+        let attempts = 0;
+        const maxAttempts = 50;
+        
+        do {
+          x = AGENT_RADIUS + Math.random() * (containerWidth - 2 * AGENT_RADIUS);
+          y = AGENT_RADIUS + Math.random() * (containerHeight - 2 * AGENT_RADIUS);
+          attempts++;
+        } while (
+          attempts < maxAttempts &&
+          x >= buttonAreaLeft && 
+          x <= buttonAreaRight && 
+          y >= buttonAreaTop && 
+          y <= buttonAreaBottom
+        );
+        
+        // If we couldn't find a spot outside the button area after many attempts,
+        // force placement in safe zones (top/bottom areas)
+        if (attempts >= maxAttempts) {
+          x = AGENT_RADIUS + Math.random() * (containerWidth - 2 * AGENT_RADIUS);
+          y = Math.random() < 0.5 
+            ? AGENT_RADIUS + Math.random() * (buttonAreaTop - AGENT_RADIUS) // Top area
+            : (buttonAreaBottom + AGENT_RADIUS) + Math.random() * (containerHeight - buttonAreaBottom - 2 * AGENT_RADIUS); // Bottom area
+        }
 
         return {
           id: `${index}`,
@@ -828,7 +866,7 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
           radius: COLLISION_RADIUS, // Use smaller radius for collision detection
           rotation: Math.random() * 360,
           hasAppeared: false,
-          appearDelay: (index * 10000) / AGENT_IMAGES.length, // Spread evenly across 10 seconds
+          appearDelay: (index * 10000) / maxAgents, // Spread evenly across 10 seconds based on actual agent count
           isHovered: false,
           isDragging: false,
           isStationary: false,
@@ -939,6 +977,41 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
           if (agent.y + AGENT_RADIUS >= containerHeight) {
             agent.y = containerHeight - AGENT_RADIUS;
             agent.vy = -Math.abs(agent.vy); // Force negative velocity (move up)
+          }
+
+          // Button area avoidance (only on mobile and when close to button area)
+          const isMobile = containerWidth <= 768;
+          if (isMobile) {
+            const buttonAreaTop = containerHeight * 0.35;
+            const buttonAreaBottom = containerHeight * 0.65;
+            const buttonAreaLeft = Math.max(0, (containerWidth - 600) / 2 - 50);
+            const buttonAreaRight = Math.min(containerWidth, (containerWidth + 600) / 2 + 50);
+            
+            // Check if agent is entering button area and redirect it
+            if (agent.x + AGENT_RADIUS >= buttonAreaLeft && 
+                agent.x - AGENT_RADIUS <= buttonAreaRight && 
+                agent.y + AGENT_RADIUS >= buttonAreaTop && 
+                agent.y - AGENT_RADIUS <= buttonAreaBottom) {
+              
+              // Push agent away from button area center
+              const centerX = (buttonAreaLeft + buttonAreaRight) / 2;
+              const centerY = (buttonAreaTop + buttonAreaBottom) / 2;
+              
+              // Calculate direction away from center
+              const deltaX = agent.x - centerX;
+              const deltaY = agent.y - centerY;
+              
+              // If agent is too close to center, give it a random direction
+              if (Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
+                agent.vx = (Math.random() - 0.5) * SPEED * 2;
+                agent.vy = (Math.random() - 0.5) * SPEED * 2;
+              } else {
+                // Redirect velocity away from button area
+                const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                agent.vx = (deltaX / length) * SPEED;
+                agent.vy = (deltaY / length) * SPEED;
+              }
+            }
           }
 
           // Check collision with text areas
