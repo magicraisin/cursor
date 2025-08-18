@@ -179,7 +179,10 @@
   margin-bottom: 32px; /* Reduced for fixed layout */
   width: 100%; /* Full width to match answer blocks */
   max-width: 100%; /* Ensure no width constraints */
-  text-align: left; /* Left align for better readability */
+  text-align: center; /* Restore center alignment */
+  padding: 0; /* Remove any hidden padding */
+  margin-left: 0; /* Remove any hidden margins */
+  margin-right: 0; /* Remove any hidden margins */
 }
 
 .answers {
@@ -1069,12 +1072,12 @@
   }
 
   .testContent .question {
-    margin: 0 0 32px 0 !important; /* Consistent 32px spacing below question */
-    padding: 0 !important;
+    margin: 0 -4px 32px -4px !important; /* Break out of container padding (negative margins) */
+    padding: 0 4px !important; /* Add back minimal padding for text readability */
     font-size: 24px !important;
-    width: 100% !important; /* Ensure full width on mobile */
-    max-width: 100% !important; /* No width constraints */
-    text-align: left !important; /* Left align for better text flow */
+    width: calc(100% + 8px) !important; /* Compensate for negative margins */
+    max-width: none !important; /* Remove width constraints */
+    text-align: center !important; /* Restore center alignment */
     box-sizing: border-box !important; /* Ensure proper width calculation */
   }
 
@@ -1407,10 +1410,13 @@
   
   .question {
     margin-top: inherit; /* Reset to original desktop margin-top */
-    width: 100% !important; /* Ensure full width on desktop */
-    max-width: 100% !important; /* No width constraints */
-    text-align: left !important; /* Left align for better text flow - override container center alignment */
+    margin-left: -40px !important; /* Break out of container padding */
+    margin-right: -40px !important; /* Break out of container padding */
+    width: calc(100% + 80px) !important; /* Compensate for negative margins (40px each side) */
+    max-width: none !important; /* Remove width constraints */
+    text-align: center !important; /* Restore center alignment */
     box-sizing: border-box !important; /* Ensure proper width calculation */
+    padding: 0 40px !important; /* Add back padding for text readability */
   }
   
   /* Desktop test content - restore original layout */
