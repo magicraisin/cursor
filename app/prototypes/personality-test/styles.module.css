@@ -993,50 +993,64 @@
     overflow: hidden; /* No scrolling within the content */
   }
   
-    /* Mobile question spacing adjustments - ULTRA TIGHT SPACING */
-  /* Target all possible variations to ensure override */
-  .testContainer .progressBar,
-  .container .progressBar,
-  .progressBar {
-    margin-top: 16px !important; /* 16px from top of screen */
-    margin-bottom: 16px !important; /* 16px gap to question number */
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    /* NUCLEAR MOBILE SOLUTION - Absolute positioning to bypass CSS cascade */
+  .testContainer {
+    position: relative !important;
   }
-
-  /* Extra aggressive overrides to eliminate ALL spacing on mobile */
+  
   .testContent {
+    position: relative !important;
     padding: 0 !important;
     margin: 0 !important;
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    gap: 0 !important; /* Remove any flexbox gaps */
+    height: 100vh !important;
   }
 
-  /* Eliminate any extra spacing from containers */
-  .testContainer > *,
-  .container > *,
-  .testContent > * {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
+  /* Force exact positioning for each element */
+  .testContent .progressBar {
+    position: absolute !important;
+    top: 16px !important;
+    left: 24px !important;
+    right: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* First child should have top margin only for progress bar */
-  .testContainer > *:first-child,
-  .container > *:first-child,
-  .testContent > *:first-child {
-    margin-top: 16px !important; /* Only progress bar gets top margin */
+  .testContent .questionNumber {
+    position: absolute !important;
+    top: 48px !important; /* 16px (progress bar top) + 4px (bar height) + 28px gap */
+    left: 24px !important;
+    right: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Target all possible variations for question number */
-  .testContainer .questionNumber,
-  .container .questionNumber,
-  .testContent .questionNumber,
-  .questionNumber {
-    margin-top: 0 !important; /* No additional top margin - rely on progressBar bottom margin */
-    margin-bottom: 8px !important; /* Only 8px above question text */
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+  .testContent .question {
+    position: absolute !important;
+    top: 80px !important; /* 48px (question number top) + 24px (question number height) + 8px gap */
+    left: 24px !important;
+    right: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 24px;
+  }
+
+  /* Position other elements below */
+  .testContent .answers {
+    position: absolute !important;
+    top: 180px !important; /* Leave space for question */
+    left: 24px !important;
+    right: 24px !important;
+    bottom: 120px !important; /* Leave space for buttons */
+    overflow-y: auto !important;
+  }
+
+  .testContent .navigationButtons {
+    position: absolute !important;
+    bottom: 40px !important;
+    left: 24px !important;
+    right: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .result {
@@ -1045,17 +1059,6 @@
     margin: 0;
     width: 100%;
     position: relative;
-  }
-
-  /* Target all possible variations for question text */
-  .testContainer .question,
-  .container .question,
-  .testContent .question,
-  .question {
-    margin-top: 0 !important; /* Remove any top margin from question text */
-    margin-bottom: 24px !important; /* Reduced bottom margin */
-    padding-top: 0 !important;
-    font-size: 24px;
   }
   
   .agentName {
