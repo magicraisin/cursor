@@ -1843,11 +1843,11 @@
   padding: 0;
   height: 100%; /* Fill available modal content space */
   margin-bottom: 0; /* Remove margin to maximize space */
-  margin-top: 0; /* Remove margin to maximize space */
+  margin-top: -24px; /* Move content up by 24px */
 }
 
 .agentDetailCard {
-  max-width: 500px;
+  max-width: 450px; /* Reduced from 500px for slightly smaller size */
   width: 100%;
   display: flex;
   justify-content: center;
@@ -1887,7 +1887,7 @@
   }
   
   .agentDetailCard {
-    max-width: 400px;
+    max-width: 360px; /* Reduced from 400px for slightly smaller size on mobile */
   }
 }
 
