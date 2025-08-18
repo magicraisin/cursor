@@ -2006,8 +2006,7 @@ export default function NotionAgentTest() {
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [leaderboardView, setLeaderboardView] = useState<'list' | 'detail'>('list');
-  const [debugLogs, setDebugLogs] = useState<string[]>([]);
-  const [showDebug, setShowDebug] = useState(false);
+
   const [isMobile, setIsMobile] = useState(false);
 
   const profileCardRef = useRef<HTMLDivElement>(null);
@@ -2024,43 +2023,7 @@ export default function NotionAgentTest() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Debug logging function
-  const addDebugLog = (message: string) => {
-    const timestamp = new Date().toLocaleTimeString();
-    const logEntry = `[${timestamp}] ${message}`;
-    console.log(logEntry);
-    setDebugLogs(prev => [...prev.slice(-10), logEntry]); // Keep last 10 logs
-  };
 
-  // Add browser info on load
-  useEffect(() => {
-    const userAgent = navigator.userAgent;
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
-    addDebugLog(`🌐 Browser: ${isMobile ? 'Mobile' : 'Desktop'}`);
-    addDebugLog(`📱 User Agent: ${userAgent.substring(0, 50)}...`);
-    
-    // Debug console for finding the button
-    console.log('🐛 DEBUG BUTTON SHOULD BE VISIBLE IN BOTTOM-RIGHT CORNER');
-    console.log('Debug panel state:', { showDebug, debugLogs: debugLogs.length });
-    console.log('💡 TIP: Press "D" key to toggle debug panel if button is not visible');
-    
-    // Add keyboard shortcut to toggle debug (press 'd' key)
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'd' || e.key === 'D') {
-        setShowDebug(prev => {
-          console.log('🐛 Debug toggled via keyboard:', !prev);
-          return !prev;
-        });
-      }
-    };
-    
-    document.addEventListener('keydown', handleKeyPress);
-    
-    // Cleanup
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, []);
 
   // Preload images for the next question
   useEffect(() => {
@@ -2203,9 +2166,7 @@ export default function NotionAgentTest() {
       // Generate a unique session ID: timestamp + random string
       sessionId = `session-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
       localStorage.setItem('personality-test-session-id', sessionId);
-      addDebugLog(`🆔 Generated new session ID: ${sessionId}`);
     } else {
-      addDebugLog(`🆔 Using existing session ID: ${sessionId}`);
     }
     return sessionId;
   };
@@ -2224,17 +2185,14 @@ export default function NotionAgentTest() {
   useEffect(() => {
     const hasCompleted = hasAlreadyTakenTest();
     const sessionId = localStorage.getItem('personality-test-session-id');
-    addDebugLog(`🔍 Initial check - Test completed: ${hasCompleted}, Session ID: ${sessionId || 'none'}`);
   }, []);
 
   const saveResult = async (finalSequence: string) => {
     try {
       const agent = agents[finalSequence];
-      addDebugLog(`Saving result: ${agent.name} (${finalSequence})`);
       
       // Check if user has already taken test in this browser
       if (hasAlreadyTakenTest()) {
-        addDebugLog(`⚠️ Test already completed in this browser - not saving to leaderboard`);
         return;
       }
       
@@ -2253,19 +2211,18 @@ export default function NotionAgentTest() {
       });
       
       const data = await response.json();
-      addDebugLog(`Save response: ${JSON.stringify(data)}`);
       
       if (!data.success) {
-        addDebugLog(`❌ API Error: ${data.error || 'Unknown error'}`);
+        console.error('API Error:', data.error || 'Unknown error');
       } else if (data.isNewResult === false) {
-        addDebugLog(`❌ Duplicate session! Existing: ${data.existingAgent}`);
+        console.log('Duplicate session:', data.existingAgent);
       } else {
-        addDebugLog(`✅ New result saved successfully!`);
+        console.log('New result saved successfully!');
         // Mark test as completed to prevent future submissions from this browser
         markTestCompleted();
       }
     } catch (error) {
-      addDebugLog(`❌ Save failed: ${error}`);
+      console.error('Save failed:', error);
     }
   };
 
@@ -2317,7 +2274,7 @@ export default function NotionAgentTest() {
     setAnswers({});
     // Reset the "test completed" flag to allow retaking for testing purposes
     localStorage.removeItem('personality-test-completed');
-    addDebugLog(`🔄 Test restarted - cleared completion flag`);
+    console.log('Test restarted - cleared completion flag');
   };
 
   const saveAsImage = async () => {
@@ -2422,23 +2379,20 @@ export default function NotionAgentTest() {
   };
 
   const fetchLeaderboard = async () => {
-    setIsLoadingLeaderboard(true);
     try {
-      addDebugLog('Fetching leaderboard...');
+      console.log('Fetching leaderboard...');
       const response = await fetch('/api/personality-results');
       const data = await response.json();
-      addDebugLog(`Fetch response: ${JSON.stringify(data)}`);
+      console.log('Fetch response:', data);
       
-      if (data.success) {
+      if (data.leaderboard) {
         const completeLeaderboard = generateCompleteLeaderboard(data.leaderboard);
         setLeaderboardData(completeLeaderboard);
         setTotalResults(data.totalResults);
-        addDebugLog(`📊 Complete Leaderboard: ${data.totalResults} total, ${completeLeaderboard.length} total agents (${data.leaderboard.length} with results)`);
+        console.log(`Complete Leaderboard: ${data.totalResults} total, ${completeLeaderboard.length} total agents (${data.leaderboard.length} with results)`);
       }
     } catch (error) {
-      addDebugLog(`❌ Fetch failed: ${error}`);
-    } finally {
-      setIsLoadingLeaderboard(false);
+      console.error('Fetch failed:', error);
     }
   };
 
@@ -2742,96 +2696,7 @@ export default function NotionAgentTest() {
         </div>
       )}
 
-      {/* Debug Panel */}
-      <div 
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          zIndex: 10000
-        }}
-      >
-        <button
-          onClick={() => setShowDebug(!showDebug)}
-          style={{
-            background: '#ff4444',
-            color: 'white',
-            border: '2px solid white',
-            borderRadius: '50px',
-            width: '80px',
-            height: '80px',
-            cursor: 'pointer',
-            fontSize: '32px',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-            animation: 'none'
-          }}
-          title="Debug Console"
-        >
-          🐛
-        </button>
-        
-        {showDebug && (
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '70px',
-              right: '0',
-              width: '350px',
-              maxHeight: '400px',
-              background: 'rgba(0,0,0,0.9)',
-              color: 'white',
-              borderRadius: '8px',
-              padding: '15px',
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              overflow: 'auto',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.4)'
-            }}
-          >
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              marginBottom: '10px',
-              borderBottom: '1px solid #444',
-              paddingBottom: '8px'
-            }}>
-              <strong>🔍 Debug Logs</strong>
-              <button
-                onClick={() => setDebugLogs([])}
-                style={{
-                  background: '#444',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '4px 8px',
-                  cursor: 'pointer',
-                  fontSize: '10px'
-                }}
-              >
-                Clear
-              </button>
-            </div>
-            
-            {debugLogs.length === 0 ? (
-              <p style={{ color: '#888', fontStyle: 'italic' }}>No logs yet...</p>
-            ) : (
-              debugLogs.map((log, index) => (
-                <div 
-                  key={index}
-                  style={{ 
-                    marginBottom: '5px',
-                    wordBreak: 'break-word',
-                    lineHeight: '1.4'
-                  }}
-                >
-                  {log}
-                </div>
-              ))
-            )}
-          </div>
-        )}
-      </div>
+
     </div>
   );
 } 
