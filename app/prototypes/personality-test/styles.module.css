@@ -1286,7 +1286,7 @@
     background: #F7F6F3 !important; /* Restore original background */
     align-items: center !important; /* Center alignment */
     justify-content: center !important; /* Center the result card */
-    padding: 120px 232px !important; /* Original desktop container padding */
+    padding: 40px 232px !important; /* Reduced padding to give more space for card */
     display: flex !important;
     min-height: 100vh !important;
   }
@@ -1294,6 +1294,7 @@
   .result {
     text-align: center !important;
     max-width: 600px !important; /* Original constrained width */
+    max-height: calc(100vh - 80px) !important; /* Ensure card fits in viewport with margin */
     width: 100% !important;
     background: white !important;
     border-radius: 40px !important;
@@ -1302,7 +1303,18 @@
     position: relative !important; /* For absolute positioned save button */
     z-index: 10 !important;
     margin: 0 auto !important; /* Center the card */
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important; /* Prevent content overflow */
+  }
+
+  /* Desktop agent card image - make responsive to available space */
+  .result .agentCardImage {
+    max-height: calc(100vh - 200px) !important; /* Constrain image height to fit viewport */
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important; /* Maintain aspect ratio */
+    flex-shrink: 1 !important; /* Allow image to shrink if needed */
   }
   
   /* Desktop homepage content - restore original positioning */
@@ -1480,36 +1492,33 @@
 
 /* Height-based responsive behavior for desktop results card positioning */
 
-/* For tall desktop screens (above 800px): True center the results card */
-@media (min-width: 769px) and (min-height: 801px) {
+/* For all desktop screens: Consistent center alignment with optimal spacing */
+@media (min-width: 769px) and (min-height: 701px) {
   .resultsContainer {
     align-items: center !important; /* Center vertically */
     justify-content: center !important; /* Center horizontally */
-    padding: 40px 232px !important; /* Minimal padding for true centering */
+    padding: 40px 232px !important; /* Consistent padding for optimal fit */
     display: flex !important;
     min-height: 100vh !important;
   }
 }
 
-/* For medium desktop screens (701px-800px): Slight top bias */
-@media (min-width: 769px) and (min-height: 701px) and (max-height: 800px) {
-  .resultsContainer {
-    align-items: center !important; /* Center vertically */
-    justify-content: center !important; /* Center horizontally */
-    padding: 80px 232px 40px 232px !important; /* Slight top bias */
-    display: flex !important;
-    min-height: 100vh !important;
-  }
-}
-
-/* For short desktop screens (700px and below): Center-align always */
+/* For short desktop screens (700px and below): Minimal padding for maximum space */
 @media (min-width: 769px) and (max-height: 700px) {
   .resultsContainer {
     align-items: center !important; /* Center vertically always */
     justify-content: center !important; /* Center horizontally */
-    padding: 40px 232px !important; /* Consistent padding for centering */
+    padding: 20px 232px !important; /* Minimal padding for short screens */
     display: flex !important;
     min-height: 100vh !important;
+  }
+
+  .result {
+    max-height: calc(100vh - 40px) !important; /* Even tighter constraint for short screens */
+  }
+
+  .result .agentCardImage {
+    max-height: calc(100vh - 120px) !important; /* More constrained for short screens */
   }
 }
 
