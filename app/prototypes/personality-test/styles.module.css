@@ -903,7 +903,7 @@
   .testContainer {
     background: white !important;
     align-items: flex-start;
-    padding: 24px 24px 0 24px;
+    padding: 16px 24px 0 24px; /* Reduced top padding from 24px to 16px */
   }
   
   /* Hide background agents on mobile */
@@ -981,6 +981,15 @@
   .nextButton {
     width: 100%;
     justify-content: center;
+  }
+  
+  /* Reverse button order on mobile - Next button on top */
+  .nextButton {
+    order: 1;
+  }
+  
+  .backButton {
+    order: 2;
   }
   
   /* Mobile agent card display */
