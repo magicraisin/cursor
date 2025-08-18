@@ -1156,20 +1156,24 @@
   .resultsContainer {
     background: #F7F6F3 !important; /* Restore original background */
     align-items: center !important; /* Center alignment */
-    padding: 20px !important; /* Original desktop padding */
+    justify-content: center !important; /* Center the result card */
+    padding: 120px 232px !important; /* Original desktop container padding */
+    display: flex !important;
+    min-height: 100vh !important;
   }
   
   .result {
+    text-align: center !important;
+    max-width: 600px !important; /* Original constrained width */
+    width: 100% !important;
+    background: white !important;
+    border-radius: 40px !important;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1) !important;
+    padding: 16px 40px 28px 40px !important; /* Original padding */
+    position: relative !important; /* For absolute positioned save button */
+    z-index: 10 !important;
+    margin: 0 auto !important; /* Center the card */
     display: block !important;
-    padding: 120px 232px !important; /* Restore original desktop padding */
-    margin: 0 !important;
-    width: auto !important;
-    max-width: none !important;
-    position: static !important;
-    padding-bottom: 40px !important; /* Remove mobile bottom padding */
-    flex-direction: column !important; /* Reset mobile flex properties */
-    justify-content: center !important; /* Reset mobile flex properties */
-    align-items: center !important; /* Reset mobile flex properties */
   }
   
   /* Desktop homepage content - restore original positioning */
@@ -1256,24 +1260,23 @@
   }
   
   .profileCard {
-    display: block !important;
-    flex: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 40px !important;
+    display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     margin-bottom: 0 !important;
-    max-width: 600px !important; /* Restore original card size */
-    width: auto !important; /* Remove mobile full width */
-    background: transparent !important; /* Original background */
-    padding: 0 !important; /* Original padding */
-    border-radius: 40px !important; /* Original border-radius */
+    width: 100% !important; /* Fill result container */
+    max-width: none !important; /* Remove width constraint */
   }
   
   .agentCardImage {
-    width: 100% !important; /* Original width */
-    height: auto !important; /* Original height */
-    border-radius: 40px !important; /* Original border-radius */
-    display: block !important; /* Original display */
-    max-width: 600px !important; /* Limit card size */
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 40px !important;
+    display: block !important;
+    max-width: none !important; /* Remove size constraint - let result container control width */
   }
   
   /* Desktop button layout - restore original positioning */
@@ -1289,10 +1292,11 @@
   }
   
   .saveDropdown {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
+    position: absolute !important; /* Position inside result container */
+    top: 32px !important; /* Original top position */
+    right: 32px !important; /* Original right position */
     width: auto !important;
+    display: inline-block !important;
     order: 0 !important;
   }
   
@@ -1314,9 +1318,9 @@
     order: 0 !important;
   }
   
-  /* Hide save button icons on desktop */
+  /* Show save button icons on desktop (restore chevron) */
   .saveButton svg {
-    display: none !important;
+    display: inline !important;
   }
   
   .leaderboardButton {
@@ -1326,6 +1330,7 @@
     width: auto !important;
     justify-content: center !important;
     order: 0 !important;
+    z-index: 20 !important; /* Above result card */
   }
   
   .fixedRetakeButton {
@@ -1335,6 +1340,7 @@
     width: auto !important;
     justify-content: center !important;
     order: 0 !important;
+    z-index: 20 !important; /* Above result card */
   }
 }
 
