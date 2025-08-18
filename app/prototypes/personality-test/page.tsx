@@ -372,6 +372,90 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
             .leaderboardItem.zeroCount .leaderboardAgent img {
               filter: grayscale(100%);
             }
+            
+            /* Agent Modal Styles */
+            .agentModal {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 1000;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .agentModalOverlay {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: rgba(0, 0, 0, 0.5);
+              backdrop-filter: blur(4px);
+            }
+            
+            .agentModalContent {
+              position: relative;
+              background: white;
+              border-radius: 12px;
+              box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+              max-width: 90vw;
+              max-height: 90vh;
+              overflow: hidden;
+              z-index: 1001;
+            }
+            
+            .agentModalHeader {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 16px 20px;
+              border-bottom: 1px solid #e5e7eb;
+              background: #f9fafb;
+            }
+            
+            .agentModalClose {
+              background: none;
+              border: none;
+              font-size: 18px;
+              cursor: pointer;
+              color: #6b7280;
+              width: 24px;
+              height: 24px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 4px;
+            }
+            
+            .agentModalClose:hover {
+              background: #e5e7eb;
+            }
+            
+            .agentModalBody {
+              padding: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            
+            .agentModalBody img {
+              max-width: 100%;
+              max-height: 60vh;
+              object-fit: contain;
+              border-radius: 8px;
+            }
+            
+            .leaderboardChevron {
+              opacity: 0.6;
+              transition: opacity 0.2s ease;
+            }
+            
+            .leaderboardNameContainer:hover .leaderboardChevron {
+              opacity: 1;
+            }
           </style>
         </head>
         <body>
@@ -383,6 +467,20 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
             </div>
             <div id="leaderboardContent" class="leaderboardContent">
               <!-- Leaderboard items will be inserted here -->
+            </div>
+          </div>
+          
+          <!-- Agent Modal -->
+          <div class="agentModal" id="agentModal" style="display: none;">
+            <div class="agentModalOverlay" onclick="closeAgentModal()"></div>
+            <div class="agentModalContent">
+              <div class="agentModalHeader">
+                <h2 id="agentModalTitle"></h2>
+                <button class="agentModalClose" onclick="closeAgentModal()">✕</button>
+              </div>
+              <div class="agentModalBody">
+                <img id="agentModalImage" src="" alt="" />
+              </div>
             </div>
           </div>
           <script>
@@ -419,6 +517,74 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               if (agentName === 'Swish') return 'single-loop.png';
               return agentName.toLowerCase().replace(/\\s+/g, '-').replace('/', '-') + '.png';
             };
+            
+            // Agent card image mapping for modal
+            const getAgentCardImage = (agentName) => {
+              const nameMapping = {
+                'Greek God': 'Greek god.png',
+                'Cloud Flower': 'Cloud flower.png',
+                'Double Copy': 'Double Copy.png',
+                'Infinity Glasses': 'Infinity Glasses.png',
+                'Repetition': 'Repeat Cycle.png',
+                'Whoosh Arrow': 'Single arrow.png',
+                'Swish': 'Single loop.png',
+                'Clock': 'Time schedule.png',
+                'Book Wiki': 'Book Wiki.png',
+                'Apple': 'Apple.png',
+                'Banana': 'Banana.png',
+                'Bell': 'Bell.png',
+                'Book': 'Book.png',
+                'Brackets': 'Brackets.png',
+                'Cactus': 'Cactus.png',
+                'Clippy': 'Clippy.png',
+                'Coffee': 'Coffee.png',
+                'Command': 'Command.png',
+                'Formula': 'Formula.png',
+                'Gear': 'Gear.png',
+                'Heart': 'Heart.png',
+                'Lightbulb': 'Lightbulb.png',
+                'Math': 'Math.png',
+                'Music': 'Music.png',
+                'Notetaker': 'Notetaker.png',
+                'Phone': 'Phone.png',
+                'Research': 'Research.png',
+                'Root': 'Root.png',
+                'Saucy': 'Saucy.png',
+                'Scribble': 'Scribble.png',
+                'Spiky': 'Spiky.png',
+                'Umbrella': 'Umbrella.png'
+              };
+              
+              const filename = nameMapping[agentName] || agentName + '.png';
+              return '/images/agent-cards/' + filename;
+            };
+            
+            // Modal functions
+            const openAgentModal = (agentName) => {
+              const modal = document.getElementById('agentModal');
+              const title = document.getElementById('agentModalTitle');
+              const image = document.getElementById('agentModalImage');
+              
+              title.textContent = agentName;
+              image.src = getAgentCardImage(agentName);
+              image.alt = agentName + ' Agent Card';
+              
+              modal.style.display = 'flex';
+              document.body.style.overflow = 'hidden';
+            };
+            
+            const closeAgentModal = () => {
+              const modal = document.getElementById('agentModal');
+              modal.style.display = 'none';
+              document.body.style.overflow = 'auto';
+            };
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape') {
+                closeAgentModal();
+              }
+            });
             
             // Only include agents with count > 0 for the animation
             leaderboardData.filter(entry => entry.count > 0).forEach(entry => {
@@ -515,15 +681,34 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
                 const info = document.createElement('div');
                 info.className = 'leaderboardInfo';
                 
+                const nameContainer = document.createElement('div');
+                nameContainer.className = 'leaderboardNameContainer';
+                nameContainer.style.display = 'flex';
+                nameContainer.style.alignItems = 'center';
+                nameContainer.style.gap = '8px';
+                nameContainer.style.cursor = 'pointer';
+                nameContainer.onclick = () => openAgentModal(entry.agent);
+                
                 const name = document.createElement('div');
                 name.className = 'leaderboardName';
                 name.textContent = entry.agent;
+                
+                const chevron = document.createElement('svg');
+                chevron.setAttribute('width', '16');
+                chevron.setAttribute('height', '16');
+                chevron.setAttribute('viewBox', '0 0 24 24');
+                chevron.setAttribute('fill', 'none');
+                chevron.innerHTML = '<path d="M9 18l6-6-6-6" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+                chevron.className = 'leaderboardChevron';
+                
+                nameContainer.appendChild(name);
+                nameContainer.appendChild(chevron);
                 
                 const personality = document.createElement('div');
                 personality.className = 'leaderboardPersonality';
                 personality.textContent = entry.personality;
                 
-                info.appendChild(name);
+                info.appendChild(nameContainer);
                 info.appendChild(personality);
                 
                 const count = document.createElement('div');
