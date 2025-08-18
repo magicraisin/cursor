@@ -222,7 +222,24 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
   
   const handleExpandFullScreen = () => {
     // Generate complete leaderboard including 0-count agents
-    const allAgentNames = Object.values(agents).map(agent => agent.name);
+    // Convert AGENT_IMAGES filenames to agent names
+    const getAgentNameFromImage = (imageName: string): string => {
+      const name = imageName.replace('.png', '').replace(/-/g, ' ');
+      // Handle special cases
+      if (name === 'book wiki') return 'Book Wiki';
+      if (name === 'cloud flower') return 'Cloud Flower';
+      if (name === 'double copy') return 'Double Copy';
+      if (name === 'greek god') return 'Greek God';
+      if (name === 'infinity glasses') return 'Infinity Glasses';
+      if (name === 'repeat cycle') return 'Repetition';
+      if (name === 'single arrow') return 'Whoosh Arrow';
+      if (name === 'single loop') return 'Swish';
+      if (name === 'time schedule') return 'Clock';
+      // Capitalize first letter of each word
+      return name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    };
+    
+    const allAgentNames = AGENT_IMAGES.map(imageName => getAgentNameFromImage(imageName));
     const apiDataMap = new Map(leaderboardData.map(entry => [entry.agent, entry.count]));
     const completeLeaderboard = allAgentNames.map(agentName => ({
       agent: agentName,
@@ -1665,4 +1682,53 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
             </div>
     </div>
   );
+}
+
+// Main PersonalityTest component that handles the test flow
+export default function PersonalityTestPage() {
+  const [currentStep, setCurrentStep] = useState<'home' | 'test' | 'results'>('home');
+  const [testResult, setTestResult] = useState<string | null>(null);
+
+  const handleStartTest = () => {
+    setCurrentStep('test');
+  };
+
+  const handleTestComplete = (result: string) => {
+    setTestResult(result);
+    setCurrentStep('results');
+  };
+
+  const handleReturnHome = () => {
+    setCurrentStep('home');
+    setTestResult(null);
+  };
+
+  if (currentStep === 'home') {
+    return <GravityHomepage onStartTest={handleStartTest} />;
+  }
+
+  if (currentStep === 'test') {
+    // This would be the actual test component - for now return placeholder
+    return (
+      <div style={{ padding: '50px', textAlign: 'center' }}>
+        <h1>Personality Test</h1>
+        <p>Test component would go here</p>
+        <button onClick={() => handleTestComplete('Sample Agent')}>
+          Complete Test (Sample)
+        </button>
+      </div>
+    );
+  }
+
+  if (currentStep === 'results' && testResult) {
+    // This would be the results component - for now return placeholder  
+    return (
+      <div style={{ padding: '50px', textAlign: 'center' }}>
+        <h1>Your Result: {testResult}</h1>
+        <button onClick={handleReturnHome}>Take Test Again</button>
+      </div>
+    );
+  }
+
+  return <GravityHomepage onStartTest={handleStartTest} />;
 } 
