@@ -389,6 +389,7 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               display: flex;
               align-items: center;
               justify-content: center;
+              padding: 16px;
             }
             
             .agentModalOverlay {
@@ -406,19 +407,61 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               background: white;
               border-radius: 12px;
               box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-              max-width: 90vw;
-              max-height: 90vh;
+              width: 576px;
+              height: 652px;
               overflow: hidden;
               z-index: 1001;
+              flex-shrink: 0;
+              display: flex;
+              flex-direction: column;
             }
             
-            .agentModalHeader {
+            .agentModalBody {
+              padding: 20px;
               display: flex;
+              justify-content: center;
               align-items: center;
-              justify-content: space-between;
-              padding: 16px 20px;
-              border-bottom: 1px solid #e5e7eb;
-              background: #f9fafb;
+              flex: 1;
+            }
+            
+            .agentModalBody img {
+              max-width: 100%;
+              max-height: 100%;
+              object-fit: contain;
+              border-radius: 8px;
+            }
+
+            /* Responsive behavior for short viewports - same logic as leaderboard modal */
+            @media (max-height: 700px) {
+              .agentModal {
+                align-items: flex-start !important;
+                justify-content: center !important;
+                padding-top: 24px !important;
+                padding-bottom: 24px !important;
+                min-height: 100vh !important;
+                max-height: 100vh !important;
+                overflow-y: auto !important;
+              }
+              
+              .agentModalContent {
+                width: 576px !important;
+                height: 652px !important;
+                max-height: none !important;
+                flex-shrink: 0 !important;
+                margin: 0 !important;
+              }
+            }
+
+            /* Mobile adjustments */
+            @media (max-width: 768px) {
+              .agentModalContent {
+                width: calc(100vw - 32px) !important;
+                max-width: 576px !important;
+                height: 652px !important;
+                max-height: none !important;
+                flex-shrink: 0 !important;
+                margin: 0 !important;
+              }
             }
             
             .agentModalClose {
@@ -437,20 +480,6 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
             
             .agentModalClose:hover {
               background: #e5e7eb;
-            }
-            
-            .agentModalBody {
-              padding: 20px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-            
-            .agentModalBody img {
-              max-width: 100%;
-              max-height: 60vh;
-              object-fit: contain;
-              border-radius: 8px;
             }
             
             .leaderboardChevron {
