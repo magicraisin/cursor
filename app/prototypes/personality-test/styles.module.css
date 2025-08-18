@@ -802,7 +802,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px 24px 16px;
-  border-bottom: none; /* Removed border to eliminate line above first agent */
+  border-bottom: none !important; /* Removed border to eliminate line above first agent */
   height: 80px; /* Fixed header height */
   flex-shrink: 0; /* Prevent header from shrinking */
   box-sizing: border-box; /* Include padding in height calculation */
@@ -1329,29 +1329,34 @@
 
   /* Mobile modal header - ensure proper spacing and prevent white box issues */
   .modalHeader {
-    padding: 16px 16px 12px 16px; /* Reduced padding for mobile */
+    padding: 16px 16px 12px 16px !important; /* Reduced padding for mobile */
+    border-bottom: none !important; /* Force remove border on mobile */
+    border: none !important; /* Remove all borders */
   }
   
   .miniRoamingContainer {
     height: 140px;
   }
 
-  /* Mobile modal responsive behavior - same logic as results card */
+  /* Mobile modal responsive behavior - same logic as results card - STRONGER SPECIFICITY */
   .modalOverlay {
     align-items: flex-start !important; /* Top-align instead of center */
     justify-content: center !important; /* Keep horizontal centering */
-    padding-top: 24px !important; /* 24px space above modal */
-    padding-bottom: 24px !important; /* Space below for scrolling */
+    padding: 24px 16px !important; /* 24px top/bottom, 16px sides for mobile */
     min-height: 100vh !important; /* Full viewport height */
+    max-height: 100vh !important; /* Constrain height */
     overflow-y: auto !important; /* Enable scrolling */
+    display: flex !important; /* Ensure flex layout */
   }
   
-  /* Modal keeps the same dimensions - no scaling */
+  /* Modal keeps the same dimensions - no scaling - STRONGER SPECIFICITY */
   .modal {
     width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
     max-width: 576px !important; /* But don't exceed desktop width */
     height: 652px !important; /* Fixed height */
+    max-height: none !important; /* Override any max-height constraints */
     flex-shrink: 0 !important; /* Prevent modal from shrinking */
+    margin: 0 !important; /* Remove any conflicting margins */
   }
 }
 
