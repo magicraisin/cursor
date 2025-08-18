@@ -8,7 +8,7 @@ interface PersonalityResult {
   timestamp: number;
 }
 
-const KV_KEY = 'personality-results';
+const KV_KEY = 'personality-results'; // Force redeploy
 
 // Read existing results from KV storage
 async function readResults(): Promise<PersonalityResult[]> {
