@@ -965,7 +965,7 @@
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 24px;
+    gap: 8px; /* Reduced from 24px for tighter spacing */
     transform: translateY(-5vh); /* Move content up slightly for perfect centering */
   }
   
@@ -983,6 +983,12 @@
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden; /* No scrolling within the content */
+  }
+  
+  /* Mobile question spacing adjustments */
+  .questionNumber {
+    margin-top: 24px; /* 24px below progress bar */
+    margin-bottom: 8px; /* 8px above question text */
   }
   
   .result {
@@ -1133,6 +1139,12 @@
   .roamingContent {
     transform: none !important; /* Remove mobile transform on desktop */
     gap: inherit;
+  }
+  
+  /* Desktop question spacing - restore original values */
+  .questionNumber {
+    margin-top: 0; /* Reset mobile margin-top */
+    margin-bottom: 20px; /* Original desktop spacing */
   }
   
   .profileCard {
