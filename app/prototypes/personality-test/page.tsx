@@ -1412,9 +1412,11 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
         <div 
           className={styles.roamingContent}
         >
-          <h1 className={styles.title}>What Notion Agent Are You?</h1>
+          <h1 className={styles.title}>
+            What Notion <span className={styles.titleBreak}>Agent Are You?</span>
+          </h1>
           <p className={styles.description}>
-            Answer 11 questions to reveal what Notion agent<br />aligns most closely with your personality.
+            Answer 11 questions to reveal what Notion agent aligns most closely with your personality.
           </p>
           <button className={styles.getStartedButton} onClick={onStartTest}>
             Get Started →

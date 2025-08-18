@@ -95,6 +95,10 @@
   line-height: 1.2;
 }
 
+.titleBreak {
+  /* Default: no break on desktop */
+}
+
 .description {
   color: #666;
   font-size: 16px;
@@ -887,6 +891,16 @@
     min-height: 100vh;
     padding: 10px;
     align-items: center;
+  }
+  
+  /* Mobile title adjustments */
+  .title {
+    font-size: 36px; /* Smaller on mobile */
+    line-height: 1.1;
+  }
+  
+  .titleBreak {
+    display: block; /* Force line break on mobile */
   }
   
   .testContent {
