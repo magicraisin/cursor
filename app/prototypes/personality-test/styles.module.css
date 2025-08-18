@@ -119,7 +119,7 @@
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -208,7 +208,7 @@
   font-weight: 500;
   color: #2c2c2c;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   text-align: left;
 }
 
@@ -345,7 +345,7 @@
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
 }
 
 .backButton:hover {
@@ -362,7 +362,7 @@
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   opacity: 0.5;
   pointer-events: none;
 }
@@ -514,7 +514,7 @@
   font-weight: 500;
   color: #888;
   border-radius: 80px;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   cursor: default;
   z-index: 2;
   position: relative;
@@ -606,7 +606,7 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   display: flex;
   align-items: center;
   gap: 8px;
@@ -628,7 +628,7 @@
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   z-index: 1000;
   min-width: 180px;
   margin-top: 4px;
@@ -653,7 +653,7 @@
   cursor: pointer;
   font-size: 14px;
   color: #2c2c2c;
-  transition: background 0.2s ease;
+  /* transition: background 0.2s ease; */ /* Removed to eliminate janky transitions */
 }
 
 .saveMenuItem:hover {
@@ -677,7 +677,7 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   display: flex;
   align-items: center;
   gap: 8px;
@@ -700,7 +700,7 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   display: flex;
   align-items: center;
   gap: 8px;
@@ -724,7 +724,7 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   display: flex;
   align-items: center;
   gap: 8px;
@@ -784,7 +784,7 @@
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
 }
 
 .closeButton:hover {
@@ -823,7 +823,7 @@
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 4px; /* Reduced from 16px for ultra-tight spacing */
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   margin-bottom: 0; /* Removed margin since gap handles spacing */
 }
 
@@ -840,14 +840,14 @@
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 6px;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   margin-left: -8px;
   margin-right: 0; /* Reset margin for inline layout */
 }
 
 .agentArrow {
   opacity: 1; /* Always visible instead of only on hover */
-  transition: opacity 0.2s ease;
+  /* transition: opacity 0.2s ease; */ /* Removed to eliminate janky transitions */
   margin-left: -2px; /* Moved 4px to the left (from 2px to -2px) */
   transform: translateY(-15px);
 }
@@ -1213,7 +1213,7 @@
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1415,7 +1415,7 @@
     font-size: 14px !important;
     font-weight: 500 !important;
     cursor: pointer !important;
-    transition: all 0.2s ease !important;
+    /* transition: all 0.2s ease !important; */ /* Removed to eliminate janky transitions */
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
@@ -1554,7 +1554,7 @@
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1647,7 +1647,7 @@
   width: 32px;
   height: 32px;
   border-radius: 6px;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
 }
 
 .backButton:hover {
