@@ -1492,7 +1492,7 @@ const questions: Question[] = [
     ]
   },
   {
-    text: "What templates are you interested in?",
+    text: "Which templates do you prefer?",
     answers: [
       { image: "/images/agents/4A.png", value: "A" },
       { image: "/images/agents/4B.png", value: "C" }
