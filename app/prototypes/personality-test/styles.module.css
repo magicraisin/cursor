@@ -800,7 +800,7 @@
 .leaderboardList {
   display: flex;
   flex-direction: column;
-  gap: 4px; /* Reduced by 20px for tighter spacing */
+  gap: 0px; /* Ultra-tight spacing - reduced by additional 4px */
 }
 
 .leaderboardItem {
@@ -856,7 +856,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: -4px; /* Reduced by 12px for tighter spacing with progress bar */
+  margin-bottom: -8px; /* Reduced by additional 4px for ultra-tight spacing with progress bar */
   width: 100%; /* Ensure full width for proper space-between */
 }
 
