@@ -330,6 +330,11 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               align-items: center;
               padding: 12px 16px;
               border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+              transition: background-color 0.2s ease;
+              cursor: pointer;
+            }
+            .leaderboardItem:hover {
+              background-color: rgba(0, 0, 0, 0.04);
             }
             .leaderboardItem:last-child {
               border-bottom: none;
