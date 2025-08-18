@@ -221,9 +221,22 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
   }, [miniAgents.length]);
   
   const handleExpandFullScreen = () => {
+    // Generate complete leaderboard including 0-count agents
+    const allAgentNames = Object.values(agents).map(agent => agent.name);
+    const apiDataMap = new Map(leaderboardData.map(entry => [entry.agent, entry.count]));
+    const completeLeaderboard = allAgentNames.map(agentName => ({
+      agent: agentName,
+      count: apiDataMap.get(agentName) || 0
+    })).sort((a, b) => {
+      if (b.count !== a.count) {
+        return b.count - a.count;
+      }
+      return a.agent.localeCompare(b.agent);
+    });
+    
     // Create the data to pass to the full screen view
     const fullScreenData = {
-      leaderboardData,
+      leaderboardData: completeLeaderboard,
       totalResults,
       agentSize,
       miniAgents
@@ -321,13 +334,7 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
             .leaderboardItem:last-child {
               border-bottom: none;
             }
-            .leaderboardRank {
-              font-size: 16px;
-              font-weight: 600;
-              color: #2c2c2c;
-              min-width: 24px;
-              margin-right: 12px;
-            }
+
             .leaderboardAgent {
               width: 32px;
               height: 32px;
@@ -356,8 +363,14 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
             }
             .leaderboardCount {
               font-size: 16px;
-              font-weight: 600;
+              font-weight: 400;
               color: #2c2c2c;
+            }
+            .leaderboardItem.zeroCount {
+              opacity: 0.4;
+            }
+            .leaderboardItem.zeroCount .leaderboardAgent img {
+              filter: grayscale(100%);
             }
           </style>
         </head>
@@ -407,7 +420,8 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
               return agentName.toLowerCase().replace(/\\s+/g, '-').replace('/', '-') + '.png';
             };
             
-            leaderboardData.forEach(entry => {
+            // Only include agents with count > 0 for the animation
+            leaderboardData.filter(entry => entry.count > 0).forEach(entry => {
               for (let i = 0; i < entry.count; i++) {
                 const x = agentRadius + Math.random() * (frameWidth - 2 * agentRadius);
                 const y = agentRadius + Math.random() * (frameHeight - 2 * agentRadius);
@@ -485,9 +499,10 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
                 const item = document.createElement('div');
                 item.className = 'leaderboardItem';
                 
-                const rank = document.createElement('div');
-                rank.className = 'leaderboardRank';
-                rank.textContent = (index + 1).toString();
+                // Add gray styling for zero count agents
+                if (entry.count === 0) {
+                  item.classList.add('zeroCount');
+                }
                 
                 const agentDiv = document.createElement('div');
                 agentDiv.className = 'leaderboardAgent';
@@ -515,7 +530,6 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
                 count.className = 'leaderboardCount';
                 count.textContent = entry.count.toString();
                 
-                item.appendChild(rank);
                 item.appendChild(agentDiv);
                 item.appendChild(info);
                 item.appendChild(count);
