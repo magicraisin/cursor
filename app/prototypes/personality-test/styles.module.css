@@ -1021,7 +1021,7 @@
   
   .testContent {
     position: relative !important;
-    padding: 16px 16px 24px 16px !important; /* Reduced side margins from 24px to 16px */
+    padding: 16px 4px 24px 4px !important; /* Reduced side margins by 12px (from 16px to 4px) */
     margin: 0 !important;
     height: 100vh !important;
     display: flex !important;
@@ -1048,10 +1048,10 @@
     font-size: 24px !important;
   }
 
-  /* Answers section - flexible height */
+  /* Answers section - flexible height with space for fixed bottom buttons */
   .testContent .answers {
     flex: 1 !important; /* Take remaining space */
-    margin: 0 0 24px 0 !important; /* 24px above navigation buttons */
+    margin: 0 0 120px 0 !important; /* 120px bottom margin to account for fixed navigation buttons */
     padding: 0 !important;
     overflow-y: auto !important;
     display: flex !important;
@@ -1092,18 +1092,24 @@
     align-items: stretch !important; /* Stretch to full width */
   }
 
-  /* Navigation buttons - clean container aligned with content */
+  /* Navigation buttons - fixed to bottom of screen to ensure visibility */
   .testContent .navigationButtons {
+    position: fixed !important; /* Pin to bottom of screen */
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     margin: 0 !important;
-    padding: 16px 0 40px 0 !important; /* Top padding for separation, bottom for viewport clearance */
-    background: transparent !important; /* Remove background to eliminate container look */
+    padding: 16px 20px 40px 20px !important; /* Add side padding to match visual alignment */
+    background: white !important; /* White background to separate from content */
     display: flex !important;
     flex-direction: column !important; /* Stack buttons vertically on mobile */
     gap: 12px !important;
     align-items: stretch !important;
     width: 100% !important;
-    box-shadow: none !important; /* Remove any shadows */
-    border: none !important; /* Remove any borders */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow to separate from content */
+    border: none !important;
+    z-index: 10 !important; /* Ensure buttons stay on top */
+    box-sizing: border-box !important;
   }
 
   .result {
