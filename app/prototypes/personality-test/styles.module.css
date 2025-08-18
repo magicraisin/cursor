@@ -787,7 +787,7 @@
 .modal {
   background: white;
   border-radius: 12px;
-  width: 600px; /* Fixed width to match result card container */
+  width: 576px; /* Reduced width to match result card container (600px - 24px) */
   height: 652px; /* Reduced by 24px (676px - 24px) */
   overflow-x: visible;
   overflow-y: hidden;
@@ -1328,8 +1328,8 @@
   
   .result {
     text-align: center !important;
-    width: 600px !important; /* Container width as requested */
-    height: 676px !important; /* Reduced height by 24px (700px - 24px) */
+    width: 576px !important; /* Reduced width by 24px (600px - 24px) */
+    height: 652px !important; /* Reduced height by another 24px (676px - 24px) */
     background: white !important;
     border-radius: 40px !important;
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1) !important;
@@ -1345,7 +1345,7 @@
 
   /* Desktop agent card image - contained within container */
   .result .agentCardImage {
-    width: 520px !important; /* Contained within 600px container */
+    width: 500px !important; /* Reduced width to 500px (was 520px) */
     height: 600px !important; /* Adjusted height for 700px container */
     object-fit: contain !important; /* Maintain aspect ratio within fixed dimensions */
     flex-shrink: 0 !important; /* Prevent image from shrinking */
@@ -1365,12 +1365,12 @@
     
     /* Container and image keep the same dimensions - no scaling */
     .result {
-      width: 600px !important; /* Same container size */
-      height: 676px !important; /* Same container size - reduced by 24px */
+      width: 576px !important; /* Same container size - reduced by 24px */
+      height: 652px !important; /* Same container size - reduced by another 24px */
     }
     
     .result .agentCardImage {
-      width: 520px !important; /* Same image size - contained within container */
+      width: 500px !important; /* Same image size - reduced to 500px */
       height: 600px !important; /* Same image size */
     }
   }
@@ -1817,7 +1817,7 @@
   /* Mobile modal adjustments */
   .modal {
     width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
-    max-width: 600px !important; /* But don't exceed desktop width */
+    max-width: 576px !important; /* But don't exceed desktop width (reduced to 576px) */
     height: 652px !important; /* Reduced by 24px (676px - 24px) */
   }
 
