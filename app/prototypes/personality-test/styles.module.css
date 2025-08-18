@@ -1136,20 +1136,69 @@
     display: contents; /* Use normal document flow on desktop */
   }
   
+  /* Desktop results container - restore original behavior */
+  .resultsContainer {
+    background: #F7F6F3 !important; /* Restore original background */
+    align-items: center !important; /* Center alignment */
+    padding: 20px !important; /* Original desktop padding */
+  }
+  
   .result {
-    display: block;
-    padding: 120px 232px; /* Restore original desktop padding */
+    display: block !important;
+    padding: 120px 232px !important; /* Restore original desktop padding */
+    margin: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+    position: static !important;
+    padding-bottom: 40px !important; /* Remove mobile bottom padding */
   }
   
   /* Desktop homepage content - restore original positioning */
   .roamingContent {
     transform: none !important; /* Remove mobile transform on desktop */
-    gap: inherit;
+    gap: inherit !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 40px !important;
+    max-width: 600px !important;
+  }
+  
+  /* Desktop landing container - restore original behavior */
+  .landingContainer {
+    background: #F7F6F3 !important; /* Restore original background */
+    align-items: center !important; /* Center alignment */
+    justify-content: center !important; /* Center alignment */
+    position: static !important; /* Remove fixed positioning */
+    height: auto !important; /* Remove fixed height */
+    min-height: 100vh !important; /* Original min-height */
+    max-height: none !important; /* Remove max-height constraint */
+    overflow: visible !important; /* Restore scroll capability */
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    padding: 20px !important; /* Original desktop padding */
   }
   
   /* Desktop question spacing - restore original values */
   .container.testContainer {
     padding: 20px !important; /* Restore original desktop padding */
+    background: #F7F6F3 !important; /* Restore original background */
+    align-items: center !important; /* Center alignment */
+    justify-content: center !important; /* Center alignment */
+    position: static !important; /* Remove fixed positioning */
+    height: auto !important; /* Remove fixed height */
+    min-height: 100vh !important; /* Original min-height */
+    max-height: none !important; /* Remove max-height constraint */
+    overflow-y: auto !important; /* Restore scroll capability */
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
   
   .progressBar {
@@ -1166,15 +1215,49 @@
     margin-top: inherit; /* Reset to original desktop margin-top */
   }
   
+  /* Desktop test content - restore original layout */
+  .testContent {
+    max-width: 600px !important; /* Original desktop max-width */
+    padding: 16px 40px 40px 40px !important; /* Original desktop padding */
+    margin: 0 !important;
+    width: auto !important;
+    background: white !important; /* Original background */
+    border-radius: 12px !important; /* Original border-radius */
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important; /* Original shadow */
+    text-align: center !important; /* Original text alignment */
+    height: auto !important; /* Remove fixed height */
+    display: block !important; /* Original display */
+    flex-direction: row !important; /* Reset flex direction */
+    justify-content: center !important; /* Reset justify content */
+    overflow: visible !important; /* Restore overflow */
+  }
+  
   .profileCard {
-    display: block;
+    display: block !important;
+    flex: none !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* Desktop button layout - restore original positioning */
+  .mobileButtonStack {
+    position: static !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    display: contents !important;
+    flex-direction: row !important;
+    gap: 0 !important;
+    z-index: auto !important;
   }
   
   .saveDropdown {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: auto;
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: auto !important;
+    order: 0 !important;
   }
   
   .saveButton {
@@ -1194,17 +1277,21 @@
   }
   
   .leaderboardButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: auto;
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    width: auto !important;
+    justify-content: center !important;
+    order: 0 !important;
   }
   
   .fixedRetakeButton {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    width: auto;
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 20px !important;
+    width: auto !important;
+    justify-content: center !important;
+    order: 0 !important;
   }
 }
 
