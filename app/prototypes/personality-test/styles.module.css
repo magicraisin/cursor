@@ -800,7 +800,7 @@
 .leaderboardList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px; /* Increased to 24px for better spacing */
 }
 
 .leaderboardItem {
@@ -809,32 +809,32 @@
   border-radius: 8px;
   padding: 16px;
   transition: all 0.2s ease;
-  margin-bottom: 8px;
+  margin-bottom: 0; /* Removed margin since gap handles spacing */
 }
 
 .rankInfo {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: -4px;
+  margin-bottom: 0; /* Reset margin since it's now inline with percentage */
   line-height: 1;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 6px;
   transition: all 0.2s ease;
   margin-left: -8px;
-  margin-right: 8px;
+  margin-right: 0; /* Reset margin for inline layout */
 }
 
 .agentArrow {
-  opacity: 0;
+  opacity: 1; /* Always visible instead of only on hover */
   transition: opacity 0.2s ease;
-  margin-left: 2px;
+  margin-left: -2px; /* Moved 4px to the left (from 2px to -2px) */
   transform: translateY(-15px);
 }
 
 .rankInfo:hover .agentArrow {
-  opacity: 1;
+  opacity: 1; /* Keep visible on hover */
 }
 
 .agentIcon {
@@ -857,12 +857,10 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  width: 100%; /* Ensure full width for proper space-between */
 }
 
-.count {
-  color: #666;
-  font-size: 14px;
-}
+/* .count styles removed - no longer used in redesigned layout */
 
 .percentage {
   color: #2c2c2c;

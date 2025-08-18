@@ -2584,35 +2584,32 @@ export default function NotionAgentTest() {
                       const percentage = totalResults > 0 ? ((entry.count / totalResults) * 100).toFixed(1) : '0';
                       return (
                         <div key={entry.agent} className={styles.leaderboardItem}>
-                          <div className={styles.rankInfo} onClick={() => openAgentDetail(entry.agent)}>
-                            <img 
-                              src={getAgentImage(entry.agent)} 
-                              alt={entry.agent}
-                              className={styles.agentIcon}
-                            />
-                            <span className={styles.agentName}>{entry.agent}</span>
-                            <svg 
-                              width="16" 
-                              height="16" 
-                              viewBox="0 0 24 24" 
-                              fill="none" 
-                              xmlns="http://www.w3.org/2000/svg"
-                              className={styles.agentArrow}
-                            >
-                              <path 
-                                d="M9 18l6-6-6-6" 
-                                stroke="#999" 
-                                strokeWidth="2" 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </div>
                           <div className={styles.statsInfo}>
-                            <span className={styles.count}>
-                              {entry.count} {entry.count === 1 ? 'person' : 'people'}
-                            </span>
-                            <span className={styles.percentage}>{percentage}%</span>
+                            <div className={styles.rankInfo} onClick={() => openAgentDetail(entry.agent)}>
+                              <img 
+                                src={getAgentImage(entry.agent)} 
+                                alt={entry.agent}
+                                className={styles.agentIcon}
+                              />
+                              <span className={styles.agentName}>{entry.agent}</span>
+                              <svg 
+                                width="16" 
+                                height="16" 
+                                viewBox="0 0 24 24" 
+                                fill="none" 
+                                xmlns="http://www.w3.org/2000/svg"
+                                className={styles.agentArrow}
+                              >
+                                <path 
+                                  d="M9 18l6-6-6-6" 
+                                  stroke="#999" 
+                                  strokeWidth="2" 
+                                  strokeLinecap="round" 
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <span className={styles.percentage}>{percentage}% ({entry.count})</span>
                           </div>
                           <div className={styles.progressBar}>
                             <div 
