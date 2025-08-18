@@ -986,8 +986,12 @@
   }
   
   /* Mobile question spacing adjustments */
+  .progressBar {
+    margin-bottom: 0; /* Remove default bottom margin on mobile */
+  }
+  
   .questionNumber {
-    margin-top: 24px; /* 24px below progress bar */
+    margin-top: 24px; /* 24px total below progress bar */
     margin-bottom: 8px; /* 8px above question text */
   }
   
@@ -1000,6 +1004,7 @@
   }
   
   .question {
+    margin-top: 0; /* Remove any top margin from question text */
     font-size: 24px;
     margin-bottom: 30px;
   }
@@ -1142,9 +1147,17 @@
   }
   
   /* Desktop question spacing - restore original values */
+  .progressBar {
+    margin-bottom: 30px; /* Restore original desktop bottom margin */
+  }
+  
   .questionNumber {
     margin-top: 0; /* Reset mobile margin-top */
     margin-bottom: 20px; /* Original desktop spacing */
+  }
+  
+  .question {
+    margin-top: inherit; /* Reset to original desktop margin-top */
   }
   
   .profileCard {
