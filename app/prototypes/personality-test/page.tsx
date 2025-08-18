@@ -2301,19 +2301,7 @@ export default function NotionAgentTest() {
     const filename = nameMapping[agentName] || `${agentName}.png`;
     // Add cache busting parameter for Greek God to ensure fresh image loads
     const cacheBuster = agentName === 'Greek God' ? `?v=${Date.now()}` : '';
-    const finalPath = `/images/agent-cards/${filename}${cacheBuster}`;
-    
-    // Debug logging for Greek God
-    if (agentName === 'Greek God') {
-      console.log('🔍 getAgentCardImage DEBUG:', {
-        agentName,
-        filename,
-        cacheBuster,
-        finalPath
-      });
-    }
-    
-    return finalPath;
+    return `/images/agent-cards/${filename}${cacheBuster}`;
   };
 
   const getBinaryChoices = (sequence: string) => {
@@ -2744,15 +2732,6 @@ export default function NotionAgentTest() {
   
   return (
     <div className={`${styles.container} ${styles.resultsContainer}`}>
-      {/* Debug test for Greek God */}
-      {agent.name === 'Greek God' && (() => {
-        console.log('🧪 RUNTIME TEST - Greek God agent detected');
-        console.log('🧪 agent.name:', agent.name);
-        console.log('🧪 getAgentCardImage result:', getAgentCardImage(agent.name));
-        console.log('🧪 Expected path: /images/agent-cards/Greek god.png');
-        return null;
-      })()}
-      
       <div className={styles.desktopOnlyBackground}>
         <BackgroundRoamingAgents agentName={agent.name} />
       </div>
@@ -2766,17 +2745,6 @@ export default function NotionAgentTest() {
             alt={`${agent.name} Agent Card`}
             className={styles.agentCardImage}
             draggable={false}
-            onLoad={() => {
-              if (agent.name === 'Greek God') {
-                console.log('✅ Greek God image loaded successfully:', getAgentCardImage(agent.name));
-              }
-            }}
-            onError={(e) => {
-              if (agent.name === 'Greek God') {
-                console.error('❌ Greek God image failed to load:', getAgentCardImage(agent.name));
-                console.error('Error details:', e);
-              }
-            }}
           />
         </div>
         
