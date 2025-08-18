@@ -919,7 +919,7 @@
     background: white !important;
     align-items: flex-start !important;
     justify-content: flex-start !important;
-    padding: 8px 24px 0 24px !important; /* Minimal top padding */
+    padding: 0 24px 0 24px !important; /* No top padding - progress bar at very top */
     height: 100vh !important;
     min-height: 100vh !important;
     max-height: 100vh !important;
@@ -985,14 +985,15 @@
     overflow: hidden; /* No scrolling within the content */
   }
   
-  /* Mobile question spacing adjustments */
+  /* Mobile question spacing adjustments - force override with !important */
   .progressBar {
-    margin-bottom: 0; /* Remove default bottom margin on mobile */
+    margin-top: 8px !important; /* Small margin from top edge */
+    margin-bottom: 0 !important; /* Remove default bottom margin on mobile */
   }
   
   .questionNumber {
-    margin-top: 24px; /* 24px total below progress bar */
-    margin-bottom: 8px; /* 8px above question text */
+    margin-top: 24px !important; /* 24px gap below progress bar */
+    margin-bottom: 8px !important; /* 8px above question text */
   }
   
   .result {
@@ -1004,7 +1005,7 @@
   }
   
   .question {
-    margin-top: 0; /* Remove any top margin from question text */
+    margin-top: 0 !important; /* Remove any top margin from question text */
     font-size: 24px;
     margin-bottom: 30px;
   }
@@ -1147,7 +1148,12 @@
   }
   
   /* Desktop question spacing - restore original values */
+  .container.testContainer {
+    padding: 20px !important; /* Restore original desktop padding */
+  }
+  
   .progressBar {
+    margin-top: inherit; /* Reset mobile margin-top */
     margin-bottom: 30px; /* Restore original desktop bottom margin */
   }
   
