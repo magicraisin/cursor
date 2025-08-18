@@ -788,7 +788,7 @@
   background: white;
   border-radius: 12px;
   width: 600px; /* Fixed width to match result card container */
-  height: 676px; /* Updated to match result card container height (reduced by 24px) */
+  height: 652px; /* Reduced by 24px (676px - 24px) */
   overflow-x: visible;
   overflow-y: hidden;
   box-shadow: 0px 16px 50px 0px rgba(0, 0, 0, 0.2);
@@ -832,7 +832,7 @@
 .modalContent {
   padding: 24px;
   overflow-y: auto;
-  height: calc(676px - 80px); /* Fixed height minus header space */
+  height: calc(652px - 80px); /* Fixed height minus header space */
   flex: 1; /* Take remaining space */
   display: flex;
   flex-direction: column;
@@ -1818,7 +1818,7 @@
   .modal {
     width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
     max-width: 600px !important; /* But don't exceed desktop width */
-    height: 676px !important; /* Updated to match result card height (reduced by 24px) */
+    height: 652px !important; /* Reduced by 24px (676px - 24px) */
   }
 
   .agentDetailContent {
