@@ -1155,6 +1155,9 @@
     max-width: none !important;
     position: static !important;
     padding-bottom: 40px !important; /* Remove mobile bottom padding */
+    flex-direction: column !important; /* Reset mobile flex properties */
+    justify-content: center !important; /* Reset mobile flex properties */
+    align-items: center !important; /* Reset mobile flex properties */
   }
   
   /* Desktop homepage content - restore original positioning */
@@ -1230,8 +1233,8 @@
     margin: 0 !important;
     width: auto !important;
     background: white !important; /* Original background */
-    border-radius: 12px !important; /* Original border-radius */
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important; /* Original shadow */
+    border-radius: 40px !important; /* Original 40px border-radius */
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1) !important; /* Original shadow */
     text-align: center !important; /* Original text alignment */
     height: auto !important; /* Remove fixed height */
     display: block !important; /* Original display */
@@ -1246,6 +1249,19 @@
     justify-content: center !important;
     align-items: center !important;
     margin-bottom: 0 !important;
+    max-width: 600px !important; /* Restore original card size */
+    width: auto !important; /* Remove mobile full width */
+    background: transparent !important; /* Original background */
+    padding: 0 !important; /* Original padding */
+    border-radius: 40px !important; /* Original border-radius */
+  }
+  
+  .agentCardImage {
+    width: 100% !important; /* Original width */
+    height: auto !important; /* Original height */
+    border-radius: 40px !important; /* Original border-radius */
+    display: block !important; /* Original display */
+    max-width: 600px !important; /* Limit card size */
   }
   
   /* Desktop button layout - restore original positioning */
@@ -1269,19 +1285,26 @@
   }
   
   .saveButton {
-    width: auto;
-    background: white;
-    color: #666;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    width: auto !important;
+    background: white !important;
+    color: #666 !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    order: 0 !important;
+  }
+  
+  /* Hide save button icons on desktop */
+  .saveButton svg {
+    display: none !important;
   }
   
   .leaderboardButton {
