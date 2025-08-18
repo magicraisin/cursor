@@ -662,13 +662,19 @@
   visibility: hidden;
   transform: translateY(-10px);
   /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
-  z-index: 1000;
+  z-index: 10000; /* Increased from 1000 to ensure it appears above everything */
   min-width: 180px;
   margin-top: 4px;
   padding: 2px 0;
 }
 
 .saveDropdown:hover .saveMenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.saveMenu:hover {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -995,7 +1001,7 @@
     padding: 16px 24px 24px 24px !important; /* 16px top padding, 24px others */
     height: 100vh !important; /* Fixed height to prevent scrolling */
     max-height: 100vh !important; /* Ensure no overflow */
-    overflow: hidden !important; /* Prevent scrolling */
+    overflow: visible !important; /* Allow dropdown to be visible outside container */
     display: flex !important;
     justify-content: center !important;
   }
