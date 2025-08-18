@@ -1007,11 +1007,15 @@
   /* MOBILE SOLUTION - Proper flexbox layout with consistent spacing */
   .testContainer {
     position: relative !important;
+    padding: 0 !important; /* Remove any container padding that might cause overflow */
+    margin: 0 !important; /* Remove any container margins */
+    width: 100% !important; /* Ensure full width */
+    box-sizing: border-box !important; /* Include padding in width calculation */
   }
   
   .testContent {
     position: relative !important;
-    padding: 16px 24px 24px 24px !important;
+    padding: 16px 16px 24px 16px !important; /* Reduced side margins from 24px to 16px */
     margin: 0 !important;
     height: 100vh !important;
     display: flex !important;
@@ -1082,16 +1086,18 @@
     align-items: stretch !important; /* Stretch to full width */
   }
 
-  /* Navigation buttons - at bottom of flex container */
+  /* Navigation buttons - clean container aligned with content */
   .testContent .navigationButtons {
     margin: 0 !important;
     padding: 16px 0 40px 0 !important; /* Top padding for separation, bottom for viewport clearance */
-    background: white !important;
+    background: transparent !important; /* Remove background to eliminate container look */
     display: flex !important;
     flex-direction: column !important; /* Stack buttons vertically on mobile */
     gap: 12px !important;
     align-items: stretch !important;
     width: 100% !important;
+    box-shadow: none !important; /* Remove any shadows */
+    border: none !important; /* Remove any borders */
   }
 
   .result {
@@ -1142,6 +1148,9 @@
   .nextButton {
     width: 100%;
     justify-content: center;
+    box-shadow: none !important; /* Remove any shadows from buttons */
+    border: 1px solid #e0e0e0 !important; /* Clean border instead of shadow */
+    border-radius: 8px !important; /* Consistent border radius */
   }
   
   /* Reverse button order on mobile - Next button on top */
