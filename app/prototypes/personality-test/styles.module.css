@@ -42,6 +42,7 @@
   z-index: 10; /* Above the text */
   padding: 0;
   margin: 0;
+  pointer-events: none; /* Prevent blocking button clicks */
 }
 
 .roamingAgent img {
@@ -118,11 +119,13 @@
   padding: 16px 32px;
   font-size: 18px;
   font-weight: 600;
-  cursor: pointer;
+  cursor: pointer !important; /* Force pointer cursor */
   /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  z-index: 100; /* Ensure button is always on top of agents */
+  position: relative; /* Required for z-index to work */
 }
 
 .getStartedButton:hover {
@@ -1592,6 +1595,7 @@
   z-index: 10;
   padding: 0;
   margin: 0;
+  pointer-events: none; /* Prevent blocking button clicks */
 }
 
 .miniRoamingAgent img {
