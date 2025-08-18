@@ -1032,6 +1032,7 @@
     background: white !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+    overflow-y: auto !important; /* Allow scrolling if content is too long */
   }
 
   /* Top section with progress bar and question */
@@ -1054,12 +1055,13 @@
   /* Answers section - flexible height with space for fixed bottom buttons */
   .testContent .answers {
     flex: 1 !important; /* Take remaining space */
-    margin: 0 0 120px 0 !important; /* 120px bottom margin to account for fixed navigation buttons */
+    margin: 0 0 100px 0 !important; /* 100px bottom margin to account for fixed navigation buttons */
     padding: 0 !important;
     overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 16px !important;
+    min-height: 0 !important; /* Allow flexbox to shrink */
   }
 
   /* Image answers layout - stack vertically on mobile */
@@ -1105,11 +1107,11 @@
     padding: 16px 20px 40px 20px !important; /* Add side padding to match visual alignment */
     background: white !important; /* White background to separate from content */
     display: flex !important;
-    flex-direction: column !important; /* Stack buttons vertically on mobile */
+    flex-direction: row !important; /* Side by side buttons on mobile */
     gap: 12px !important;
     align-items: stretch !important;
     width: 100% !important;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow to separate from content */
+    box-shadow: none !important; /* Remove shadow */
     border: none !important;
     z-index: 10 !important; /* Ensure buttons stay on top */
     box-sizing: border-box !important;
@@ -1155,26 +1157,30 @@
   }
   
   .navigationButtons {
-    flex-direction: column;
+    flex-direction: row;
     gap: 12px;
   }
   
   .backButton,
   .nextButton {
-    width: 100%;
+    flex: 1; /* Equal width for side by side layout */
     justify-content: center;
     box-shadow: none !important; /* Remove any shadows from buttons */
-    border: 1px solid #e0e0e0 !important; /* Clean border instead of shadow */
     border-radius: 8px !important; /* Consistent border radius */
   }
   
-  /* Reverse button order on mobile - Next button on top */
+  /* Next button styling (primary) */
   .nextButton {
-    order: 1;
+    background: #2c2c2c !important;
+    color: white !important;
+    border: 1px solid #2c2c2c !important;
   }
   
+  /* Back button styling (outline) */
   .backButton {
-    order: 2;
+    background: white !important;
+    color: #2c2c2c !important;
+    border: 1px solid #d0d0d0 !important; /* Subtle gray border */
   }
   
   /* Mobile agent card display */
