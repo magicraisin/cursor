@@ -133,7 +133,7 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
         // Get the correct agent image filename - use same logic as main getAgentImage function
         const getAgentImageFilename = (agentName: string): string => {
           // Handle special cases first
-          if (agentName === 'Spiral Notebook/Greek God') {
+          if (agentName === 'Greek God') {
             return 'greek-god.png';
           }
           
@@ -399,7 +399,7 @@ function MiniRoamingAgents({ leaderboardData, totalResults }: {
             let agentId = 0;
             
             const getAgentImageFilename = (agentName) => {
-              if (agentName === 'Spiral Notebook/Greek God') return 'greek-god.png';
+              if (agentName === 'Greek God') return 'greek-god.png';
               if (agentName === 'Whoosh Arrow') return 'single-arrow.png';
               if (agentName === 'Repetition') return 'repeat-cycle.png';
               if (agentName === 'Clock') return 'time-schedule.png';
@@ -597,7 +597,7 @@ function BackgroundRoamingAgents({ agentName }: { agentName: string }) {
   
   // Get agent image using same logic as main component
   const getAgentImagePath = (name: string): string => {
-    if (name === 'Spiral Notebook/Greek God') {
+    if (name === 'Greek God') {
       return '/images/agents/greek-god.png';
     }
     
@@ -1936,7 +1936,7 @@ const agents: { [key: string]: AgentProfile } = {
     ]
   },
   "LISAD": {
-    name: "Spiral Notebook/Greek God",
+    name: "Greek God",
     strengths: [
       "Works best alone and somehow makes it look effortless",
       "Can turn impossible dreams into actual to-do lists",
@@ -2079,7 +2079,7 @@ export default function NotionAgentTest() {
 
   const getAgentImage = (agentName: string) => {
     // Handle special cases first
-    if (agentName === 'Spiral Notebook/Greek God') {
+    if (agentName === 'Greek God') {
       return '/images/agents/greek-god.png';
     }
     
@@ -2105,33 +2105,31 @@ export default function NotionAgentTest() {
   };
 
   const getAgentCardImage = (agentName: string): string => {
-    // Map agent names to the new agent card images
-    let cardName = agentName;
+    // Map agent names to the updated agent card images in /images/agents/
+    let filename = agentName.toLowerCase().replace(/\s+/g, '-');
     
-    // Handle special cases to match the exact filenames in the new agent cards folder
-    if (agentName === 'Spiral Notebook/Greek God' || agentName === 'The Greek God') {
-      cardName = 'Greek god';
+    // Handle special cases to match the exact filenames
+    if (agentName === 'Greek God') {
+      filename = 'greek-god';
     } else if (agentName === 'Cloud Flower') {
-      cardName = 'Cloud flower';
+      filename = 'cloud-flower';
     } else if (agentName === 'Double Copy') {
-      cardName = 'Double Copy';
+      filename = 'double-copy';
     } else if (agentName === 'Infinity Glasses') {
-      cardName = 'Infinity Glasses';
+      filename = 'infinity-glasses';
     } else if (agentName === 'Repetition') {
-      cardName = 'Repeat Cycle';
+      filename = 'repeat-cycle';
     } else if (agentName === 'Whoosh Arrow') {
-      cardName = 'Single arrow';
+      filename = 'single-arrow';
     } else if (agentName === 'Swish') {
-      cardName = 'Single loop';
+      filename = 'single-loop';
     } else if (agentName === 'Clock') {
-      cardName = 'Time schedule';
+      filename = 'time-schedule';
     } else if (agentName === 'Book Wiki') {
-      cardName = 'Book Wiki';
-    } else if (agentName === 'Spiky') {
-      cardName = 'DONE Spiky';
+      filename = 'book-wiki';
     }
     
-    return `/images/new agent cards/${cardName}.png`;
+    return `/images/agents/${filename}.png`;
   };
 
   const getBinaryChoices = (sequence: string) => {
