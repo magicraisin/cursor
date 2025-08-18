@@ -187,6 +187,11 @@
   margin-bottom: 24px; /* Space above navigation buttons */
 }
 
+/* Extra spacing for text-only answers (not image answers) */
+.answers:not(.imageAnswers) {
+  margin-top: 24px; /* Additional 24px space between question and first text answer */
+}
+
 .answers.imageAnswers {
   flex-direction: row;
   gap: 24px;
