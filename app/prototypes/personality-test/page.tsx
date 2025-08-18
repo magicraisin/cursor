@@ -2342,6 +2342,28 @@ export default function NotionAgentTest() {
     }
   };
 
+  const generateCompleteLeaderboard = (apiLeaderboard: LeaderboardEntry[]): LeaderboardEntry[] => {
+    // Get all possible agent names from the agents object
+    const allAgentNames = Object.values(agents).map(agent => agent.name);
+    
+    // Create a map from API data for quick lookup
+    const apiDataMap = new Map(apiLeaderboard.map(entry => [entry.agent, entry.count]));
+    
+    // Generate complete leaderboard with all agents
+    const completeLeaderboard: LeaderboardEntry[] = allAgentNames.map(agentName => ({
+      agent: agentName,
+      count: apiDataMap.get(agentName) || 0
+    }));
+    
+    // Sort by count (descending), then by name (ascending) for consistent ordering
+    return completeLeaderboard.sort((a, b) => {
+      if (b.count !== a.count) {
+        return b.count - a.count; // Higher counts first
+      }
+      return a.agent.localeCompare(b.agent); // Alphabetical for same counts
+    });
+  };
+
   const fetchLeaderboard = async () => {
     setIsLoadingLeaderboard(true);
     try {
@@ -2351,9 +2373,10 @@ export default function NotionAgentTest() {
       addDebugLog(`Fetch response: ${JSON.stringify(data)}`);
       
       if (data.success) {
-        setLeaderboardData(data.leaderboard);
+        const completeLeaderboard = generateCompleteLeaderboard(data.leaderboard);
+        setLeaderboardData(completeLeaderboard);
         setTotalResults(data.totalResults);
-        addDebugLog(`📊 Leaderboard: ${data.totalResults} total, ${data.leaderboard.length} unique agents`);
+        addDebugLog(`📊 Complete Leaderboard: ${data.totalResults} total, ${completeLeaderboard.length} total agents (${data.leaderboard.length} with results)`);
       }
     } catch (error) {
       addDebugLog(`❌ Fetch failed: ${error}`);
@@ -2610,8 +2633,9 @@ export default function NotionAgentTest() {
                   <div className={styles.leaderboardList}>
                     {leaderboardData.map((entry, index) => {
                       const percentage = totalResults > 0 ? ((entry.count / totalResults) * 100).toFixed(1) : '0';
+                      const isZeroResults = entry.count === 0;
                       return (
-                        <div key={entry.agent} className={styles.leaderboardItem}>
+                        <div key={entry.agent} className={`${styles.leaderboardItem} ${isZeroResults ? styles.zeroResults : ''}`}>
                           <div className={styles.statsInfo}>
                             <div className={styles.rankInfo} onClick={() => openAgentDetail(entry.agent)}>
                               <img 

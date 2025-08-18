@@ -741,7 +741,7 @@
   border-radius: 12px;
   max-width: 600px;
   width: 100%;
-  max-height: 80vh;
+  max-height: 90vh; /* Increased from 80vh for more height */
   overflow-x: visible;
   overflow-y: hidden;
   box-shadow: 0px 16px 50px 0px rgba(0, 0, 0, 0.2);
@@ -807,9 +807,13 @@
   background: transparent;
   border: 1px solid transparent;
   border-radius: 8px;
-  padding: 16px;
+  padding: 4px; /* Reduced from 16px for ultra-tight spacing */
   transition: all 0.2s ease;
   margin-bottom: 0; /* Removed margin since gap handles spacing */
+}
+
+.leaderboardItem.zeroResults {
+  opacity: 0.4; /* Gray out agents with 0 results */
 }
 
 .rankInfo {
