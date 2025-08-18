@@ -2105,31 +2105,45 @@ export default function NotionAgentTest() {
   };
 
   const getAgentCardImage = (agentName: string): string => {
-    // Map agent names to the updated agent card images in /images/agents/
-    let filename = agentName.toLowerCase().replace(/\s+/g, '-');
+    // Map agent names to the result card images in /images/agent-cards/
+    // These use the exact names from the "new agent cards" folder
+    const nameMapping: { [key: string]: string } = {
+      'Greek God': 'Greek god.png',
+      'Cloud Flower': 'Cloud flower.png',
+      'Double Copy': 'Double Copy.png',
+      'Infinity Glasses': 'Infinity Glasses.png',
+      'Repetition': 'Repeat Cycle.png',
+      'Whoosh Arrow': 'Single arrow.png',
+      'Swish': 'Single loop.png',
+      'Clock': 'Time schedule.png',
+      'Book Wiki': 'Book Wiki.png',
+      'Apple': 'Apple.png',
+      'Banana': 'Banana.png',
+      'Bell': 'Bell.png',
+      'Book': 'Book.png',
+      'Brackets': 'Brackets.png',
+      'Cactus': 'Cactus.png',
+      'Clippy': 'Clippy.png',
+      'Coffee': 'Coffee.png',
+      'Command': 'Command.png',
+      'Formula': 'Formula.png',
+      'Gear': 'Gear.png',
+      'Heart': 'Heart.png',
+      'Lightbulb': 'Lightbulb.png',
+      'Math': 'Math.png',
+      'Music': 'Music.png',
+      'Notetaker': 'Notetaker.png',
+      'Phone': 'Phone.png',
+      'Research': 'Research.png',
+      'Root': 'Root.png',
+      'Saucy': 'Saucy.png',
+      'Scribble': 'Scribble.png',
+      'Spiky': 'Spiky.png',
+      'Umbrella': 'Umbrella.png'
+    };
     
-    // Handle special cases to match the exact filenames
-    if (agentName === 'Greek God') {
-      filename = 'greek-god';
-    } else if (agentName === 'Cloud Flower') {
-      filename = 'cloud-flower';
-    } else if (agentName === 'Double Copy') {
-      filename = 'double-copy';
-    } else if (agentName === 'Infinity Glasses') {
-      filename = 'infinity-glasses';
-    } else if (agentName === 'Repetition') {
-      filename = 'repeat-cycle';
-    } else if (agentName === 'Whoosh Arrow') {
-      filename = 'single-arrow';
-    } else if (agentName === 'Swish') {
-      filename = 'single-loop';
-    } else if (agentName === 'Clock') {
-      filename = 'time-schedule';
-    } else if (agentName === 'Book Wiki') {
-      filename = 'book-wiki';
-    }
-    
-    return `/images/agents/${filename}.png`;
+    const filename = nameMapping[agentName] || `${agentName}.png`;
+    return `/images/agent-cards/${filename}`;
   };
 
   const getBinaryChoices = (sequence: string) => {
@@ -2308,20 +2322,30 @@ export default function NotionAgentTest() {
 
   const saveAsImage = async () => {
     const agent = agents[sequence];
-    if (agent && profileCardRef.current) {
+    if (agent) {
       try {
-        const html2canvas = (await import('html2canvas')).default;
-        const canvas = await html2canvas(profileCardRef.current, {
-          backgroundColor: '#ffffff',
-          scale: 2,
-          useCORS: true
-        });
-        
-        // Create download link
-        const link = document.createElement('a');
-        link.download = `my-notion-agent-card-${agent.name.toLowerCase().replace(/\s+/g, '-')}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
+        // Get the agent card image element
+        const agentCardElement = document.querySelector(`.${styles.agentCardImage}`) as HTMLImageElement;
+        if (agentCardElement) {
+          // Create a canvas to draw the agent card image
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          // Use the natural dimensions of the agent card image
+          canvas.width = agentCardElement.naturalWidth;
+          canvas.height = agentCardElement.naturalHeight;
+
+          if (ctx) {
+            // Draw the agent card image directly
+            ctx.drawImage(agentCardElement, 0, 0);
+
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `my-notion-agent-card-${agent.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+          }
+        }
       } catch (error) {
         console.error('Error generating agent card image:', error);
       }
@@ -2523,36 +2547,12 @@ export default function NotionAgentTest() {
           ref={profileCardRef}
           className={styles.profileCard}
         >
-          <div className={styles.agentHeaderContainer}>
-            <img 
-              src={getAgentImage(agent.name)} 
-              alt={agent.name}
-              className={styles.agentImage}
-              draggable={false}
-            />
-            <h1 className={styles.resultTitle}>{agent.name}</h1>
-            <p className={styles.resultSubtitle}>Your Notion agent personality</p>
-          </div>
-          
-          <div className={styles.traitsSection}>
-            <div className={styles.traitColumn}>
-              <h3 className={styles.traitTitle}>Strengths</h3>
-              <ul className={styles.traitList}>
-                {agent.strengths.map((strength, index) => (
-                  <li key={index} className={styles.traitItem}>{strength}</li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className={styles.traitColumn}>
-              <h3 className={styles.traitTitle}>Weaknesses</h3>
-              <ul className={styles.traitList}>
-                {agent.weaknesses.map((weakness, index) => (
-                  <li key={index} className={styles.traitItem}>{weakness}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <img
+            src={getAgentCardImage(agent.name)}
+            alt={`${agent.name} Agent Card`}
+            className={styles.agentCardImage}
+            draggable={false}
+          />
         </div>
         
         {/* Mobile: Buttons stacked at bottom, Desktop: Positioned as before */}
@@ -2673,35 +2673,12 @@ export default function NotionAgentTest() {
                   
                   <div className={styles.agentDetailContent}>
                     <div className={styles.agentDetailCard}>
-                      <div className={styles.agentHeaderContainer}>
-                        <img 
-                          src={getAgentImage(selectedAgent)} 
-                          alt={selectedAgent}
-                          className={styles.agentImage}
-                        />
-                        <h1 className={styles.resultTitle}>{selectedAgent}</h1>
-                        <p className={styles.resultSubtitle}>Notion agent personality</p>
-                      </div>
-                      
-                                             <div className={styles.traitsSection}>
-                         <div className={styles.traitColumn}>
-                           <h3 className={styles.traitTitle}>Strengths</h3>
-                           <ul className={styles.traitList}>
-                             {agents[Object.keys(agents).find(key => agents[key].name === selectedAgent) || '']?.strengths?.map((strength, index) => (
-                               <li key={index} className={styles.traitItem}>{strength}</li>
-                             ))}
-                           </ul>
-                         </div>
-                         
-                         <div className={styles.traitColumn}>
-                           <h3 className={styles.traitTitle}>Weaknesses</h3>
-                           <ul className={styles.traitList}>
-                             {agents[Object.keys(agents).find(key => agents[key].name === selectedAgent) || '']?.weaknesses?.map((weakness, index) => (
-                               <li key={index} className={styles.traitItem}>{weakness}</li>
-                             ))}
-                           </ul>
-                         </div>
-                       </div>
+                      <img
+                        src={getAgentCardImage(selectedAgent)}
+                        alt={`${selectedAgent} Agent Card`}
+                        className={styles.agentCardImage}
+                        draggable={false}
+                      />
                     </div>
                   </div>
                 </>
