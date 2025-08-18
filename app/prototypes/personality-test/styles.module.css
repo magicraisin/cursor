@@ -787,8 +787,8 @@
 .modal {
   background: white;
   border-radius: 12px;
-  width: 600px; /* Fixed width to prevent dimension changes */
-  height: 700px; /* Fixed height to prevent dimension changes */
+  width: 600px; /* Fixed width to match result card container */
+  height: 750px; /* Updated to match result card container height */
   overflow-x: visible;
   overflow-y: hidden;
   box-shadow: 0px 16px 50px 0px rgba(0, 0, 0, 0.2);
@@ -832,7 +832,7 @@
 .modalContent {
   padding: 24px;
   overflow-y: auto;
-  height: calc(700px - 80px); /* Fixed height minus header space */
+  height: calc(750px - 80px); /* Fixed height minus header space */
   flex: 1; /* Take remaining space */
   display: flex;
   flex-direction: column;
@@ -1161,17 +1161,7 @@
     box-sizing: border-box !important;
   }
 
-  .result {
-    max-width: 100%;
-    padding: 24px 24px 200px 24px !important; /* 24px top padding as requested, maintain bottom for buttons */
-    margin: 0;
-    width: 100%;
-    position: relative;
-    border: none !important; /* Remove border around results card on mobile */
-    box-shadow: none !important; /* Remove shadow as well for cleaner look */
-    border-radius: 0 !important; /* Remove border radius for mobile */
-    background: white !important; /* Ensure white background */
-  }
+  /* Mobile result card - removed to maintain consistent dimensions across all viewports */
   
   .agentName {
     font-size: 28px;
@@ -1339,8 +1329,8 @@
   
   .result {
     text-align: center !important;
-    width: 600px !important; /* Fixed width - no longer responsive */
-    height: 800px !important; /* Fixed height for consistent container size */
+    width: 600px !important; /* Container width as requested */
+    height: 750px !important; /* Updated height to 750px */
     background: white !important;
     border-radius: 40px !important;
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1) !important;
@@ -1354,24 +1344,35 @@
     flex-shrink: 0 !important; /* Prevent container from shrinking */
   }
 
-  /* Desktop agent card image - fixed size */
+  /* Desktop agent card image - contained within container */
   .result .agentCardImage {
-    width: 520px !important; /* Fixed width */
-    height: 700px !important; /* Fixed height */
+    width: 520px !important; /* Contained within 600px container */
+    height: 650px !important; /* Adjusted height proportionally */
     object-fit: contain !important; /* Maintain aspect ratio within fixed dimensions */
     flex-shrink: 0 !important; /* Prevent image from shrinking */
     flex-grow: 0 !important; /* Prevent image from growing */
   }
 
-  /* Small viewport handling (< 700px) - top-align with scroll */
+  /* Small viewport handling (< 700px) - maintain card size, allow scrolling */
   @media (max-height: 700px) {
     .resultsContainer {
       align-items: flex-start !important; /* Top-align instead of center */
-      justify-content: flex-start !important;
-      padding-top: 16px !important; /* 16px space above card */
-      padding-bottom: 16px !important;
-      min-height: auto !important; /* Allow content to exceed viewport */
+      justify-content: center !important; /* Keep horizontal centering */
+      padding-top: 24px !important; /* 24px space above card as requested */
+      padding-bottom: 24px !important; /* Space below for scrolling */
+      min-height: 100vh !important; /* Full viewport height */
       overflow-y: auto !important; /* Enable scrolling */
+    }
+    
+    /* Container and image keep the same dimensions - no scaling */
+    .result {
+      width: 600px !important; /* Same container size */
+      height: 750px !important; /* Same container size */
+    }
+    
+    .result .agentCardImage {
+      width: 520px !important; /* Same image size - contained within container */
+      height: 650px !important; /* Same image size */
     }
   }
   
@@ -1567,24 +1568,7 @@
   }
 }
 
-/* For short desktop screens (700px and below): Minimal padding for maximum space */
-@media (min-width: 769px) and (max-height: 700px) {
-  .resultsContainer {
-    align-items: center !important; /* Center vertically always */
-    justify-content: center !important; /* Center horizontally */
-    padding: 20px 232px !important; /* Minimal padding for short screens */
-    display: flex !important;
-    min-height: 100vh !important;
-  }
-
-  .result {
-    max-height: calc(100vh - 40px) !important; /* Even tighter constraint for short screens */
-  }
-
-  .result .agentCardImage {
-    max-height: calc(100vh - 120px) !important; /* More constrained for short screens */
-  }
-}
+/* Removed desktop short screen overrides to maintain consistent card dimensions */
 
 @media (max-width: 480px) {
   .container {
@@ -1592,13 +1576,14 @@
     align-items: center;
   }
   
-  .testContent,
-  .result {
+  .testContent {
     padding: 20px 16px;
     margin: 0;
     border-radius: 8px;
     width: 100%;
   }
+  
+  /* Removed .result override to maintain consistent dimensions */
   
   .question {
     font-size: 20px;
@@ -1834,7 +1819,7 @@
   .modal {
     width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
     max-width: 600px !important; /* But don't exceed desktop width */
-    height: 700px !important; /* Keep same height */
+    height: 750px !important; /* Updated to match result card height */
   }
 
   .agentDetailContent {
