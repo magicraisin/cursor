@@ -2299,7 +2299,9 @@ export default function NotionAgentTest() {
     };
     
     const filename = nameMapping[agentName] || `${agentName}.png`;
-    return `/images/agent-cards/${filename}`;
+    // Add cache busting parameter for Greek God to ensure fresh image loads
+    const cacheBuster = agentName === 'Greek God' ? `?v=${Date.now()}` : '';
+    return `/images/agent-cards/${filename}${cacheBuster}`;
   };
 
   const getBinaryChoices = (sequence: string) => {
