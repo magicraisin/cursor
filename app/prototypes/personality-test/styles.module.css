@@ -1331,9 +1331,8 @@
   
   .result {
     text-align: center !important;
-    max-width: 600px !important; /* Original constrained width */
-    max-height: calc(100vh - 80px) !important; /* Ensure card fits in viewport with margin */
-    width: 100% !important;
+    width: 600px !important; /* Fixed width - no longer responsive */
+    height: 800px !important; /* Fixed height for consistent container size */
     background: white !important;
     border-radius: 40px !important;
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1) !important;
@@ -1344,15 +1343,28 @@
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important; /* Prevent content overflow */
+    flex-shrink: 0 !important; /* Prevent container from shrinking */
   }
 
-  /* Desktop agent card image - make responsive to available space */
+  /* Desktop agent card image - fixed size */
   .result .agentCardImage {
-    max-height: calc(100vh - 200px) !important; /* Constrain image height to fit viewport */
-    width: auto !important;
-    height: auto !important;
-    object-fit: contain !important; /* Maintain aspect ratio */
-    flex-shrink: 1 !important; /* Allow image to shrink if needed */
+    width: 520px !important; /* Fixed width */
+    height: 700px !important; /* Fixed height */
+    object-fit: contain !important; /* Maintain aspect ratio within fixed dimensions */
+    flex-shrink: 0 !important; /* Prevent image from shrinking */
+    flex-grow: 0 !important; /* Prevent image from growing */
+  }
+
+  /* Small viewport handling (< 700px) - top-align with scroll */
+  @media (max-height: 700px) {
+    .resultsContainer {
+      align-items: flex-start !important; /* Top-align instead of center */
+      justify-content: flex-start !important;
+      padding-top: 16px !important; /* 16px space above card */
+      padding-bottom: 16px !important;
+      min-height: auto !important; /* Allow content to exceed viewport */
+      overflow-y: auto !important; /* Enable scrolling */
+    }
   }
   
   /* Desktop homepage content - restore original positioning */
