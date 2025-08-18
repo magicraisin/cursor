@@ -1083,7 +1083,7 @@
     font-size: 24px !important;
     width: calc(100% + 8px) !important; /* Compensate for negative margins */
     max-width: none !important; /* Remove width constraints */
-    text-align: center !important; /* Restore center alignment */
+    text-align: left !important; /* Left-align question text on mobile */
     box-sizing: border-box !important; /* Ensure proper width calculation */
   }
 
