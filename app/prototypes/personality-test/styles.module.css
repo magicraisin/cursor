@@ -1375,6 +1375,23 @@
       height: 600px !important; /* Same image size */
       margin-top: 16px !important; /* Nudge image down by 16px */
     }
+
+    /* Modal responsive behavior - same logic as results card */
+    .modalOverlay {
+      align-items: flex-start !important; /* Top-align instead of center */
+      justify-content: center !important; /* Keep horizontal centering */
+      padding-top: 24px !important; /* 24px space above modal */
+      padding-bottom: 24px !important; /* Space below for scrolling */
+      min-height: 100vh !important; /* Full viewport height */
+      overflow-y: auto !important; /* Enable scrolling */
+    }
+    
+    /* Modal keeps the same dimensions - no scaling */
+    .modal {
+      width: 576px !important; /* Same modal size */
+      height: 652px !important; /* Same modal size */
+      flex-shrink: 0 !important; /* Prevent modal from shrinking */
+    }
   }
   
   /* Desktop homepage content - restore original positioning */
