@@ -2182,10 +2182,49 @@ export default function NotionAgentTest() {
     }
   };
 
+  // Generate or get existing session ID for this browser
+  const getSessionId = () => {
+    let sessionId = localStorage.getItem('personality-test-session-id');
+    if (!sessionId) {
+      // Generate a unique session ID: timestamp + random string
+      sessionId = `session-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+      localStorage.setItem('personality-test-session-id', sessionId);
+      addDebugLog(`🆔 Generated new session ID: ${sessionId}`);
+    } else {
+      addDebugLog(`🆔 Using existing session ID: ${sessionId}`);
+    }
+    return sessionId;
+  };
+
+  // Check if this browser has already taken the test
+  const hasAlreadyTakenTest = () => {
+    return localStorage.getItem('personality-test-completed') === 'true';
+  };
+
+  // Mark test as completed for this browser
+  const markTestCompleted = () => {
+    localStorage.setItem('personality-test-completed', 'true');
+  };
+
+  // Check test completion status on component mount
+  useEffect(() => {
+    const hasCompleted = hasAlreadyTakenTest();
+    const sessionId = localStorage.getItem('personality-test-session-id');
+    addDebugLog(`🔍 Initial check - Test completed: ${hasCompleted}, Session ID: ${sessionId || 'none'}`);
+  }, []);
+
   const saveResult = async (finalSequence: string) => {
     try {
       const agent = agents[finalSequence];
       addDebugLog(`Saving result: ${agent.name} (${finalSequence})`);
+      
+      // Check if user has already taken test in this browser
+      if (hasAlreadyTakenTest()) {
+        addDebugLog(`⚠️ Test already completed in this browser - not saving to leaderboard`);
+        return;
+      }
+      
+      const sessionId = getSessionId();
       
       const response = await fetch('/api/personality-results', {
         method: 'POST',
@@ -2195,6 +2234,7 @@ export default function NotionAgentTest() {
         body: JSON.stringify({
           agent: agent.name,
           sequence: finalSequence,
+          sessionId: sessionId,
         }),
       });
       
@@ -2204,9 +2244,11 @@ export default function NotionAgentTest() {
       if (!data.success) {
         addDebugLog(`❌ API Error: ${data.error || 'Unknown error'}`);
       } else if (data.isNewResult === false) {
-        addDebugLog(`❌ Duplicate IP! Existing: ${data.existingAgent}`);
+        addDebugLog(`❌ Duplicate session! Existing: ${data.existingAgent}`);
       } else {
         addDebugLog(`✅ New result saved successfully!`);
+        // Mark test as completed to prevent future submissions from this browser
+        markTestCompleted();
       }
     } catch (error) {
       addDebugLog(`❌ Save failed: ${error}`);
@@ -2259,6 +2301,9 @@ export default function NotionAgentTest() {
     setSequence('');
     setSelectedAnswer(null);
     setAnswers({});
+    // Reset the "test completed" flag to allow retaking for testing purposes
+    localStorage.removeItem('personality-test-completed');
+    addDebugLog(`🔄 Test restarted - cleared completion flag`);
   };
 
   const saveAsImage = async () => {

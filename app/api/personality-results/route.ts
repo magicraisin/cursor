@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
 
 interface PersonalityResult {
-  ip: string;
+  sessionId: string;
   agent: string;
   sequence: string;
   timestamp: number;
@@ -37,36 +37,7 @@ async function writeResults(results: PersonalityResult[]) {
   }
 }
 
-// Get client IP
-function getClientIP(request: NextRequest): string {
-  // Get various IP headers (Vercel uses these)
-  const forwarded = request.headers.get('x-forwarded-for');
-  const realIP = request.headers.get('x-real-ip');
-  const vercelIP = request.headers.get('x-vercel-forwarded-for');
-  const userAgent = request.headers.get('user-agent') || '';
-  
-  console.log('IP Detection Debug:', {
-    forwarded,
-    realIP, 
-    vercelIP,
-    userAgent: userAgent.substring(0, 100)
-  });
-  
-  // Try different IP headers in order of preference
-  if (vercelIP) {
-    return vercelIP.split(',')[0].trim();
-  }
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
-  }
-  if (realIP) {
-    return realIP;
-  }
-  
-  // Create a unique identifier combining IP and User-Agent for better uniqueness
-  const fallbackId = `unknown-${userAgent.replace(/[^a-zA-Z0-9]/g, '').substring(0, 20)}-${Date.now().toString().slice(-6)}`;
-  return fallbackId;
-}
+// No longer needed - using browser-based sessionId instead of IP detection
 
 export async function POST(request: NextRequest) {
   try {
@@ -74,24 +45,23 @@ export async function POST(request: NextRequest) {
     const requestBody = await request.json();
     console.log('Request body:', requestBody);
     
-    const { agent, sequence } = requestBody;
-    const ip = getClientIP(request);
+    const { agent, sequence, sessionId } = requestBody;
     
-    console.log('POST Debug:', { agent, sequence, ip });
+    console.log('POST Debug:', { agent, sequence, sessionId });
     
     console.log('Attempting to read existing results...');
     const results = await readResults();
     console.log('Existing results:', results.length, 'entries');
     console.log('Current results data:', results);
     
-    // Check if this IP has already submitted a result
-    const existingResult = results.find(result => result.ip === ip);
+    // Check if this sessionId has already submitted a result
+    const existingResult = results.find(result => result.sessionId === sessionId);
     if (existingResult) {
-      console.log('Duplicate IP detected:', ip, 'existing agent:', existingResult.agent);
-      // IP already exists, don't add duplicate
+      console.log('Duplicate sessionId detected:', sessionId, 'existing agent:', existingResult.agent);
+      // SessionId already exists, don't add duplicate
       return NextResponse.json({ 
         success: true, 
-        message: 'Result already recorded for this IP',
+        message: 'Result already recorded for this session',
         isNewResult: false,
         existingAgent: existingResult.agent
       });
@@ -99,7 +69,7 @@ export async function POST(request: NextRequest) {
     
     // Add new result
     const newResult: PersonalityResult = {
-      ip,
+      sessionId,
       agent,
       sequence,
       timestamp: Date.now()
@@ -139,7 +109,7 @@ export async function GET() {
   try {
     const results = await readResults();
     console.log('GET Debug - Total results:', results.length);
-    console.log('All IPs:', results.map(r => ({ ip: r.ip, agent: r.agent })));
+    console.log('All Sessions:', results.map(r => ({ sessionId: r.sessionId, agent: r.agent })));
     
     // Calculate leaderboard
     const agentCounts: { [key: string]: number } = {};
