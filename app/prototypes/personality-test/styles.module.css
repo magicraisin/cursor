@@ -836,6 +836,7 @@
   flex: 1; /* Take remaining space */
   display: flex;
   flex-direction: column;
+  min-height: 0; /* Allow content to shrink and prevent overflow issues */
 }
 
 .loading {
@@ -1336,7 +1337,8 @@
   }
   
   .miniRoamingContainer {
-    height: 140px;
+    height: 140px !important; /* Force height on mobile to prevent conflicts */
+    display: block !important; /* Ensure it's visible on mobile */
   }
 
   /* Mobile modal responsive behavior - same logic as results card - STRONGER SPECIFICITY */
@@ -1681,6 +1683,8 @@
   border: 1px solid #e0e0e0;
   margin: 0 0 24px 0;
   overflow: hidden;
+  flex-shrink: 0; /* Prevent container from shrinking and disappearing */
+  z-index: 1; /* Ensure it's visible above other content */
 }
 
 .expandButton {
