@@ -1347,6 +1347,7 @@
   .result .agentCardImage {
     width: 500px !important; /* Reduced width to 500px (was 520px) */
     height: 600px !important; /* Adjusted height for 700px container */
+    margin-top: 16px !important; /* Nudge image down by 16px */
     object-fit: contain !important; /* Maintain aspect ratio within fixed dimensions */
     flex-shrink: 0 !important; /* Prevent image from shrinking */
     flex-grow: 0 !important; /* Prevent image from growing */
@@ -1372,6 +1373,7 @@
     .result .agentCardImage {
       width: 500px !important; /* Same image size - reduced to 500px */
       height: 600px !important; /* Same image size */
+      margin-top: 16px !important; /* Nudge image down by 16px */
     }
   }
   
