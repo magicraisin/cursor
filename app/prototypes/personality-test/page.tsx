@@ -1690,10 +1690,10 @@ const questions: Question[] = [
     ]
   },
   {
-    text: "Which templates do you prefer?",
+    text: "A co-worker is stressed about work and wants to talk about it. Do you tend to...",
     answers: [
-      { image: "/images/agents/4A.png", value: "A" },
-      { image: "/images/agents/4B.png", value: "C" }
+      { text: "Offer practical solutions and actionable strategies: delegate tasks, cut scope, talk to their manager, take a break", value: "C" },
+      { text: "Explore deeper themes: why the job feels unfulfilling, what direction they want long-term, is this part of a pattern", value: "A" }
     ]
   },
   {
@@ -2686,7 +2686,7 @@ export default function NotionAgentTest() {
           
           <h2 className={styles.question}>{question.text}</h2>
           
-                          <div className={`${styles.answers} ${question.answers.some(answer => answer.image) ? styles.imageAnswers : ''} ${currentQuestion === 2 ? styles.question3 : ''}`}>
+                          <div className={`${styles.answers} ${question.answers.some(answer => answer.image) ? styles.imageAnswers : ''} ${currentQuestion === 2 ? styles.question3 : ''} ${currentQuestion === 9 ? styles.question10 : ''}`}>
             {question.answers.map((answer, index) => (
               <button
                 key={index}

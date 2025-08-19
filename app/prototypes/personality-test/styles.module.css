@@ -205,6 +205,11 @@
   margin-top: 8px; /* Reduced by 16px from 24px to 8px for question 3 */
 }
 
+/* Reduced spacing for question 10 specifically */
+.answers.question10:not(.imageAnswers) {
+  margin-top: 8px; /* Reduced by 16px from 24px to 8px for question 10 */
+}
+
 .answers.imageAnswers {
   flex-direction: row;
   gap: 24px;
@@ -664,11 +669,12 @@
   /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
   z-index: 1000;
   min-width: 180px;
-  margin-top: 4px;
+  margin-top: 0px; /* Remove gap to prevent hover break */
   padding: 2px 0;
 }
 
-.saveDropdown:hover .saveMenu {
+.saveDropdown:hover .saveMenu,
+.saveMenu:hover {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
