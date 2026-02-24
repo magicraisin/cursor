@@ -1,0 +1,1918 @@
+.container {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F7F6F3;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* Landing Page Styles */
+.homepage {
+  text-align: center;
+  padding: 40px;
+  max-width: 600px;
+}
+
+/* Roaming Homepage Styles */
+.roamingContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #F7F6F3;
+  margin: 0;
+  padding: 0;
+}
+
+.roamingAgent {
+  position: absolute;
+  border-radius: 50%; /* Circular frame */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  z-index: 10; /* Above the text */
+  padding: 0;
+  margin: 0;
+  pointer-events: none; /* Prevent blocking button clicks */
+}
+
+.roamingAgent img {
+  display: block;
+  object-fit: cover;
+  border-radius: 50%; /* Make the image circular too */
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0;
+  margin: 0;
+}
+
+/* Pop-in animation now handled entirely in JavaScript */
+
+.roamingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1; /* Behind the agents */
+  pointer-events: none;
+}
+
+.roamingContent {
+  text-align: center;
+  padding: 40px;
+  max-width: 600px;
+  background: none; /* No container background */
+  border: none;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.landingIcon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #2c2c2c;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+}
+
+.titleBreak {
+  /* Default: no break on desktop */
+}
+
+.description {
+  color: #666;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 32px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.getStartedButton {
+  background: #2c2c2c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer !important; /* Force pointer cursor */
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100; /* Ensure button is always on top of agents */
+  position: relative; /* Required for z-index to work */
+}
+
+.getStartedButton:hover {
+  background: #1a1a1a;
+  transform: translateY(-2px);
+}
+
+/* Test Content Styles */
+.testContent {
+  max-width: 600px;
+  width: 100%;
+  background: white;
+  border-radius: 40px;
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1);
+  padding: 16px 40px 24px 40px;
+  text-align: center;
+  height: 548px; /* Fixed height to prevent jumpiness - reduced by 32px */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.progressBar {
+  width: 100%;
+  height: 4px;
+  background: #f0f0f0;
+  border-radius: 2px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #2c2c2c;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.questionNumber {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.question {
+  color: #2c2c2c;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 32px; /* Reduced for fixed layout */
+  width: 100%; /* Full width to match answer blocks */
+  max-width: 100%; /* Ensure no width constraints */
+  text-align: center; /* Restore center alignment */
+  padding: 0; /* Remove any hidden padding */
+  margin-left: 0; /* Remove any hidden margins */
+  margin-right: 0; /* Remove any hidden margins */
+}
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1; /* Take available space */
+  align-items: stretch;
+  justify-content: flex-start;
+  margin-bottom: 24px; /* Space above navigation buttons */
+}
+
+/* Extra spacing for text-only answers (not image answers) */
+.answers:not(.imageAnswers) {
+  margin-top: 24px; /* Additional 24px space between question and first text answer */
+}
+
+/* Reduced spacing for question 3 specifically */
+.answers.question3:not(.imageAnswers) {
+  margin-top: 8px; /* Reduced by 16px from 24px to 8px for question 3 */
+}
+
+/* Reduced spacing for question 10 specifically */
+.answers.question10:not(.imageAnswers) {
+  margin-top: 8px; /* Reduced by 16px from 24px to 8px for question 10 */
+}
+
+.answers.imageAnswers {
+  flex-direction: row;
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-start; /* Align to top for consistent positioning */
+}
+
+.answerButton {
+  background: #f7f6f3;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c2c2c;
+  cursor: pointer;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  text-align: left;
+  outline: none; /* Remove focus outline */
+}
+
+.answerButton:focus {
+  outline: none; /* Ensure no focus outline on focus */
+}
+
+.answerButton:hover {
+  background: #eeeee8;
+  border-color: #d3d3d0;
+}
+
+.answerButton.selected {
+  background: #2c2c2c;
+  color: white;
+  border-color: #2c2c2c;
+}
+
+.imageAnswer {
+  padding: 0;
+  text-align: center;
+  height: 260px; /* Fixed height instead of min-height for consistency */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  max-width: 400px;
+  border: 2px solid #E7E7E7;
+  background: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+  outline: none; /* Remove focus outline */
+}
+
+.imageAnswer:focus {
+  outline: none; /* Ensure no focus outline on focus */
+}
+
+.imageAnswer:hover {
+  border-color: #D3D3D0;
+  background: #ffffff;
+}
+
+.imageAnswer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+}
+
+.imageAnswer:hover::after {
+  background: rgba(0, 0, 0, 0);
+}
+
+.imageAnswer.selected {
+  border-color: black;
+  background: #ffffff;
+}
+
+.imageAnswer.question4 {
+  background: #F8F8F7;
+}
+
+.imageAnswer.question4:hover {
+  background: #F8F8F7;
+}
+
+.imageAnswer.question4::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+}
+
+.imageAnswer.question4:hover::after {
+  background: rgba(0, 0, 0, 0);
+}
+
+.imageAnswer.question4.selected {
+  background: #F8F8F7;
+}
+
+.imageAnswer.question10 {
+  background: #F8F8F7;
+}
+
+.imageAnswer.question10:hover {
+  background: #F8F8F7;
+}
+
+.imageAnswer.question10::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+}
+
+.imageAnswer.question10:hover::after {
+  background: rgba(0, 0, 0, 0);
+}
+
+.imageAnswer.question10.selected {
+  background: #F8F8F7;
+}
+
+.answerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+  display: block;
+}
+
+
+
+.navigationButtons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: auto; /* Push to bottom of flex container */
+}
+
+.backButton {
+  background: transparent;
+  color: #666;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  outline: none; /* Remove focus outline */
+}
+
+.backButton:focus {
+  outline: none; /* Ensure no focus outline on focus */
+}
+
+.backButton:hover {
+  background: #f7f6f3;
+  border-color: #d3d3d0;
+}
+
+.nextButton {
+  background: #2c2c2c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  opacity: 0.5;
+  pointer-events: none;
+  outline: none; /* Remove focus outline */
+}
+
+.nextButton:focus {
+  outline: none; /* Ensure no focus outline on focus */
+}
+
+.nextButton.enabled {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nextButton:hover.enabled {
+  background: #1a1a1a;
+}
+
+/* Result Styles */
+.result {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  background: white;
+  border-radius: 40px;
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1);
+  padding: 16px 40px 28px 40px;
+  position: relative;
+  z-index: 10;
+}
+
+.profileCard {
+  /* This element will be captured in the image */
+  background: transparent;
+  padding: 0;
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.resultTitle {
+  color: #2c2c2c;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.resultSubtitle {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 0px;
+  text-align: left;
+}
+
+.agentHeaderContainer {
+  margin-bottom: 12px;
+}
+
+.agentHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: -32px;
+  padding-bottom: 20px;
+}
+
+.headerDivider {
+  border-bottom: 1px solid #e0e0e0;
+  margin-top: 24px;
+}
+
+.agentImageContainer {
+  flex-shrink: 0;
+}
+
+.agentInfo {
+  text-align: left;
+}
+
+.agentImage {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+}
+
+.agentCardImage {
+  width: 100%;
+  height: auto;
+  border-radius: 40px;
+  display: block;
+}
+
+.agentName {
+  color: #2c2c2c;
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+.binaryChoices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.binaryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px 12px 0;
+  background: white;
+  border-radius: 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.binaryItem:last-child {
+  border-bottom: none;
+}
+
+.binaryLabel {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.letterContainer {
+  background: #F0F0F0;
+  color: #666;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.toggleContainer {
+  display: flex;
+  background: #F0F0F0;
+  border-radius: 80px;
+  padding: 0;
+  position: relative;
+  width: 200px;
+}
+
+.toggleOption {
+  flex: 1;
+  padding: 4px 4px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: #888;
+  border-radius: 80px;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  cursor: default;
+  z-index: 2;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0;
+  letter-spacing: -0.01em;
+}
+
+.toggleOption.active {
+  background: #2c2c2c;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.traitsSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 52px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.traitColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.traitTitle {
+  color: #2c2c2c;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.traitList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.traitItem {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: left;
+}
+
+.traitItem:last-child {
+  border-bottom: none;
+}
+
+.sequenceCode {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+  margin-left: 0px;
+  transform: translateY(-20px);
+}
+
+.saveDropdown {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  display: inline-block;
+}
+
+.saveButton {
+  background: white;
+  color: #4a4a4a;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.saveButton:hover {
+  background: #f8f8f8;
+  border-color: #d0d0d0;
+}
+
+.saveMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  z-index: 1000;
+  min-width: 180px;
+  margin-top: 0px; /* Remove gap to prevent hover break */
+  padding: 2px 0;
+}
+
+.saveDropdown:hover .saveMenu,
+.saveMenu:hover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.saveMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: #2c2c2c;
+  /* transition: background 0.2s ease; */ /* Removed to eliminate janky transitions */
+}
+
+.saveMenuItem:hover {
+  background: #f7f6f3;
+}
+
+.saveMenuItem:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.saveMenuItem:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.restartButton {
+  background: transparent;
+  color: #666;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.restartButton:hover {
+  background: #f7f6f3;
+  border-color: #d3d3d0;
+}
+
+.leaderboardButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #2c2c2c;
+  color: white;
+  border: 1px solid #2c2c2c;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+}
+
+.leaderboardButton:hover {
+  background: #404040;
+  border-color: #404040;
+}
+
+.fixedRetakeButton {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: white;
+  color: #666;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+}
+
+.fixedRetakeButton:hover {
+  background: #f8f8f8;
+  border-color: #d0d0d0;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  width: 576px; /* Reduced width to match result card container (600px - 24px) */
+  height: 652px; /* Reduced by 24px (676px - 24px) */
+  overflow-x: visible;
+  overflow-y: hidden;
+  box-shadow: 0px 16px 50px 0px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0; /* Prevent modal from shrinking */
+  display: flex; /* Flex layout for consistent structure */
+  flex-direction: column; /* Stack header and content */
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 16px;
+  border-bottom: none !important; /* Removed border to eliminate line above first agent */
+  height: 80px; /* Fixed header height */
+  flex-shrink: 0; /* Prevent header from shrinking */
+  box-sizing: border-box; /* Include padding in height calculation */
+}
+
+.modalTitle {
+  color: #2c2c2c;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+}
+
+.closeButton:hover {
+  background: #f0f0f0;
+}
+
+.modalContent {
+  padding: 24px;
+  overflow-y: auto;
+  height: calc(652px - 80px); /* Fixed height minus header space */
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Allow content to shrink and prevent overflow issues */
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+  padding: 40px;
+}
+
+.totalResults {
+  color: #666;
+  font-size: 14px;
+  margin-top: 0px; /* Reduced from 24px to move divider 24px higher */
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0; /* Add divider line above total results */
+}
+
+.leaderboardList {
+  display: flex;
+  flex-direction: column;
+  gap: 0px; /* Ultra-tight spacing - reduced by additional 4px */
+}
+
+.leaderboardItem {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 4px; /* Reduced from 16px for ultra-tight spacing */
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  margin-bottom: 0; /* Removed margin since gap handles spacing */
+}
+
+.leaderboardItem.zeroResults {
+  opacity: 0.4; /* Gray out agents with 0 results */
+}
+
+.rankInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0; /* Reset margin since it's now inline with percentage */
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  margin-left: -8px;
+  margin-right: 0; /* Reset margin for inline layout */
+}
+
+.agentArrow {
+  opacity: 1; /* Always visible instead of only on hover */
+  /* transition: opacity 0.2s ease; */ /* Removed to eliminate janky transitions */
+  margin-left: -2px; /* Moved 4px to the left (from 2px to -2px) */
+  transform: translateY(-15px);
+}
+
+.rankInfo:hover .agentArrow {
+  opacity: 1; /* Keep visible on hover */
+}
+
+.agentIcon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 2px;
+  vertical-align: middle;
+  transform: translateY(-14px);
+}
+
+.agentName {
+  color: #2c2c2c;
+  font-size: 16px;
+  font-weight: 600;
+  transform: translateY(1px); /* Move 1px down to align with profile picture */
+}
+
+.statsInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -8px; /* Reduced by additional 4px for ultra-tight spacing with progress bar */
+  width: 100%; /* Ensure full width for proper space-between */
+}
+
+/* .count styles removed - no longer used in redesigned layout */
+
+.percentage {
+  color: #2c2c2c;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #2c2c2c 0%, #666 100%);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    min-height: 100vh;
+    padding: 10px;
+    align-items: center;
+  }
+  
+  /* Override base container for test screens */
+  .container.testContainer {
+    padding: 0 24px 0 24px !important; /* No top padding */
+    margin: 0 !important; /* No margin */
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: white !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Mobile landing page - full viewport without scroll */
+  .landingContainer {
+    height: 100vh !important;
+    min-height: 100vh;
+    max-height: 100vh;
+    padding: 0;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  /* Mobile-specific containers */
+  .resultsContainer {
+    background: white !important;
+    align-items: flex-start;
+    padding: 16px 24px 24px 24px !important; /* 16px top padding, 24px others */
+    height: 100vh !important; /* Fixed height to prevent scrolling */
+    max-height: 100vh !important; /* Ensure no overflow */
+    overflow: hidden !important; /* Prevent scrolling */
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  /* Mobile results card - remove border/shadow and adjust spacing */
+  .result {
+    background: white !important;
+    border-radius: 0 !important; /* Remove border radius */
+    box-shadow: none !important; /* Remove shadow/border */
+    padding: 0 !important; /* Remove padding to maximize image space */
+    margin: 0 !important;
+    width: 100% !important; /* Full width available */
+    height: auto !important; /* Auto height to fit content */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+
+  /* Mobile results image - larger size (10% increase) */
+  .result .agentCardImage {
+    width: 550px !important; /* 10% larger than 500px */
+    height: 660px !important; /* 10% larger than 600px */
+    margin-top: 0 !important; /* Remove top margin for mobile */
+    object-fit: contain !important;
+    max-width: calc(100vw - 48px) !important; /* Ensure it fits in viewport with padding */
+    max-height: calc(100vh - 100px) !important; /* Ensure it fits in viewport */
+  }
+  
+  /* Mobile test screen - full viewport without scroll - moved to earlier position */
+  
+  /* Hide background agents on mobile */
+  .desktopOnlyBackground {
+    display: none;
+  }
+  
+  /* Mobile title adjustments */
+  .title {
+    font-size: 36px; /* Smaller on mobile */
+    line-height: 1.1;
+  }
+  
+  .titleBreak {
+    display: block; /* Force line break on mobile */
+  }
+  
+  .desktopBreak {
+    display: none; /* Hide desktop line break on mobile */
+  }
+  
+  /* Mobile landing page content centering */
+  .roamingOverlay {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  .roamingContent {
+    padding: 20px;
+    max-width: 90%;
+    text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px; /* Reduced from 24px for tighter spacing */
+    transform: translateY(-5vh); /* Move content up slightly for perfect centering */
+  }
+  
+  .testContent {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    text-align: left;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden; /* No scrolling within the content */
+  }
+  
+  /* MOBILE SOLUTION - Proper flexbox layout with consistent spacing */
+  .testContainer {
+    position: relative !important;
+    padding: 0 !important; /* Remove any container padding that might cause overflow */
+    margin: 0 !important; /* Remove any container margins */
+    width: 100% !important; /* Ensure full width */
+    box-sizing: border-box !important; /* Include padding in width calculation */
+  }
+  
+  .testContent {
+    position: relative !important;
+    padding: 16px 4px 24px 4px !important; /* Reduced side margins by 12px (from 16px to 4px) */
+    margin: 0 !important;
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: white !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow-y: auto !important; /* Allow scrolling if content is too long */
+  }
+
+  /* Top section with progress bar and question */
+  .testContent .progressBar {
+    margin: 0 0 28px 0 !important;
+    padding: 0 !important;
+  }
+
+  .testContent .questionNumber {
+    margin: 0 0 8px 0 !important;
+    padding: 0 !important;
+  }
+
+  .testContent .question {
+    margin: 0 -4px 32px -4px !important; /* Break out of container padding (negative margins) */
+    padding: 0 4px !important; /* Add back minimal padding for text readability */
+    font-size: 24px !important;
+    width: calc(100% + 8px) !important; /* Compensate for negative margins */
+    max-width: none !important; /* Remove width constraints */
+    text-align: left !important; /* Left-align question text on mobile */
+    box-sizing: border-box !important; /* Ensure proper width calculation */
+    word-wrap: break-word !important; /* Allow text to wrap properly */
+    overflow-wrap: break-word !important; /* Modern property for text wrapping */
+  }
+
+  /* Answers section - flexible height with space for fixed bottom buttons */
+  .testContent .answers {
+    flex: 1 !important; /* Take remaining space */
+    margin: 0 0 76px 0 !important; /* Reduced bottom margin to account for smaller button spacing */
+    padding: 0 !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    min-height: 0 !important; /* Allow flexbox to shrink */
+  }
+
+  /* Image answers layout - stack vertically on mobile */
+  .testContent .answers.imageAnswers {
+    flex-direction: column !important;
+    gap: 16px !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+  }
+
+  /* Fix image answer aspect ratio on mobile - full width stacked */
+  .imageAnswer {
+    min-height: auto !important;
+    max-width: 100% !important; /* Full width for stacked layout */
+    width: 100% !important;
+    aspect-ratio: 1 / 1.07 !important; /* Target 1:1.07 ratio */
+    height: auto !important;
+    max-height: calc(100vh - 296px) !important; /* Reduced by 16px (was 280px, now 296px) to prevent cut-off */
+  }
+
+  /* Fallback for browsers without aspect-ratio support */
+  @supports not (aspect-ratio: 1 / 1.07) {
+    .imageAnswer {
+      height: calc(min(100vw * 1.07 - 48px, 100vh - 296px)) !important; /* Reduced by 16px (was 280px, now 296px) */
+      max-height: calc(100vh - 296px) !important; /* Reduced by 16px to prevent cut-off by buttons */
+    }
+  }
+
+  /* Stack image answers vertically on mobile */
+  .answers.imageAnswers {
+    flex-direction: column !important; /* Stack vertically instead of side-by-side */
+    gap: 16px !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important; /* Stretch to full width */
+  }
+
+  /* Navigation buttons - fixed to bottom of screen to ensure visibility */
+  .testContent .navigationButtons {
+    position: fixed !important; /* Pin to bottom of screen */
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    padding: 16px 20px 16px 20px !important; /* Reduced bottom padding to 16px */
+    background: white !important; /* White background to separate from content */
+    display: flex !important;
+    flex-direction: row !important; /* Side by side buttons on mobile */
+    gap: 12px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    box-shadow: none !important; /* Remove shadow */
+    border: none !important;
+    z-index: 10 !important; /* Ensure buttons stay on top */
+    box-sizing: border-box !important;
+  }
+
+  /* Mobile result card - removed to maintain consistent dimensions across all viewports */
+  
+  .agentName {
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+  
+  .agentImage {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .traitsSection {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .saveButton,
+  .restartButton {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .navigationButtons {
+    flex-direction: row;
+    gap: 12px;
+  }
+  
+  .backButton,
+  .nextButton {
+    flex: 1; /* Equal width for side by side layout */
+    justify-content: center;
+    box-shadow: none !important; /* Remove any shadows from buttons */
+    border-radius: 8px !important; /* Consistent border radius */
+    height: 48px !important; /* Ensure same height for both buttons */
+    padding: 12px 16px !important; /* Consistent padding */
+  }
+  
+  /* Next button styling (primary) */
+  .nextButton {
+    background: #2c2c2c !important;
+    color: white !important;
+    border: 1px solid #2c2c2c !important;
+  }
+  
+  /* Back button styling (outline) */
+  .backButton {
+    background: white !important;
+    color: #2c2c2c !important;
+    border: 1px solid #d0d0d0 !important; /* Subtle gray border */
+  }
+  
+  /* Mobile agent card display */
+  .profileCard {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 0;
+  }
+  
+
+  
+  .mobileButtonStack {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+  }
+  
+  .leaderboardButton {
+    position: static;
+    width: 100%;
+    justify-content: center;
+    order: 1; /* First button */
+  }
+  
+  .saveDropdown {
+    position: static;
+    width: 100%;
+    order: 2; /* Second button */
+  }
+  
+  .saveButton {
+    width: 100%;
+    justify-content: center;
+    background: white;
+    color: #666;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Mobile save button icons - show download icon only, hide chevron */
+  .saveButton svg:first-child {
+    display: inline !important; /* Show download icon on mobile */
+  }
+  
+  .saveButton svg:last-child {
+    display: none !important; /* Hide chevron on mobile */
+  }
+  
+  .fixedRetakeButton {
+    position: static;
+    width: 100%;
+    justify-content: center;
+    order: 3; /* Third button */
+  }
+  
+  .modal {
+    margin: 0 16px; /* Increased from 10px to provide more space and prevent cutoff */
+    max-height: 90vh;
+  }
+
+  /* Mobile leaderboard - reduce agent name font size */
+  .agentName {
+    font-size: 14px !important; /* Reduced from 16px for mobile leaderboard */
+  }
+
+  /* Mobile modal header - ensure proper spacing and prevent white box issues */
+  .modalHeader {
+    padding: 16px 16px 12px 16px !important; /* Reduced padding for mobile */
+    border-bottom: none !important; /* Force remove border on mobile */
+    border: none !important; /* Remove all borders */
+  }
+  
+  .miniRoamingContainer {
+    height: 140px !important; /* Force height on mobile to prevent conflicts */
+    display: block !important; /* Ensure it's visible on mobile */
+  }
+
+  /* Mobile modal width adjustments only - positioning handled by short viewport media query */
+  .modal {
+    width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
+    max-width: 576px !important; /* But don't exceed desktop width */
+    height: 652px !important; /* Fixed height */
+    max-height: none !important; /* Override any max-height constraints */
+    flex-shrink: 0 !important; /* Prevent modal from shrinking */
+    margin: 0 !important; /* Remove any conflicting margins */
+  }
+}
+
+/* Desktop styles - maintain original layout for larger screens */
+@media (min-width: 769px) {
+  /* Show background agents on desktop */
+  .desktopOnlyBackground {
+    display: block;
+  }
+  
+  .mobileButtonStack {
+    display: contents; /* Use normal document flow on desktop */
+  }
+  
+  /* Desktop results container - restore original behavior */
+  .resultsContainer {
+    background: #F7F6F3 !important; /* Restore original background */
+    align-items: center !important; /* Center alignment */
+    justify-content: center !important; /* Center the result card */
+    padding: 40px 232px !important; /* Reduced padding to give more space for card */
+    display: flex !important;
+    min-height: 100vh !important;
+  }
+  
+  .result {
+    text-align: center !important;
+    width: 576px !important; /* Reduced width by 24px (600px - 24px) */
+    height: 652px !important; /* Reduced height by another 24px (676px - 24px) */
+    background: white !important;
+    border-radius: 40px !important;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1) !important;
+    padding: 16px 40px 28px 40px !important; /* Original padding */
+    position: relative !important; /* For absolute positioned save button */
+    z-index: 10 !important;
+    margin: 0 auto !important; /* Center the card */
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important; /* Allow save dropdown to overflow container */
+    flex-shrink: 0 !important; /* Prevent container from shrinking */
+  }
+
+  /* Desktop agent card image - contained within container */
+  .result .agentCardImage {
+    width: 500px !important; /* Reduced width to 500px (was 520px) */
+    height: 600px !important; /* Adjusted height for 700px container */
+    margin-top: 16px !important; /* Nudge image down by 16px */
+    object-fit: contain !important; /* Maintain aspect ratio within fixed dimensions */
+    flex-shrink: 0 !important; /* Prevent image from shrinking */
+    flex-grow: 0 !important; /* Prevent image from growing */
+  }
+
+  /* Small viewport handling (< 700px) - maintain card size, allow scrolling */
+  @media (max-height: 700px) {
+    .resultsContainer {
+      align-items: flex-start !important; /* Top-align instead of center */
+      justify-content: center !important; /* Keep horizontal centering */
+      padding-top: 24px !important; /* 24px space above card as requested */
+      padding-bottom: 24px !important; /* Space below for scrolling */
+      min-height: 100vh !important; /* Full viewport height */
+      overflow-y: auto !important; /* Enable scrolling */
+    }
+    
+    /* Container and image keep the same dimensions - no scaling */
+    .result {
+      width: 576px !important; /* Same container size - reduced by 24px */
+      height: 652px !important; /* Same container size - reduced by another 24px */
+    }
+    
+    .result .agentCardImage {
+      width: 500px !important; /* Same image size - reduced to 500px */
+      height: 600px !important; /* Same image size */
+      margin-top: 16px !important; /* Nudge image down by 16px */
+    }
+
+    /* Modal responsive behavior for short viewports - same logic as results card */
+    .modalOverlay {
+      align-items: flex-start !important; /* Top-align instead of center */
+      justify-content: center !important; /* Keep horizontal centering */
+      padding-top: 24px !important; /* Exactly 24px space above modal */
+      padding-bottom: 24px !important; /* Space below for scrolling */
+      padding-left: 16px !important; /* Sides */
+      padding-right: 16px !important; /* Sides */
+      min-height: 100vh !important; /* Full viewport height */
+      max-height: 100vh !important; /* Constrain height */
+      overflow-y: auto !important; /* Enable scrolling */
+      display: flex !important; /* Ensure flex layout */
+    }
+    
+    /* Modal keeps the same dimensions for short viewports - no scaling */
+    .modal {
+      width: 576px !important; /* Same modal size */
+      height: 652px !important; /* Same modal size */
+      max-height: none !important; /* Override any max-height constraints */
+      flex-shrink: 0 !important; /* Prevent modal from shrinking */
+      margin: 0 !important; /* Remove any conflicting margins */
+    }
+  }
+  
+  /* Desktop homepage content - restore original positioning */
+  .roamingContent {
+    transform: none !important; /* Remove mobile transform on desktop */
+    gap: inherit !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 40px !important;
+    max-width: 600px !important;
+  }
+  
+  .desktopBreak {
+    display: inline !important; /* Show desktop line break on desktop */
+  }
+  
+  /* Desktop landing container - restore original behavior */
+  .landingContainer {
+    background: #F7F6F3 !important; /* Restore original background */
+    align-items: center !important; /* Center alignment */
+    justify-content: center !important; /* Center alignment */
+    position: static !important; /* Remove fixed positioning */
+    height: auto !important; /* Remove fixed height */
+    min-height: 100vh !important; /* Original min-height */
+    max-height: none !important; /* Remove max-height constraint */
+    overflow: visible !important; /* Restore scroll capability */
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    padding: 20px !important; /* Original desktop padding */
+  }
+  
+  /* Desktop question spacing - restore original values */
+  .container.testContainer {
+    padding: 20px !important; /* Restore original desktop padding */
+    background: #F7F6F3 !important; /* Restore original background */
+    align-items: center !important; /* Center alignment */
+    justify-content: center !important; /* Center alignment */
+    position: static !important; /* Remove fixed positioning */
+    height: auto !important; /* Remove fixed height */
+    min-height: 100vh !important; /* Original min-height */
+    max-height: none !important; /* Remove max-height constraint */
+    overflow-y: auto !important; /* Restore scroll capability */
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .progressBar {
+    margin-top: inherit; /* Reset mobile margin-top */
+    margin-bottom: 30px; /* Restore original desktop bottom margin */
+  }
+  
+  .questionNumber {
+    margin-top: 0; /* Reset mobile margin-top */
+    margin-bottom: 20px; /* Original desktop spacing */
+  }
+  
+  .question {
+    margin-top: inherit; /* Reset to original desktop margin-top */
+    margin-left: -40px !important; /* Break out of container padding */
+    margin-right: -40px !important; /* Break out of container padding */
+    width: calc(100% + 80px) !important; /* Compensate for negative margins (40px each side) */
+    max-width: none !important; /* Remove width constraints */
+    text-align: center !important; /* Restore center alignment */
+    box-sizing: border-box !important; /* Ensure proper width calculation */
+    padding: 0 40px !important; /* Add back padding for text readability */
+  }
+  
+  /* Desktop test content - restore original layout */
+  .testContent {
+    max-width: 600px !important; /* Desktop max-width */
+    width: 600px !important; /* Fixed width to prevent jumpiness between questions */
+    padding: 16px 40px 24px 40px !important; /* Match base styles */
+    margin: 0 auto !important; /* Center the fixed-width container */
+    background: white !important; /* Original background */
+    border-radius: 40px !important; /* Original 40px border-radius */
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 16px 50px 0px rgba(0, 0, 0, 0.1) !important; /* Original shadow */
+    text-align: center !important; /* Original text alignment */
+    height: 548px !important; /* Keep fixed height for consistency - reduced by 32px */
+    display: flex !important; /* Keep flex layout */
+    flex-direction: column !important; /* Keep column direction */
+    justify-content: flex-start !important; /* Keep flex start */
+    overflow: visible !important; /* Restore overflow */
+  }
+  
+  .profileCard {
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 40px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 0 !important;
+    width: 100% !important; /* Fill result container */
+    max-width: none !important; /* Remove width constraint */
+  }
+  
+  .agentCardImage {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 40px !important;
+    display: block !important;
+    max-width: none !important; /* Remove size constraint - let result container control width */
+  }
+  
+  /* Desktop button layout - restore original positioning */
+  .mobileButtonStack {
+    position: static !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    display: contents !important;
+    flex-direction: row !important;
+    gap: 0 !important;
+    z-index: auto !important;
+  }
+  
+  .saveDropdown {
+    position: absolute !important; /* Position inside result container */
+    top: 32px !important; /* Original top position */
+    right: 32px !important; /* Original right position */
+    width: auto !important;
+    display: inline-block !important;
+    order: 0 !important;
+    z-index: 50 !important; /* Ensure save dropdown appears above other elements */
+  }
+  
+  .saveButton {
+    width: auto !important;
+    background: white !important;
+    color: #666 !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    /* transition: all 0.2s ease !important; */ /* Removed to eliminate janky transitions */
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    order: 0 !important;
+  }
+  
+  /* Desktop save button icons - hide save icon, show chevron only */
+  .saveButton svg:first-child {
+    display: none !important; /* Hide the save/document icon on desktop */
+  }
+  
+  .saveButton svg:last-child {
+    display: inline !important; /* Show the chevron/dropdown arrow on desktop */
+  }
+  
+  .leaderboardButton {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    width: auto !important;
+    justify-content: center !important;
+    order: 0 !important;
+    z-index: 20 !important; /* Above result card */
+  }
+  
+  .fixedRetakeButton {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 20px !important;
+    width: auto !important;
+    justify-content: center !important;
+    order: 0 !important;
+    z-index: 20 !important; /* Above result card */
+  }
+}
+
+/* Height-based responsive behavior for desktop results card positioning */
+
+/* For all desktop screens: Consistent center alignment with optimal spacing */
+@media (min-width: 769px) and (min-height: 701px) {
+  .resultsContainer {
+    align-items: center !important; /* Center vertically */
+    justify-content: center !important; /* Center horizontally */
+    padding: 40px 232px !important; /* Consistent padding for optimal fit */
+    display: flex !important;
+    min-height: 100vh !important;
+  }
+}
+
+/* Removed desktop short screen overrides to maintain consistent card dimensions */
+
+@media (max-width: 480px) {
+  .container {
+    padding: 8px;
+    align-items: center;
+  }
+  
+  .testContent {
+    padding: 20px 16px;
+    margin: 0;
+    border-radius: 8px;
+    width: 100%;
+  }
+  
+  /* Removed .result override to maintain consistent dimensions */
+  
+  .question {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+  
+  .agentName {
+    font-size: 24px;
+  }
+  
+  .agentImage {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .answerButton {
+    padding: 16px;
+    font-size: 15px;
+  }
+  
+  .traitItem {
+    font-size: 13px;
+    padding: 6px 0;
+  }
+  
+  .miniRoamingContainer {
+    height: 120px;
+  }
+}
+
+/* Mini Roaming Agents Styles */
+.miniRoamingContainer {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: #F7F6F3;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  margin: 0 0 24px 0;
+  overflow: hidden;
+  flex-shrink: 0; /* Prevent container from shrinking and disappearing */
+  z-index: 1; /* Ensure it's visible above other content */
+}
+
+.expandButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 20;
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expandButton:hover {
+  color: #666;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.miniRoamingAgent {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  z-index: 10;
+  padding: 0;
+  margin: 0;
+  pointer-events: none; /* Prevent blocking button clicks */
+}
+
+.miniRoamingAgent img {
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+/* Background Roaming Agents Styles */
+.backgroundRoamingContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.backgroundRoamingAgent {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  opacity: 1;
+  pointer-events: none;
+  padding: 0;
+  margin: 0;
+}
+
+.backgroundRoamingAgent img {
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+/* Agent Detail Navigation Styles */
+.agentDetailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 0 0;
+  margin-bottom: 24px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: -40px; /* Nudged 8px further left (was -32px) */
+}
+
+.backButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  /* transition: all 0.2s ease; */ /* Removed to eliminate janky transitions */
+}
+
+.backButton:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.breadcrumbText {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.breadcrumbResults {
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumbResults:hover {
+  color: #666;
+}
+
+.breadcrumbResults:hover .backChevron {
+  color: #666;
+}
+
+.backChevron {
+  color: #999;
+  transition: color 0.2s ease;
+}
+
+.breadcrumbSeparator {
+  color: #ccc;
+  font-weight: 300;
+}
+
+.breadcrumbCurrent {
+  color: #2c2c2c;
+  font-weight: 600;
+}
+
+.agentDetailContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  height: 100%; /* Fill available modal content space */
+  margin-bottom: 0; /* Remove margin to maximize space */
+  margin-top: -24px; /* Move content up by 24px */
+}
+
+.agentDetailCard {
+  max-width: 450px; /* Reduced from 500px for slightly smaller size */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.agentDetailCardImage {
+  width: 100%;
+  height: auto;
+  border-radius: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .breadcrumb {
+    padding: 12px 0 16px 0;
+    margin-bottom: 16px;
+    margin-left: 0; /* Remove negative margin to prevent cutoff on mobile */
+  }
+  
+  .breadcrumbText {
+    font-size: 14px;
+  }
+  
+  /* Mobile modal adjustments */
+  .modal {
+    width: calc(100vw - 32px) !important; /* Use viewport width minus margins on mobile */
+    max-width: 576px !important; /* But don't exceed desktop width (reduced to 576px) */
+    height: 652px !important; /* Reduced by 24px (676px - 24px) */
+  }
+
+  .agentDetailContent {
+    padding: 16px 0;
+    height: 100% !important; /* Fill available space */
+    margin-top: 0 !important; /* Remove margin on mobile */
+    margin-bottom: 0 !important; /* Remove margin on mobile */
+  }
+  
+  .agentDetailCard {
+    max-width: 360px; /* Reduced from 400px for slightly smaller size on mobile */
+  }
+}
+
+
+
