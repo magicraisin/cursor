@@ -3,15 +3,14 @@ import styles from './styles/home.module.css';
 import { instrumentSans } from './fonts';
 
 export default function Home() {
-  // Both personality test versions
   const prototypes = [
     {
-      title: 'What Notion Agent Are You?',
+      title: 'What Notion Agent Are You? (10 questions)',
       description: 'Answer 10 questions to reveal what Notion agent aligns most closely with your personality.',
       path: '/prototypes/personality-test-2'
     },
     {
-      title: 'What Notion Agent Are You? (original)',
+      title: 'What Notion Agent Are You? (original, 11 questions)',
       description: 'Answer 11 questions to reveal what Notion agent aligns most closely with your personality.',
       path: '/prototypes/personality-test'
     },
