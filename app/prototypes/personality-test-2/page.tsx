@@ -2332,6 +2332,7 @@ export default function NotionAgentTest() {
     return (
       <div className={`${styles.container} ${styles.testContainer}`}>
         <div className={styles.testContent}>
+          <div className={styles.testContentScroll}>
           <div className={styles.progressBar}>
             <div className={styles.progressFill} style={{ width: `${progress}%` }}></div>
           </div>
@@ -2359,6 +2360,7 @@ export default function NotionAgentTest() {
                 )}
               </button>
             ))}
+          </div>
           </div>
           
           <div className={styles.navigationButtons}>

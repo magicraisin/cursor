@@ -148,6 +148,14 @@
   justify-content: flex-start;
 }
 
+/* Wrapper for question + answers (scrollable on mobile; buttons stay outside) */
+.testContentScroll {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .progressBar {
   width: 100%;
   height: 4px;
@@ -1100,7 +1108,7 @@
   
   .testContent {
     position: relative !important;
-    padding: 16px 4px 24px 4px !important; /* Reduced side margins by 12px (from 16px to 4px) */
+    padding: 16px 4px 0 4px !important;
     margin: 0 !important;
     height: 100vh !important;
     display: flex !important;
@@ -1108,7 +1116,17 @@
     background: white !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    overflow-y: auto !important; /* Allow scrolling if content is too long */
+    overflow: hidden !important;
+  }
+
+  /* Scrollable area: progress + question + answers only; nav buttons stay fixed below */
+  .testContentScroll {
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 96px !important; /* Space so last answer can scroll above sticky buttons */
   }
 
   /* Top section with progress bar and question */
@@ -1134,16 +1152,14 @@
     overflow-wrap: break-word !important; /* Modern property for text wrapping */
   }
 
-  /* Answers section - flexible height with space for fixed bottom buttons */
+  /* Answers section - natural height; parent .testContentScroll handles scroll */
   .testContent .answers {
-    flex: 1 !important; /* Take remaining space */
-    margin: 0 0 76px 0 !important; /* Reduced bottom margin to account for smaller button spacing */
+    margin: 0 !important;
     padding: 0 !important;
-    overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 16px !important;
-    min-height: 0 !important; /* Allow flexbox to shrink */
+    flex: none !important;
   }
 
   /* Image answers layout - stack vertically on mobile */
@@ -1154,21 +1170,20 @@
     align-items: stretch !important;
   }
 
-  /* Fix image answer aspect ratio on mobile - full width stacked */
+  /* Image answers - full width stacked; height from aspect-ratio; scroll reveals all */
   .imageAnswer {
     min-height: auto !important;
-    max-width: 100% !important; /* Full width for stacked layout */
+    max-width: 100% !important;
     width: 100% !important;
-    aspect-ratio: 1 / 1.07 !important; /* Target 1:1.07 ratio */
+    aspect-ratio: 1 / 1.07 !important;
     height: auto !important;
-    max-height: calc(100vh - 296px) !important; /* Reduced by 16px (was 280px, now 296px) to prevent cut-off */
+    max-height: none !important;
   }
 
-  /* Fallback for browsers without aspect-ratio support */
   @supports not (aspect-ratio: 1 / 1.07) {
     .imageAnswer {
-      height: calc(min(100vw * 1.07 - 48px, 100vh - 296px)) !important; /* Reduced by 16px (was 280px, now 296px) */
-      max-height: calc(100vh - 296px) !important; /* Reduced by 16px to prevent cut-off by buttons */
+      height: calc(100vw * 1.07 - 48px) !important;
+      max-height: none !important;
     }
   }
 
