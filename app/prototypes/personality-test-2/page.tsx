@@ -1547,6 +1547,7 @@ function GravityHomepage({ onStartTest }: { onStartTest: () => void }) {
         <div 
           className={styles.roamingContent}
         >
+          <img src="/images/notionlogo.png" alt="Notion" className={styles.notionLogo} />
           <h1 className={styles.title}>
             What Notion <span className={styles.titleBreak}>Agent Are You?</span>
           </h1>
@@ -2332,14 +2333,13 @@ export default function NotionAgentTest() {
     return (
       <div className={`${styles.container} ${styles.testContainer}`}>
         <div className={styles.testContent}>
-          <div className={styles.testContentScroll}>
           <div className={styles.progressBar}>
             <div className={styles.progressFill} style={{ width: `${progress}%` }}></div>
           </div>
-            <div className={styles.questionNumber}>
+          <div className={styles.questionNumber}>
             Question {currentQuestion + 1} of {questions.length}
           </div>
-          
+          <div className={styles.testContentScroll}>
           <h2 className={styles.question}>{question.text}</h2>
           
                           <div className={`${styles.answers} ${question.answers.some(answer => answer.image) ? styles.imageAnswers : ''} ${currentQuestion === 2 ? styles.question3 : ''} ${currentQuestion === 9 ? styles.question10 : ''}`}>

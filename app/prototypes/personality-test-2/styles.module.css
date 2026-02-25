@@ -83,6 +83,13 @@
   justify-content: center;
 }
 
+.notionLogo {
+  width: 40px;
+  height: auto;
+  margin-bottom: 24px;
+  display: block;
+}
+
 .landingIcon {
   font-size: 64px;
   margin-bottom: 24px;
@@ -148,12 +155,18 @@
   justify-content: flex-start;
 }
 
-/* Wrapper for question + answers (scrollable on mobile; buttons stay outside) */
+/* Wrapper for question + answers (scrollable when tall; progress bar stays above) */
 .testContentScroll {
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
+}
+
+/* Progress bar and question number stay at top of card (don't scroll away) */
+.testContent > .progressBar,
+.testContent > .questionNumber {
+  flex-shrink: 0;
 }
 
 .progressBar {
@@ -1094,6 +1107,11 @@
     gap: 8px; /* Reduced from 24px for tighter spacing */
     transform: translateY(-5vh); /* Move content up slightly for perfect centering */
   }
+
+  .notionLogo {
+    width: 40px;
+    margin-bottom: 16px;
+  }
   
   .testContent {
     max-width: 100%;
@@ -1557,13 +1575,11 @@
   .progressBar {
     margin-top: inherit; /* Reset mobile margin-top */
     margin-bottom: 30px; /* Restore original desktop bottom margin */
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: white;
-    padding-top: 0;
-    padding-bottom: 30px;
-    margin-bottom: 0;
+  }
+
+  /* When question + answers are tall (e.g. 3-line Q9), scroll only this part so progress bar stays visible */
+  .testContent .testContentScroll {
+    overflow-y: auto !important;
   }
   
   .questionNumber {
