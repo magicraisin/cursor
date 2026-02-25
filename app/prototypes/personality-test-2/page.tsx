@@ -2340,7 +2340,7 @@ export default function NotionAgentTest() {
             Question {currentQuestion + 1} of {questions.length}
           </div>
           <div className={styles.testContentScroll}>
-          <h2 className={styles.question}>{question.text}</h2>
+          <h2 className={`${styles.question} ${currentQuestion === 8 ? styles.question9Spacing : ''}`}>{question.text}</h2>
           
                           <div className={`${styles.answers} ${question.answers.some(answer => answer.image) ? styles.imageAnswers : ''} ${currentQuestion === 2 ? styles.question3 : ''} ${currentQuestion === 9 ? styles.question10 : ''}`}>
             {question.answers.map((answer, index) => (

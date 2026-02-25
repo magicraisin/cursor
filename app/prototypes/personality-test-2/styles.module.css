@@ -206,6 +206,11 @@
   margin-right: 0; /* Remove any hidden margins */
 }
 
+/* Question 9: reduce gap below question by 16px so answers move up and there's more space above nav buttons */
+.question9Spacing {
+  margin-bottom: 16px !important;
+}
+
 .answers {
   display: flex;
   flex-direction: column;
@@ -1185,6 +1190,10 @@
     overflow-wrap: break-word !important; /* Modern property for text wrapping */
   }
 
+  .testContent .question.question9Spacing {
+    margin-bottom: 16px !important;
+  }
+
   /* Answers section - natural height; parent .testContentScroll handles scroll */
   .testContent .answers {
     margin: 0 !important;
@@ -1890,6 +1899,11 @@
   /* Both headers: 14px from top and right of modal so both X's align */
   .modalHeader {
     padding: 14px 14px 14px 14px !important;
+  }
+
+  /* Remove 24px gap between Leaderboard title and mini roaming map */
+  .modalContent {
+    padding-top: 0 !important;
   }
 }
 
