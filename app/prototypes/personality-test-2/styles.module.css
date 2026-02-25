@@ -1772,6 +1772,12 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
+@media (max-width: 768px) {
+  .miniRoamingContainer .expandButton {
+    display: none !important; /* Expand doesn't translate to mobile */
+  }
+}
+
 .miniRoamingAgent {
   position: absolute;
   border-radius: 50%;
@@ -1835,6 +1841,10 @@
   justify-content: space-between;
   padding: 16px 16px 0 16px;
   margin-bottom: 24px;
+}
+
+.agentDetailHeader .closeButton {
+  margin-top: -20px;
 }
 
 .breadcrumb {
