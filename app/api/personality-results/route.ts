@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { kv } from '@vercel/kv';
+import { createClient } from '@vercel/kv';
+
+// Support both Vercel KV env vars and Upstash Redis integration env vars
+const kv = createClient({
+  url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '',
+  token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '',
+});
 
 interface PersonalityResult {
   sessionId: string;
@@ -8,7 +14,7 @@ interface PersonalityResult {
   timestamp: number;
 }
 
-const KV_KEY = 'personality-results'; // Force redeploy
+const KV_KEY = 'personality-results';
 
 // Read existing results from KV storage
 async function readResults(): Promise<PersonalityResult[]> {
