@@ -1170,20 +1170,30 @@
     align-items: stretch !important;
   }
 
-  /* Image answers - full width stacked; height from aspect-ratio; scroll reveals all */
+  /* Image answers - shorter cards on mobile; image keeps aspect ratio via object-fit */
   .imageAnswer {
     min-height: auto !important;
     max-width: 100% !important;
     width: 100% !important;
-    aspect-ratio: 1 / 1.07 !important;
-    height: auto !important;
-    max-height: none !important;
+    height: 200px !important;
+    max-height: 200px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .imageAnswer .answerImage {
+    width: auto !important;
+    height: 100% !important;
+    max-height: 200px !important;
+    object-fit: contain !important;
   }
 
   @supports not (aspect-ratio: 1 / 1.07) {
     .imageAnswer {
-      height: calc(100vw * 1.07 - 48px) !important;
-      max-height: none !important;
+      height: 200px !important;
+      max-height: 200px !important;
     }
   }
 
