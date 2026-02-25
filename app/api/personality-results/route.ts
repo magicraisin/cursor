@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
 
-// Support both Vercel KV env vars and Upstash Redis integration env vars
-const kv = createClient({
-  url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '',
-  token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '',
-});
+// Use Upstash Redis (same env vars the Vercel Redis integration injects)
+function getRedis(): Redis | null {
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null;
+  return new Redis({ url, token });
+}
+
+const kv = getRedis();
 
 interface PersonalityResult {
   sessionId: string;
@@ -16,27 +20,32 @@ interface PersonalityResult {
 
 const KV_KEY = 'personality-results';
 
-// Read existing results from KV storage
+// Read existing results from Redis
 async function readResults(): Promise<PersonalityResult[]> {
+  if (!kv) {
+    console.error('Redis not configured: missing KV_REST_API_URL/TOKEN or UPSTASH_REDIS_REST_URL/TOKEN');
+    return [];
+  }
   try {
-    console.log('Reading results from KV...');
+    console.log('Reading results from Redis...');
     const data = await kv.get<PersonalityResult[]>(KV_KEY);
-    console.log('KV read result:', data ? `${data.length} entries` : 'null/empty');
+    console.log('Redis read result:', data ? `${data.length} entries` : 'null/empty');
     return data || [];
   } catch (error) {
-    console.error('ERROR reading from KV:', error);
+    console.error('ERROR reading from Redis:', error);
     return [];
   }
 }
 
-// Write results to KV
+// Write results to Redis
 async function writeResults(results: PersonalityResult[]) {
+  if (!kv) {
+    throw new Error('Redis not configured. Add KV or Upstash Redis env vars in Vercel project settings.');
+  }
   try {
     console.log('writeResults called with:', results.length, 'entries');
-    console.log('Writing to KV key:', KV_KEY);
-    
     await kv.set(KV_KEY, results);
-    console.log('KV write completed successfully');
+    console.log('Redis write completed successfully');
   } catch (error) {
     console.error('ERROR in writeResults:', error);
     throw error;
@@ -140,8 +149,22 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const url = new URL(request.url);
+    if (url.searchParams.get('debug') === '1') {
+      const hasUrl = !!(process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL);
+      const hasToken = !!(process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN);
+      const results = await readResults();
+      return NextResponse.json({
+        redisConfigured: !!kv,
+        hasUrl,
+        hasToken,
+        totalResults: results.length,
+        message: !kv ? 'Add UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN (or KV_*) in Vercel → Project → Settings → Environment Variables, then redeploy.' : undefined,
+      });
+    }
+
     const results = await readResults();
     console.log('GET Debug - Total results:', results.length);
     console.log('All Sessions:', results.map(r => ({ sessionId: r.sessionId, agent: r.agent })));
