@@ -1385,6 +1385,11 @@
     border-bottom: none !important; /* Force remove border on mobile */
     border: none !important; /* Remove all borders */
   }
+
+  /* Remove 24px gap between Leaderboard title and mini roaming container */
+  .modalContent {
+    padding-top: 0 !important;
+  }
   
   .miniRoamingContainer {
     height: 140px !important; /* Force height on mobile to prevent conflicts */
@@ -1552,6 +1557,13 @@
   .progressBar {
     margin-top: inherit; /* Reset mobile margin-top */
     margin-bottom: 30px; /* Restore original desktop bottom margin */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+    padding-top: 0;
+    padding-bottom: 30px;
+    margin-bottom: 0;
   }
   
   .questionNumber {
