@@ -1279,28 +1279,27 @@
     gap: 12px;
   }
   
-  .backButton,
-  .nextButton {
-    flex: 1; /* Equal width for side by side layout */
-    justify-content: center;
-    box-shadow: none !important; /* Remove any shadows from buttons */
-    border-radius: 8px !important; /* Consistent border radius */
-    height: 48px !important; /* Ensure same height for both buttons */
-    padding: 12px 16px !important; /* Consistent padding */
+  /* Only the test screen Back/Next buttons get the large white/gray style */
+  .testContent .navigationButtons .backButton,
+  .testContent .navigationButtons .nextButton {
+    flex: 1 !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+    border-radius: 8px !important;
+    height: 48px !important;
+    padding: 12px 16px !important;
   }
   
-  /* Next button styling (primary) */
-  .nextButton {
+  .testContent .navigationButtons .nextButton {
     background: #2c2c2c !important;
     color: white !important;
     border: 1px solid #2c2c2c !important;
   }
   
-  /* Back button styling (outline) */
-  .backButton {
+  .testContent .navigationButtons .backButton {
     background: white !important;
     color: #2c2c2c !important;
-    border: 1px solid #d0d0d0 !important; /* Subtle gray border */
+    border: 1px solid #d0d0d0 !important;
   }
   
   /* Mobile agent card display */
@@ -1934,6 +1933,21 @@
     padding: 12px 0 16px 0;
     margin-bottom: 16px;
     margin-left: 0; /* Remove negative margin to prevent cutoff on mobile */
+  }
+
+  /* Modal breadcrumb back arrow stays minimal (no white box) */
+  .breadcrumb .backButton {
+    background: none !important;
+    border: none !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    flex: none !important;
+    color: #666 !important;
+  }
+
+  .breadcrumb .backButton:hover {
+    background: #f5f5f5 !important;
   }
   
   .breadcrumbText {
