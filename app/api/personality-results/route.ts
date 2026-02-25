@@ -1,15 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
-
-// Use Upstash Redis (same env vars the Vercel Redis integration injects)
-function getRedis(): Redis | null {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
-  return new Redis({ url, token });
-}
-
-const kv = getRedis();
+import { createClient } from 'redis';
 
 interface PersonalityResult {
   sessionId: string;
@@ -20,34 +11,72 @@ interface PersonalityResult {
 
 const KV_KEY = 'personality-results';
 
-// Read existing results from Redis
+type RedisBackend = 'upstash' | 'node-redis';
+
+function getBackend(): { type: RedisBackend; upstash?: Redis; nodeRedisUrl?: string } | null {
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (url && token) {
+    return { type: 'upstash', upstash: new Redis({ url, token }) };
+  }
+  const redisUrl = process.env.REDIS_URL;
+  if (redisUrl) {
+    return { type: 'node-redis', nodeRedisUrl: redisUrl };
+  }
+  return null;
+}
+
+const backend = getBackend();
+
+// Lazy node-redis client (for REDIS_URL / Redis Labs)
+let _nodeRedisClient: ReturnType<typeof createClient> | null = null;
+function getNodeRedisClient() {
+  if (!_nodeRedisClient && backend?.type === 'node-redis' && backend.nodeRedisUrl) {
+    _nodeRedisClient = createClient({
+      url: backend.nodeRedisUrl,
+      socket: { connectTimeout: 10000 },
+    });
+    _nodeRedisClient.on('error', (err) => console.error('Redis client error', err));
+  }
+  return _nodeRedisClient;
+}
+
 async function readResults(): Promise<PersonalityResult[]> {
-  if (!kv) {
-    console.error('Redis not configured: missing KV_REST_API_URL/TOKEN or UPSTASH_REDIS_REST_URL/TOKEN');
+  if (!backend) {
+    console.error('Redis not configured: set REDIS_URL or UPSTASH_REDIS_REST_URL + TOKEN');
     return [];
   }
   try {
-    console.log('Reading results from Redis...');
-    const data = await kv.get<PersonalityResult[]>(KV_KEY);
-    console.log('Redis read result:', data ? `${data.length} entries` : 'null/empty');
-    return data || [];
+    if (backend.type === 'upstash' && backend.upstash) {
+      const data = await backend.upstash.get<PersonalityResult[]>(KV_KEY);
+      return data || [];
+    }
+    const client = getNodeRedisClient();
+    if (!client) return [];
+    const raw = await client.get(KV_KEY);
+    if (!raw) return [];
+    const data = JSON.parse(raw) as PersonalityResult[];
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error('ERROR reading from Redis:', error);
     return [];
   }
 }
 
-// Write results to Redis
 async function writeResults(results: PersonalityResult[]) {
-  if (!kv) {
-    throw new Error('Redis not configured. Add KV or Upstash Redis env vars in Vercel project settings.');
+  if (!backend) {
+    throw new Error('Redis not configured. Set REDIS_URL or Upstash env vars in Vercel.');
   }
   try {
-    console.log('writeResults called with:', results.length, 'entries');
-    await kv.set(KV_KEY, results);
-    console.log('Redis write completed successfully');
+    if (backend.type === 'upstash' && backend.upstash) {
+      await backend.upstash.set(KV_KEY, results);
+      return;
+    }
+    const client = getNodeRedisClient();
+    if (!client) throw new Error('Redis client not available');
+    await client.set(KV_KEY, JSON.stringify(results));
   } catch (error) {
-    console.error('ERROR in writeResults:', error);
+    console.error('ERROR writing to Redis:', error);
     throw error;
   }
 }
@@ -153,15 +182,18 @@ export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
     if (url.searchParams.get('debug') === '1') {
-      const hasUrl = !!(process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL);
-      const hasToken = !!(process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN);
+      const hasRedisUrl = !!process.env.REDIS_URL;
+      const hasUpstashUrl = !!(process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL);
+      const hasUpstashToken = !!(process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN);
       const results = await readResults();
       return NextResponse.json({
-        redisConfigured: !!kv,
-        hasUrl,
-        hasToken,
+        redisConfigured: !!backend,
+        backend: backend?.type ?? null,
+        hasRedisUrl,
+        hasUpstashUrl,
+        hasUpstashToken,
         totalResults: results.length,
-        message: !kv ? 'Add UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN (or KV_*) in Vercel → Project → Settings → Environment Variables, then redeploy.' : undefined,
+        message: !backend ? 'Set REDIS_URL (redis://...) or UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN in Vercel → Project → Settings → Environment Variables, then redeploy.' : undefined,
       });
     }
 
