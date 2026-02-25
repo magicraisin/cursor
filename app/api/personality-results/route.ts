@@ -28,17 +28,21 @@ function getBackend(): { type: RedisBackend; upstash?: Redis; nodeRedisUrl?: str
 
 const backend = getBackend();
 
-// Lazy node-redis client (for REDIS_URL / Redis Labs)
-let _nodeRedisClient: ReturnType<typeof createClient> | null = null;
-function getNodeRedisClient() {
-  if (!_nodeRedisClient && backend?.type === 'node-redis' && backend.nodeRedisUrl) {
-    _nodeRedisClient = createClient({
-      url: backend.nodeRedisUrl,
-      socket: { connectTimeout: 10000 },
-    });
-    _nodeRedisClient.on('error', (err) => console.error('Redis client error', err));
+// For REDIS_URL (node-redis): connect fresh per request so we never use a closed client in serverless
+async function withNodeRedis<T>(fn: (client: ReturnType<typeof createClient>) => Promise<T>): Promise<T> {
+  if (backend?.type !== 'node-redis' || !backend?.nodeRedisUrl) {
+    throw new Error('Redis not configured');
   }
-  return _nodeRedisClient;
+  const client = createClient({
+    url: backend.nodeRedisUrl,
+    socket: { connectTimeout: 10000 },
+  });
+  try {
+    await client.connect();
+    return await fn(client);
+  } finally {
+    await client.quit();
+  }
 }
 
 async function readResults(): Promise<PersonalityResult[]> {
@@ -51,12 +55,12 @@ async function readResults(): Promise<PersonalityResult[]> {
       const data = await backend.upstash.get<PersonalityResult[]>(KV_KEY);
       return data || [];
     }
-    const client = getNodeRedisClient();
-    if (!client) return [];
-    const raw = await client.get(KV_KEY);
-    if (!raw) return [];
-    const data = JSON.parse(raw) as PersonalityResult[];
-    return Array.isArray(data) ? data : [];
+    return await withNodeRedis(async (client) => {
+      const raw = await client.get(KV_KEY);
+      if (!raw) return [];
+      const data = JSON.parse(raw) as PersonalityResult[];
+      return Array.isArray(data) ? data : [];
+    });
   } catch (error) {
     console.error('ERROR reading from Redis:', error);
     return [];
@@ -72,9 +76,9 @@ async function writeResults(results: PersonalityResult[]) {
       await backend.upstash.set(KV_KEY, results);
       return;
     }
-    const client = getNodeRedisClient();
-    if (!client) throw new Error('Redis client not available');
-    await client.set(KV_KEY, JSON.stringify(results));
+    await withNodeRedis(async (client) => {
+      await client.set(KV_KEY, JSON.stringify(results));
+    });
   } catch (error) {
     console.error('ERROR writing to Redis:', error);
     throw error;
