@@ -840,6 +840,7 @@
   font-size: 20px;
   font-weight: 700;
   margin: 0;
+  margin-left: 10px;
 }
 
 .closeButton {
@@ -1867,7 +1868,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 16px 0 16px;
+  padding: 14px 14px 0 14px;
   margin-bottom: 24px;
 }
 
@@ -1875,10 +1876,29 @@
   margin-top: -20px;
 }
 
+@media (min-width: 769px) {
+  .agentDetailHeader .closeButton {
+    margin-top: 0;
+    transform: translate(-4px, 4px);
+  }
+
+  .modalHeader .closeButton {
+    margin-top: 0;
+    transform: translate(-4px, -7.5px);
+  }
+
+  /* Both headers: 14px from top and right of modal so both X's align */
+  .modalHeader {
+    padding: 14px 14px 14px 14px !important;
+  }
+}
+
 .breadcrumb {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-top: 8px;
+  margin-left: 8px;
 }
 
 .backButton {
