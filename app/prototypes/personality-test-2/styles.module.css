@@ -1190,6 +1190,12 @@
     object-fit: contain !important;
   }
 
+  /* Second image on first question only: fill container to show more detail */
+  .imageAnswer.imageAnswerFill .answerImage {
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+
   @supports not (aspect-ratio: 1 / 1.07) {
     .imageAnswer {
       height: 200px !important;

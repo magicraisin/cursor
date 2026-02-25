@@ -2346,7 +2346,7 @@ export default function NotionAgentTest() {
             {question.answers.map((answer, index) => (
               <button
                 key={index}
-                className={`${styles.answerButton} ${answer.image ? styles.imageAnswer : ''} ${currentQuestion === 3 && answer.image ? styles.question4 : ''} ${currentQuestion === 9 && answer.image ? styles.question10 : ''} ${selectedAnswer === answer.value ? styles.selected : ''}`}
+                className={`${styles.answerButton} ${answer.image ? styles.imageAnswer : ''} ${currentQuestion === 0 && index === 1 ? styles.imageAnswerFill : ''} ${currentQuestion === 3 && answer.image ? styles.question4 : ''} ${currentQuestion === 9 && answer.image ? styles.question10 : ''} ${selectedAnswer === answer.value ? styles.selected : ''}`}
                 onClick={() => selectAnswer(answer.value)}
               >
                 {answer.image ? (
