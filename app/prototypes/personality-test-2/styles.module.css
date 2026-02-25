@@ -1833,7 +1833,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 24px 0 0;
+  padding: 16px 16px 0 16px;
   margin-bottom: 24px;
 }
 
@@ -1841,7 +1841,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: -40px; /* Nudged 8px further left (was -32px) */
 }
 
 .backButton {
@@ -1861,6 +1860,28 @@
 .backButton:hover {
   background: #f5f5f5;
   color: #333;
+}
+
+/* Modal breadcrumb back arrow only - never show as a box */
+.breadcrumbBackButton {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+  color: #666 !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.breadcrumbBackButton:hover,
+.breadcrumbBackButton:focus {
+  background: #f5f5f5 !important;
+  outline: none !important;
 }
 
 .breadcrumbText {
